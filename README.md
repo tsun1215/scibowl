@@ -6,3 +6,13 @@ function doSomething(){
     return "Something";
 }
 ```
+```html
+<html>
+<head>
+    <title>Something</title>
+</head>
+<body>
+    <h1>Something</h1>
+</body>
+</html>
+```
