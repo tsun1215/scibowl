@@ -1,2 +1,2 @@
-scibowl
+Temporary README for Scibowl project
 =======
