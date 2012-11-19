@@ -1,0 +1,78 @@
+{%extends "form_base.html"%}
+
+{%block title%}Add Question{%endblock%}
+{%block head%}
+    <script src="/static/js/jquery.js"></script>
+{%endblock%}
+
+{%block form%}
+<script>
+$(document).ready(function(){
+    if($("#id_type").val()==0){
+        $($("#id_choice_w").parent().parent("tr")).show();
+        $($("#id_choice_x").parent().parent("tr")).show();
+        $($("#id_choice_y").parent().parent("tr")).show();
+        $($("#id_choice_z").parent().parent("tr")).show();
+        $($("#id_answer").parent().parent("tr")).hide();
+        $($("#mc_answer").parent().parent("tr")).show();
+    }else{
+        $($("#id_choice_w").parent().parent("tr")).hide();
+        $($("#id_choice_x").parent().parent("tr")).hide();
+        $($("#id_choice_y").parent().parent("tr")).hide();
+        $($("#id_choice_z").parent().parent("tr")).hide();
+        $($("#id_answer").parent().parent("tr")).show();
+        $($("#mc_answer").parent().parent("tr")).hide();
+    }    
+    $("#test").click(function(){
+        var specs = "width=450,height=400,menubar=0,scrollbars=0,toolbar=0,status=0,toolbar=0,resizable=0,location=0";
+        window.open("/question/add","Add Question",specs);
+    });
+    $("#id_type").change(function(){
+        if($(this).val()==0){
+            $($("#id_choice_w").parent().parent("tr")).show();
+            $($("#id_choice_x").parent().parent("tr")).show();
+            $($("#id_choice_y").parent().parent("tr")).show();
+            $($("#id_choice_z").parent().parent("tr")).show();
+            $($("#id_answer").parent().parent("tr")).hide();
+            $($("#mc_answer").parent().parent("tr")).show();
+        }else{
+            $($("#id_choice_w").parent().parent("tr")).hide();
+            $($("#id_choice_x").parent().parent("tr")).hide();
+            $($("#id_choice_y").parent().parent("tr")).hide();
+            $($("#id_choice_z").parent().parent("tr")).hide();
+            $($("#id_answer").parent().parent("tr")).show();
+            $($("#mc_answer").parent().parent("tr")).hide();
+        }
+    });
+    $("form").submit(function(){
+        if($("#id_type").val()==0){
+            $("#id_answer").val($("#mc_answer").val());
+        }
+    });
+});
+</script>
+<form method="post" action="{{action}}">
+    <table>
+        {%for field in form%}
+        <tr>
+            <th>{{field.label_tag}}</th>
+            <td>{{field}}</td>
+            <td>{{field.errors}}</td>
+        </tr>
+        {%endfor%}
+        <tr>
+            <th>Answer</th>
+            <td>
+                <select id="mc_answer">
+                    <option value="w">W</option>
+                    <option value="x">X</option>
+                    <option value="y">Y</option>
+                    <option value="z">Z</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <input type="button" value="new window" id="test"/>
+    <input type="submit" value="Add Question"/>
+</form>
+{%endblock%}

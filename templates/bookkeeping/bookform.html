@@ -1,0 +1,10 @@
+{%extends "form_base.html"%}
+
+{%block title%}{{title}}{%endblock%}
+
+{%block form%}
+<form method="post" action="{{action}}">
+    {{form.as_p}}
+    <input type="submit" value="Add {{type|capfirst}}"/>
+</form>
+{%endblock%}
