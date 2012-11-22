@@ -1,0 +1,20 @@
+html, body{
+    margin: 0;
+}
+#topbar{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:30px;
+}
+#userOptions{
+    position:absolute;
+    right:20px;
+    bottom:0;
+}
+#content-container{
+    width:800px;
+    margin: 0 auto;
+    margin-top: 30px;
+}

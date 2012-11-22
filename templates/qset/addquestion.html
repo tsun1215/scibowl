@@ -1,6 +1,6 @@
 {%extends "form_base.html"%}
 
-{%block title%}Add Question{%endblock%}
+{%block title%}{{title}}{%endblock%}
 {%block head%}
     <script src="/static/js/jquery.js"></script>
 {%endblock%}
@@ -22,11 +22,7 @@ $(document).ready(function(){
         $($("#id_choice_z").parent().parent("tr")).hide();
         $($("#id_answer").parent().parent("tr")).show();
         $($("#mc_answer").parent().parent("tr")).hide();
-    }    
-    $("#test").click(function(){
-        var specs = "width=450,height=400,menubar=0,scrollbars=0,toolbar=0,status=0,toolbar=0,resizable=0,location=0";
-        window.open("/question/add","Add Question",specs);
-    });
+    }   
     $("#id_type").change(function(){
         if($(this).val()==0){
             $($("#id_choice_w").parent().parent("tr")).show();
@@ -48,6 +44,7 @@ $(document).ready(function(){
         if($("#id_type").val()==0){
             $("#id_answer").val($("#mc_answer").val());
         }
+        opener.location.reload(true);
     });
 });
 </script>
@@ -72,7 +69,6 @@ $(document).ready(function(){
             </td>
         </tr>
     </table>
-    <input type="button" value="new window" id="test"/>
     <input type="submit" value="Add Question"/>
 </form>
 {%endblock%}

@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.views import login, logout
+from django.views.generic.simple import direct_to_template
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -22,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^question/edit/(?P<q_id>\d+)', 'qset.views.editQuestion'),
     url(r'^getall/$', 'qset.views.getQuestions'),
     url(r'^register/$', 'usermanage.views.registerUser'),
+    url(r'^home/$', direct_to_template, {'template': 'home.html'}),
 )
 
 urlpatterns += patterns('bookkeeping.views',

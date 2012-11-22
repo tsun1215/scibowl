@@ -1,0 +1,98 @@
+{%extends 'base.html'%}
+{%block head%}
+<link rel="stylesheet" href="/static/css/main.css"/>
+<style>
+    #questions{
+        width:100%;
+    }
+    .type{
+        width:20px;
+    }
+    th{
+        text-align: left;
+    }
+</style>
+<script src="/static/js/jquery.js"></script>
+{% if user.is_authenticated %}
+<script>
+    $(document).ready(function(){     
+        if(opener!=null){
+            window.close();
+        }
+        $.get('/getall/', function(data){
+            table = $("#questions");
+            table.append("<tr><th>Subject</th><th>Type</th><th>Question</th></tr>");
+            for(var x = 0; x<data.length; x++){
+                q = data[x];
+                table.append("<tr class='question' title='Ans: "+q.answer+"'></tr>");
+                question = $(".question").last();
+                question.append("<td class='subject'>"+q.subject+"</td>");
+                question.append("<td class='type'>"+((q.type==0)?"MC":"SA")+"</td>");
+                question.append("<td class='text'><a href='/question/edit/"+q.id+"/'>"+q.text+"</a></td>");
+            }    
+            $(".question").hover(
+                function(){
+                    $(this).css('background-color','lightBlue');
+                }, 
+                function(){
+                    $(this).css('background-color','transparent');
+                }
+            );
+            $("#questions .text a").click(function(){
+                var url = $(this).attr('href');            
+                var specs = "width=450,height=400,menubar=0,scrollbars=0,toolbar=0,status=0,toolbar=0,resizable=0,location=0";
+                newWindow = window.open(url,"Edit Question",specs);
+                return false;
+            });
+        });
+        $("#addQ").click(function(){
+            var specs = "width=450,height=400,menubar=0,scrollbars=0,toolbar=0,status=0,toolbar=0,resizable=0,location=0";
+            newWindow = window.open("/question/add/","Add Question",specs);
+            // Note: figure out how to find when the window is closed
+            return false;
+        });
+        
+    });
+    function update(){
+        $.get('/getall/', function(data){
+            table = $("#questions");
+            table.html("");
+            for(var x = 0; x<data.length; x++){
+                q = data[x];
+                table.append("<tr class='question' title='Ans: "+q.answer+"'></tr>");
+                question = $(".question").last();
+                question.append("<td class='subject'>"+q.subject+"</td>");
+                question.append("<td class='type'>"+((q.type==0)?"MC":"SA")+"</td>");
+                question.append("<td class='text'><a href='/question/edit/"+q.id+"/'>"+q.text+"</a></td>");
+            }    
+            $(".question").hover(
+                function(){
+                    $(this).css('background-color','lightBlue');
+                }, 
+                function(){
+                    $(this).css('background-color','transparent');
+                }
+            );
+        });
+    }
+</script>
+{%endif%}
+{%endblock%}
+
+{%block content%}
+    <div id="content-container">
+        {%if user.is_authenticated%}
+        <table id="questions">
+        </table>
+        <button id="addQ">Add Question</button>
+        {%else%}
+        <h1>Home Page</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        {%endif%}
+    </div>
+{%endblock%}

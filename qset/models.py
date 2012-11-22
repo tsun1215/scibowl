@@ -78,16 +78,35 @@ class Question(models.Model):
     def __unicode__(self):
         return "(" + self.subject.__str__() + ") " + self.creator.__str__()
 
+    def ans(self):
+        if self.type == 1:
+            return self.answer
+        else:
+            if self.answer.strip().lower() == "w":
+                return "(W) " + self.choice_w
+            if self.answer.strip().lower() == "x":
+                return "(X) " + self.choice_x
+            if self.answer.strip().lower() == "y":
+                return "(Y) " + self.choice_y
+            if self.answer.strip().lower() == "z":
+                return "(Z) " + self.choice_z
+
 
 class Set(models.Model):
     questions = models.ManyToManyField(Question, through='Set_questions')
     description = models.CharField(max_length=100)
-    creation_date = models.DateTimeField()
+    creation_date = models.DateTimeField(auto_now=True)
     creator = models.ForeignKey(User)
     is_used = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.description
+
+
+class SetForm(forms.Form):
+    name = forms.CharField(max_length=50)
+    description = forms.CharField(max_length=200)
+
 
 
 class Set_questions(models.Model):

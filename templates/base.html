@@ -3,8 +3,20 @@
 <head>
 	<meta charset="UTF-8"/>
 	<title>{% block title%}Scibowl Project{%endblock%}</title>
+    {%block head%}{%endblock%}
 </head>
 <body>
+    {%block topbar%}
+    <div id="topbar">
+        <div id="userOptions">
+            {%if user.is_authenticated%}
+            Logged in as {{user.username}} <a href="/logout/">Logout</a>
+            {%else%}
+            <a href="/login/?next=/home/">Login</a>
+            {%endif%}
+        </div>
+    </div>
+    {%endblock%}
     {% block content%}{%endblock%}
 </body>
 </html>

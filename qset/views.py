@@ -23,7 +23,7 @@ def addQuestion(request):
             q = form.save(commit=False)
             q.creator = request.user
             q.save()
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/home/')
     else:
         form = QuestionForm()
     return render_to_response('qset/addquestion.html', {"form": form, "action": action, "title": "Add Question"})
@@ -38,7 +38,7 @@ def editQuestion(request, q_id):
             form = QuestionForm(data=request.POST, instance=question)
             if form.is_valid():
                 form.save()
-                return HttpResponseRedirect('/')
+                return HttpResponseRedirect('/home/')
         else:
             form = QuestionForm(instance=question)
         return render_to_response('qset/addquestion.html', {"form": form, "action": action, "type": "question", "title": "Edit question"})
@@ -48,20 +48,40 @@ def editQuestion(request, q_id):
 
 
 @login_required
+def addSet(request):
+    action = "/set/add/"
+    if(request.method == "POST"):
+        form = QuestionForm(data=request.POST)
+        if form.is_valid():
+            q = form.save(commit=False)
+            q.creator = request.user
+            q.save()
+            return HttpResponseRedirect('/')
+    else:
+        form = QuestionForm()
+    return render_to_response('qset/addquestion.html', {"form": form, "action": action, "title": "Add Question"})
+
+
+@login_required
 def getQuestions(request):
     if request.method == "GET":
         qlist = []
+
         # Parse GET Parameters
         kwargs = {
             "creator": request.user,
-            "pk": request.GET['id'] or None,
-            # "subject": request.GET['subject'] or None,
-            # "type": request.GET['type'] or None,
-            # "creator": request.GET['creator'] or None,
-            # "is_used": request.GET['used'] or None,
         }
+        if request.GET.get('id', False):
+            kwargs['pk'] = request.GET.get('id')
+        if request.GET.get('subject', False):
+            kwargs['subject'] = request.GET.get('subject')
+        if request.GET.get('type', False):
+            kwargs['type'] = request.GET.get('type')
+        if request.GET.get('used', False):
+            kwargs['is_used'] = request.GET.get('used')
+
         # Allows staff to access other user's questions (not allowed for regular users)
-        if request.user.is_staff and request.GET['creator']:
+        if request.user.is_staff and request.GET.get('creator', False):
             kwargs['creator'] = request.GET['creator']
 
         # Add questions to json object
@@ -71,7 +91,8 @@ def getQuestions(request):
                 "subject": q.subject.get_name_display(),
                 "date": q.creation_date.date().__str__(),
                 "text": q.text,
-                "answer": q.answer,
+                "answer": q.ans(),
+                "id": q.id,
             }
             qlist.append(curr)
         return HttpResponse(simplejson.dumps(qlist), mimetype='application/json')
