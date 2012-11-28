@@ -1,6 +1,5 @@
 {%extends 'base.html'%}
 {%block head%}
-<link rel="stylesheet" href="/static/css/main.css"/>
 <style>
     #questions{
         width:100%;
@@ -18,49 +17,50 @@
     $(document).ready(function(){     
         if(opener!=null){
             window.close();
-        }
-        $.get('/getall/', function(data){
-            table = $("#questions");
-            table.append("<tr><th>Subject</th><th>Type</th><th>Question</th></tr>");
-            for(var x = 0; x<data.length; x++){
-                q = data[x];
-                table.append("<tr class='question' title='Ans: "+q.answer+"'></tr>");
-                question = $(".question").last();
-                question.append("<td class='subject'>"+q.subject+"</td>");
-                question.append("<td class='type'>"+((q.type==0)?"MC":"SA")+"</td>");
-                question.append("<td class='text'><a href='/question/edit/"+q.id+"/'>"+q.text+"</a></td>");
-            }    
-            $(".question").hover(
-                function(){
-                    $(this).css('background-color','lightBlue');
-                }, 
-                function(){
-                    $(this).css('background-color','transparent');
-                }
-            );
-            $("#questions .text a").click(function(){
-                var url = $(this).attr('href');            
+        }else{
+            $.get('/getall/', function(data){
+                var table = $("#questions");
+                table.append("<tr><th>Subject</th><th>Type</th><th>Question</th></tr>");
+                for(var x = 0; x<data.length; x++){
+                    var q = data[x];
+                    table.append("<tr class='question' title='Ans: "+q.answer+"'></tr>");
+                    var question = $(".question").last();
+                    question.append("<td class='subject'>"+q.subject+"</td>");
+                    question.append("<td class='type'>"+((q.type==0)?"MC":"SA")+"</td>");
+                    question.append("<td class='text'><a href='/question/edit/"+q.id+"/'>"+q.text+"</a></td>");
+                }    
+                $(".question").hover(
+                    function(){
+                        $(this).css('background-color','lightBlue');
+                    }, 
+                    function(){
+                        $(this).css('background-color','transparent');
+                    }
+                );
+                $("#questions .text a").click(function(){
+                    var url = $(this).attr('href');            
+                    var specs = "width=450,height=400,menubar=0,scrollbars=0,toolbar=0,status=0,toolbar=0,resizable=0,location=0";
+                    newWindow = window.open(url,"Edit Question",specs);
+                    return false;
+                });
+            });
+
+            $("#addQ").click(function(){
                 var specs = "width=450,height=400,menubar=0,scrollbars=0,toolbar=0,status=0,toolbar=0,resizable=0,location=0";
-                newWindow = window.open(url,"Edit Question",specs);
+                newWindow = window.open("/question/add/","Add Question",specs);
+                // Note: figure out how to find when the window is closed
                 return false;
             });
-        });
-        $("#addQ").click(function(){
-            var specs = "width=450,height=400,menubar=0,scrollbars=0,toolbar=0,status=0,toolbar=0,resizable=0,location=0";
-            newWindow = window.open("/question/add/","Add Question",specs);
-            // Note: figure out how to find when the window is closed
-            return false;
-        });
-        
+        }
     });
     function update(){
         $.get('/getall/', function(data){
-            table = $("#questions");
+            var table = $("#questions");
             table.html("");
             for(var x = 0; x<data.length; x++){
-                q = data[x];
+                var q = data[x];
                 table.append("<tr class='question' title='Ans: "+q.answer+"'></tr>");
-                question = $(".question").last();
+                var question = $(".question").last();
                 question.append("<td class='subject'>"+q.subject+"</td>");
                 question.append("<td class='type'>"+((q.type==0)?"MC":"SA")+"</td>");
                 question.append("<td class='text'><a href='/question/edit/"+q.id+"/'>"+q.text+"</a></td>");

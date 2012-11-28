@@ -39,15 +39,19 @@ SUBJECT_CHOICES_DICT = {
     'GG': 'Geography (NOSB)',
     'SS': 'Social Sciences (NOSB)',
 }
-QUESTION_TYPE_CHOICES = (
+QUESTION_SUBTYPE_CHOICES = (
     (0, 'Multiple Choice'),
     (1, 'Short Answer'),
+)
+QUESTION_TYPE_CHOICES = (
+    (0, 'TOSS-UP'),
+    (1, 'BONUS'),
 )
 SCORE_TYPES_CHOICES = (
     ('c', 'Correct'),
     ('w', 'Incorrect'),
-    ('ic', 'Correct Interupt'),
-    ('iw', 'Incorrect Interupt'),
+    ('ic', 'Correct Interrupt'),
+    ('iw', 'Incorrect Interrupt'),
     ('b', 'Blurt'),
 )
 
@@ -62,7 +66,7 @@ class Subject(models.Model):
 class Question(models.Model):
     creator = models.ForeignKey(User)
     subject = models.ForeignKey(Subject)
-    type = models.IntegerField(choices=QUESTION_TYPE_CHOICES, default=0)
+    type = models.IntegerField(choices=QUESTION_SUBTYPE_CHOICES, default=0)
     creation_date = models.DateTimeField(auto_now=True)
     is_used = models.BooleanField(default=False)
     text = models.CharField(max_length=500)
@@ -83,17 +87,18 @@ class Question(models.Model):
             return self.answer
         else:
             if self.answer.strip().lower() == "w":
-                return "(W) " + self.choice_w
+                return "W) " + self.choice_w
             if self.answer.strip().lower() == "x":
-                return "(X) " + self.choice_x
+                return "X) " + self.choice_x
             if self.answer.strip().lower() == "y":
-                return "(Y) " + self.choice_y
+                return "Y) " + self.choice_y
             if self.answer.strip().lower() == "z":
-                return "(Z) " + self.choice_z
+                return "Z) " + self.choice_z
 
 
 class Set(models.Model):
     questions = models.ManyToManyField(Question, through='Set_questions')
+    subjects = models.ManyToManyField(Subject)
     description = models.CharField(max_length=100)
     creation_date = models.DateTimeField(auto_now=True)
     creator = models.ForeignKey(User)
@@ -103,16 +108,20 @@ class Set(models.Model):
         return self.description
 
 
-class SetForm(forms.Form):
-    name = forms.CharField(max_length=50)
-    description = forms.CharField(max_length=200)
+class SetForm(ModelForm):
+    description = forms.CharField(max_length=200, widget=forms.Textarea)
+    num_questions = forms.IntegerField()
 
+    class Meta:
+        model = Set
+        exclude = ('is_used', 'creation_date', 'creator', 'questions')
 
 
 class Set_questions(models.Model):
     set = models.ForeignKey(Set)
-    question_id = models.ForeignKey(Question)
+    question = models.ForeignKey(Question)
     q_num = models.IntegerField()
+    q_type = models.IntegerField(choices=QUESTION_TYPE_CHOICES)
 
 
 class Round(models.Model):

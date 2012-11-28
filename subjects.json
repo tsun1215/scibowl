@@ -1,0 +1,107 @@
+[
+    {
+        "model": "qset.subject",
+        "pk": 1,
+        "fields": {
+            "name": "ES"
+        }
+    },
+    {
+        "model": "qset.subject",
+        "pk": 2,
+        "fields": {
+            "name": "A"
+        }
+    },
+    {
+        "model": "qset.subject",
+        "pk": 3,
+        "fields": {
+            "name": "P"
+        }
+    },
+    {
+        "model": "qset.subject",
+        "pk": 4,
+        "fields": {
+            "name": "C"
+        }
+    },
+    {
+        "model": "qset.subject",
+        "pk": 5,
+        "fields": {
+            "name": "M"
+        }
+    },
+    {
+        "model": "qset.subject",
+        "pk": 6,
+        "fields": {
+            "name": "B"
+        }
+    },
+    {
+        "model": "qset.subject",
+        "pk": 7,
+        "fields": {
+            "name": "E"
+        }
+    },
+    {
+        "model": "qset.subject",
+        "pk": 8,
+        "fields": {
+            "name": "OC"
+        }
+    },
+    {
+        "model": "qset.subject",
+        "pk": 9,
+        "fields": {
+            "name": "PO"
+        }
+    },
+    {
+        "model": "qset.subject",
+        "pk": 10,
+        "fields": {
+            "name": "MB"
+        }
+    },
+    {
+        "model": "qset.subject",
+        "pk": 11,
+        "fields": {
+            "name": "T"
+        }
+    },
+    {
+        "model": "qset.subject",
+        "pk": 12,
+        "fields": {
+            "name": "MP"
+        }
+    },
+    {
+        "model": "qset.subject",
+        "pk": 13,
+        "fields": {
+            "name": "GL"
+        }
+    },
+    {
+        "model": "qset.subject",
+        "pk": 14,
+        "fields": {
+            "name": "GG"
+        }
+    },
+    {
+        "model": "qset.subject",
+        "pk": 15,
+        "fields": {
+            "name": "SS"
+        }
+    }
+]

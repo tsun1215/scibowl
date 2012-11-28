@@ -1,0 +1,58 @@
+{%extends 'base.html'%}
+{%block head%}
+    <style>
+        .question{
+            font-family: "Times New Roman", Georgia, Serif;
+        }
+        .num{
+            position:absolute;
+            top:0;
+            left:0;
+        }
+        .question .qbody{
+            position: relative;
+            padding-left:2em;
+        }
+        .type{
+            text-align: center;
+        }
+        .subject{
+            font-weight: bold;
+        }
+        .sub_type{
+            font-style: italic;
+        }
+        .choices{
+            margin:1em 0;
+        }
+        .q_id{
+            display:none;
+        }
+    </style>
+{%endblock%}
+
+{%block content%}
+    <div id="content-container">
+    {%for q in questions%}
+        <div class='question'>
+            <span class='q_id'>{{q.id}}</span>
+            <p class='type'>{{q.type}}</p>        
+            <div class='qbody'>
+                <span class='num'>{{q.num}}.</span> 
+                <span class='subject'>{{q.subject}}</span> 
+                <span class='sub_type'>{{q.subtype}}</span> 
+                <span class='text'>{{q.text}}</span>
+                <div class='choices'>
+                    {%if q.subtypenum == 0%}
+                        W) {{q.w}}<br/>
+                        X) {{q.x}}<br/>
+                        Y) {{q.y}}<br/>
+                        Z) {{q.z}}<br/>
+                    {%endif%}
+                </div>
+                ANSWER: <span class='answer'>{{q.answer}}</span>
+            </div>
+        </div>
+    {%endfor%}
+    </div>
+{%endblock%}
