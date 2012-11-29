@@ -139,6 +139,7 @@ def getQuestions(request):
                 "text": escape(q.text),
                 "answer": escape(q.ans()),
                 "id": q.id,
+                "user": q.creator.get_full_name(),
             }
             if q.type == 0:
                 curr["w"] = escape(q.choice_w)
