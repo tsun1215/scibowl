@@ -92,12 +92,10 @@ def finalizeSet(request):
     if(request.method == "POST"):
         set = Set.objects.get(pk=request.POST['set_id'])
         questions = simplejson.loads(request.POST['questions'])
-        q_num = 1
         for q in questions:
             question = Question.objects.get(pk=q['id'])
-            s = Set_questions(set=set, question=question, q_num=q_num, q_type=q['type'])
+            s = Set_questions(set=set, question=question, q_num=q["q_num"], q_type=q['type'])
             s.save()
-            q_num += 1
         return HttpResponseRedirect('/')
 
 

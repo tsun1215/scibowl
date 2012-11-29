@@ -59,8 +59,8 @@
             var data = $(".question");
             for(var x = 0; x<data.length; x++){
                 var id = $(data[x]).children('.q_id').text();
-                var type = ($(data[x]).children('.type').text=="TOSS-UP")?0:1;
-                questions.push({id:id,type:type});
+                var type = ($($(data[x]).children('.type')).text()=="TOSS-UP")?0:1;
+                questions.push({id:id,type:type,q_num:(x+1)});
             }
             $("#questions").val(JSON.stringify(questions));
         });
