@@ -6,12 +6,20 @@
     }
     .type{
         width:20px;
+        text-align: center
     }
     th{
         text-align: left;
     }
+    a:visited{
+        color:blue;
+    }
+    th{
+        font-size: 1.3em;
+        border-bottom: 2px solid black;
+        padding:5px;
+    }
 </style>
-<script src="/static/js/jquery.js"></script>
 {% if user.is_authenticated %}
 <script>
     $(document).ready(function(){     
@@ -39,14 +47,14 @@
                 );
                 $("#questions .text a").click(function(){
                     var url = $(this).attr('href');            
-                    var specs = "width=450,height=400,menubar=0,scrollbars=0,toolbar=0,status=0,toolbar=0,resizable=0,location=0";
+                    var specs = "width=450,height=430,menubar=0,scrollbars=0,toolbar=0,status=0,toolbar=0,resizable=0,location=0";
                     newWindow = window.open(url,"Edit Question",specs);
                     return false;
                 });
             });
 
             $("#addQ").click(function(){
-                var specs = "width=450,height=400,menubar=0,scrollbars=0,toolbar=0,status=0,toolbar=0,resizable=0,location=0";
+                var specs = "width=450,height=430,menubar=0,scrollbars=0,toolbar=0,status=0,toolbar=0,resizable=0,location=0";
                 newWindow = window.open("/question/add/","Add Question",specs);
                 // Note: figure out how to find when the window is closed
                 return false;
@@ -80,7 +88,6 @@
 {%endblock%}
 
 {%block content%}
-    <div id="content-container">
         {%if user.is_authenticated%}
         <table id="questions">
         </table>
@@ -94,5 +101,4 @@
         cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
         proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
         {%endif%}
-    </div>
 {%endblock%}

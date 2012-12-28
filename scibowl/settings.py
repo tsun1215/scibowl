@@ -2,6 +2,7 @@
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+PROJECT_DIR = "C:/Users/2pro4u/Documents/git_projects/scibowl/"
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -59,7 +60,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = 'C:/Users/2pro4u/Dropbox/Documents/scibowl/media'
+MEDIA_ROOT = PROJECT_DIR + 'media'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -81,7 +82,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    'C:/Users/2pro4u/Dropbox/Documents/scibowl/static/',
+    PROJECT_DIR + 'static/',
 )
 
 # List of finder classes that know how to find static files in
@@ -121,7 +122,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    "C:/Users/2pro4u/Dropbox/Documents/scibowl/templates",
+    PROJECT_DIR + "templates",
 )
 
 INSTALLED_APPS = (
@@ -140,7 +141,9 @@ INSTALLED_APPS = (
     'bookkeeping',
 )
 
-LOGIN_URL="/login/"
+LOGIN_URL = "/login/"
+
+LOGIN_REDIRECT_URL = '/home/'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

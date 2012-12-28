@@ -69,7 +69,6 @@
 {%endblock%}
 
 {%block content%}
-<div id="content-container">
     <div id="question-container">
     </div>
     <form id="finalize" method="post" action="/set/finalize/">
@@ -77,5 +76,4 @@
         <input type="hidden" name="set_id" value="{{set.id}}"/>
         <input type="submit" value="Submit"/>
     </form>
-</div>
 {%endblock%}

@@ -3,51 +3,104 @@
 {%block title%}{{title}}{%endblock%}
 {%block head%}
     <script src="/static/js/jquery.js"></script>
+    <script>
+        $(document).ready(function(){   
+            if({{success}}){
+                showSuccess();
+            }         
+            if($("#id_type").val()==0){
+                $($("#id_choice_w").parent().parent("tr")).show();
+                $($("#id_choice_x").parent().parent("tr")).show();
+                $($("#id_choice_y").parent().parent("tr")).show();
+                $($("#id_choice_z").parent().parent("tr")).show();
+                $($("#id_answer").parent().parent("tr")).hide();
+                $($("#mc_answer").parent().parent("tr")).show();
+            }else{
+                $($("#id_choice_w").parent().parent("tr")).hide();
+                $($("#id_choice_x").parent().parent("tr")).hide();
+                $($("#id_choice_y").parent().parent("tr")).hide();
+                $($("#id_choice_z").parent().parent("tr")).hide();
+                $($("#id_answer").parent().parent("tr")).show();
+                $($("#mc_answer").parent().parent("tr")).hide();
+            }   
+            $("#id_type").change(function(){
+                if($(this).val()==0){
+                    $($("#id_choice_w").parent().parent("tr")).show();
+                    $($("#id_choice_x").parent().parent("tr")).show();
+                    $($("#id_choice_y").parent().parent("tr")).show();
+                    $($("#id_choice_z").parent().parent("tr")).show();
+                    $($("#id_answer").parent().parent("tr")).hide();
+                    $($("#mc_answer").parent().parent("tr")).show();
+                }else{
+                    $($("#id_choice_w").parent().parent("tr")).hide();
+                    $($("#id_choice_x").parent().parent("tr")).hide();
+                    $($("#id_choice_y").parent().parent("tr")).hide();
+                    $($("#id_choice_z").parent().parent("tr")).hide();
+                    $($("#id_answer").parent().parent("tr")).show();
+                    $($("#mc_answer").parent().parent("tr")).hide();
+                }
+            });
+            $("form").submit(function(){
+                if($("#id_type").val()==0){
+                    $("#id_answer").val($("#mc_answer").val());
+                }
+                if(opener!=null){
+                    opener.location.reload(true);
+                }
+            });
+        });
+        function closeWindow(){
+            if(opener!=null){
+                opener.location.reload(true);
+            }
+            window.close();
+        }
+        function showSuccess(){
+            $("#flyDown").slideDown(500).delay(1000).fadeOut(1000);           
+        }
+    </script>
+    <style type="text/css">
+    #content-container{
+        width:auto;
+    }
+    #nav a{
+        position:absolute;
+        right:5px;
+    }
+    #flyDown{
+        position: fixed;
+        top:0;
+        left:0;
+        right:0;
+        margin:0 auto;
+        width:150px;
+        -webkit-border-radius: 0px 0px 10px 10px;
+        border-radius: 0px 0px 10px 10px;
+        background-color: #111111;
+        color:lime;
+        border:2px solid #222222;
+        text-align: center;
+        border-top: none;
+        padding: 5px;
+        display:none;
+    }
+    #checkmark{
+        vertical-align: middle;
+        margin:0 5px;
+    }
+    </style>
+{%endblock%}
+
+{%block topbar%}
+<div id="nav">
+    <a href="javascript:closeWindow()">Close</a>
+</div>
 {%endblock%}
 
 {%block form%}
-<script>
-$(document).ready(function(){
-    if($("#id_type").val()==0){
-        $($("#id_choice_w").parent().parent("tr")).show();
-        $($("#id_choice_x").parent().parent("tr")).show();
-        $($("#id_choice_y").parent().parent("tr")).show();
-        $($("#id_choice_z").parent().parent("tr")).show();
-        $($("#id_answer").parent().parent("tr")).hide();
-        $($("#mc_answer").parent().parent("tr")).show();
-    }else{
-        $($("#id_choice_w").parent().parent("tr")).hide();
-        $($("#id_choice_x").parent().parent("tr")).hide();
-        $($("#id_choice_y").parent().parent("tr")).hide();
-        $($("#id_choice_z").parent().parent("tr")).hide();
-        $($("#id_answer").parent().parent("tr")).show();
-        $($("#mc_answer").parent().parent("tr")).hide();
-    }   
-    $("#id_type").change(function(){
-        if($(this).val()==0){
-            $($("#id_choice_w").parent().parent("tr")).show();
-            $($("#id_choice_x").parent().parent("tr")).show();
-            $($("#id_choice_y").parent().parent("tr")).show();
-            $($("#id_choice_z").parent().parent("tr")).show();
-            $($("#id_answer").parent().parent("tr")).hide();
-            $($("#mc_answer").parent().parent("tr")).show();
-        }else{
-            $($("#id_choice_w").parent().parent("tr")).hide();
-            $($("#id_choice_x").parent().parent("tr")).hide();
-            $($("#id_choice_y").parent().parent("tr")).hide();
-            $($("#id_choice_z").parent().parent("tr")).hide();
-            $($("#id_answer").parent().parent("tr")).show();
-            $($("#mc_answer").parent().parent("tr")).hide();
-        }
-    });
-    $("form").submit(function(){
-        if($("#id_type").val()==0){
-            $("#id_answer").val($("#mc_answer").val());
-        }
-        opener.location.reload(true);
-    });
-});
-</script>
+<div id="flyDown">
+        <img src='/static/images/check.png' id="checkmark" width="15px" alt="Check Mark" title="Success"/> Question added.
+    </div>
 <form method="post" action="{{action}}">
     <table>
         {%for field in form%}

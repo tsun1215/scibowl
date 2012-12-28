@@ -1,17 +1,53 @@
 html, body{
     margin: 0;
 }
+a{
+    text-decoration: none;
+}
+
 #topbar{
     position:absolute;
     top:0;
     left:0;
     right:0;
     height:30px;
+    background-color: #2D2D2D;
+    color:white;
+}
+#nav{
+    margin-left: 20px;
+    padding:2px;
+}
+#topbar #nav a{
+    color:#BBBBBB;
+    text-decoration: none;
+    margin:0 10px;
+}
+#topbar #nav a:hover{
+    color:orange;
 }
 #userOptions{
     position:absolute;
     right:20px;
+    padding:2px;
     bottom:0;
+    top:0;
+    cursor:pointer;
+}
+#userOptionsMenu{
+    color:black;
+    width:300px;
+    height:200px;
+    position:absolute;
+    right:5px;
+    top:35px;
+    border:1px dashed gray;
+    display: none;
+    padding:5px;
+    background-color: white;
+}
+.midimg{
+    vertical-align: text-bottom;
 }
 #content-container{
     width:800px;

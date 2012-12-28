@@ -1,7 +1,7 @@
 # Create your views here.
 from qset.models import QuestionForm, Question, SetForm, Subject, Set, Set_questions
 from django.http import HttpResponseRedirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.utils import simplejson
 from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
@@ -24,10 +24,20 @@ def addQuestion(request):
             q = form.save(commit=False)
             q.creator = request.user
             q.save()
-            return HttpResponseRedirect('/home/')
+            return HttpResponseRedirect('/question/add/?success=true')
     else:
         form = QuestionForm()
-    return render_to_response('qset/addquestion.html', {"form": form, "action": action, "title": "Add Question"})
+    return render_to_response('qset/addquestion.html', {"form": form, "action": action, "title": "Add Question", "success": request.GET.get("success", "false")})
+
+
+@login_required
+def removeQuestion(request, q_id):
+    question = get_object_or_404(Question, id=q_id)
+    if question.creator == request.user:
+        question.delete()
+        return HttpResponse(simplejson.dumps({"success": True}))
+    else:
+        return HttpResponseForbidden("Access Denied")
 
 
 @login_required
@@ -42,7 +52,7 @@ def editQuestion(request, q_id):
                 return HttpResponseRedirect('/home/')
         else:
             form = QuestionForm(instance=question)
-        return render_to_response('qset/addquestion.html', {"form": form, "action": action, "type": "question", "title": "Edit question"})
+        return render_to_response('qset/addquestion.html', {"form": form, "action": action, "type": "question", "title": "Edit question", "success": "false"})
     else:
         # Is the user is not the creator of the question (or staff)
         return HttpResponseRedirect('/')

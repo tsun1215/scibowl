@@ -1,0 +1,138 @@
+[
+    {
+        "pk": 8, 
+        "model": "qset.question", 
+        "fields": {
+            "creator": 1, 
+            "text": "Salt + Water = ?", 
+            "creation_date": "2012-12-28T06:19:00.604Z", 
+            "choice_w": "Salty Water", 
+            "choice_x": "Acid + Base", 
+            "is_used": false, 
+            "answer": "z", 
+            "type": 0, 
+            "choice_y": "Electrolytic Mixture", 
+            "choice_z": "Saline Solution", 
+            "subject": 4
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "qset.question", 
+        "fields": {
+            "creator": 1, 
+            "text": "Classify the type of rock that comes from earth.", 
+            "creation_date": "2012-12-28T06:18:25.524Z", 
+            "choice_w": "", 
+            "choice_x": "", 
+            "is_used": false, 
+            "answer": "None", 
+            "type": 1, 
+            "choice_y": "", 
+            "choice_z": "", 
+            "subject": 1
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "qset.question", 
+        "fields": {
+            "creator": 1, 
+            "text": "Is 2 a prime number?", 
+            "creation_date": "2012-12-28T06:17:59.292Z", 
+            "choice_w": "", 
+            "choice_x": "", 
+            "is_used": false, 
+            "answer": "Yes", 
+            "type": 1, 
+            "choice_y": "", 
+            "choice_z": "", 
+            "subject": 5
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "qset.question", 
+        "fields": {
+            "creator": 1, 
+            "text": "What kind of energy is used to power your computer?\r\n", 
+            "creation_date": "2012-12-28T06:17:38.185Z", 
+            "choice_w": "", 
+            "choice_x": "", 
+            "is_used": false, 
+            "answer": "electrical", 
+            "type": 1, 
+            "choice_y": "", 
+            "choice_z": "", 
+            "subject": 7
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "qset.question", 
+        "fields": {
+            "creator": 1, 
+            "text": "1+1=?", 
+            "creation_date": "2012-12-28T06:16:50.604Z", 
+            "choice_w": "1", 
+            "choice_x": "2", 
+            "is_used": false, 
+            "answer": "x", 
+            "type": 0, 
+            "choice_y": "3", 
+            "choice_z": "4", 
+            "subject": 5
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "qset.question", 
+        "fields": {
+            "creator": 1, 
+            "text": "Why is biology so dumb?", 
+            "creation_date": "2012-12-28T06:16:37.223Z", 
+            "choice_w": "", 
+            "choice_x": "", 
+            "is_used": false, 
+            "answer": "Its biology", 
+            "type": 1, 
+            "choice_y": "", 
+            "choice_z": "", 
+            "subject": 6
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "qset.question", 
+        "fields": {
+            "creator": 1, 
+            "text": "What is the bigger version of the small dipper?", 
+            "creation_date": "2012-12-28T06:16:23.811Z", 
+            "choice_w": "", 
+            "choice_x": "", 
+            "is_used": false, 
+            "answer": "Big Dipper", 
+            "type": 1, 
+            "choice_y": "", 
+            "choice_z": "", 
+            "subject": 2
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "qset.question", 
+        "fields": {
+            "creator": 1, 
+            "text": "What kinds of trees to rocks grow on?", 
+            "creation_date": "2012-12-28T06:15:45.703Z", 
+            "choice_w": "Apple", 
+            "choice_x": "Banana", 
+            "is_used": false, 
+            "answer": "z", 
+            "type": 0, 
+            "choice_y": "Pineapple", 
+            "choice_z": "None", 
+            "subject": 1
+        }
+    }
+]

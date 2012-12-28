@@ -1,11 +1,6 @@
-{%extends "form_base.html"%}
-
-{%block title%}Login{%endblock%}
-
-{%block form%}
-<form method="post" action="{{action}}">
+<h3>Login</h3>
+<form method="post" action="/login/?next={{next}}">
    {% csrf_token %}
    {{form.as_p}}
    <input type="submit" value="Login"/>
 </form>
-{%endblock%}
