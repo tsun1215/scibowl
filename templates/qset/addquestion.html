@@ -7,7 +7,9 @@
         $(document).ready(function(){   
             if({{success}}){
                 showSuccess();
-            }         
+            }    
+            window.innerWidth = $("#content-container").width()
+            window.innerHeight = $("#content-container").height()+30;    
             if($("#id_type").val()==0){
                 $($("#id_choice_w").parent().parent("tr")).show();
                 $($("#id_choice_x").parent().parent("tr")).show();
@@ -107,7 +109,9 @@
         <tr>
             <th>{{field.label_tag}}</th>
             <td>{{field}}</td>
-            <td>{{field.errors}}</td>
+        </tr>
+        <tr>
+            <td colspan="2">{{field.errors}}</td>
         </tr>
         {%endfor%}
         <tr>

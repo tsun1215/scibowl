@@ -1,5 +1,18 @@
+@font-face{
+    font-family:Nexa;
+    src: url('Nexa Light.otf');
+}
+@font-face{
+    font-family:sanspro;
+    src: url('SourceSansPro-Regular.otf');
+}
+@font-face{
+    font-family:raleway;
+    src: url('raleway_thin.otf');
+}
 html, body{
     margin: 0;
+    font-family: sanspro;
 }
 a{
     text-decoration: none;
@@ -13,6 +26,7 @@ a{
     height:30px;
     background-color: #2D2D2D;
     color:white;
+    font-family: sanspro;
 }
 #nav{
     margin-left: 20px;
@@ -53,4 +67,26 @@ a{
     width:800px;
     margin: 0 auto;
     margin-top: 30px;
+}
+.flyDown{
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    margin:0 auto;
+    min-width: 150px;
+    max-width:300px;
+    -webkit-border-radius: 0px 0px 10px 10px;
+    border-radius: 0px 0px 10px 10px;
+    background-color: #333333;
+    color:lime;
+    border:2px solid #222222;
+    text-align: center;
+    border-top: none;
+    padding: 5px;
+    display:none;
+}
+.flyDown #checkmark{
+    vertical-align: middle;
+    margin:0 5px;
 }

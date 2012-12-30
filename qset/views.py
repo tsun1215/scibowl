@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.utils import simplejson
 from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.html import escape
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
@@ -32,10 +33,13 @@ def addQuestion(request):
 
 @login_required
 def removeQuestion(request, q_id):
-    question = get_object_or_404(Question, id=q_id)
+    try:
+        question = Question.objects.get(pk=q_id)
+    except ObjectDoesNotExist:
+        return HttpResponse(simplejson.dumps({"success": False}))
     if question.creator == request.user:
         question.delete()
-        return HttpResponse(simplejson.dumps({"success": True}))
+        return HttpResponse(simplejson.dumps({"success": True, "q_id": q_id}))
     else:
         return HttpResponseForbidden("Access Denied")
 
