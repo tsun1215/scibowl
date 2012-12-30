@@ -5,6 +5,7 @@
 *.sql
 *.sqlite
 scibowldb
+*.pyc
 
 # OS generated files #
 ######################
