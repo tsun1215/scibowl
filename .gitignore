@@ -6,6 +6,7 @@
 *.sqlite
 scibowldb
 *.pyc
+settings.py
 
 # OS generated files #
 ######################
