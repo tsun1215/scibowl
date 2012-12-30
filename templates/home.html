@@ -75,9 +75,11 @@
                 if (ok = true){
                     $.get('/question/delete/'+q_id+"/", function(data){
                         if(data.success="true"){
-                            update();
-                            flyDown("Entry Successfully Deleted.");
+                            flyDown("Entry Successfully Deleted.",0);
+                        }else{
+                            flyDown("Delete unsuccessful.",1)
                         } 
+                        update();
                     });
                 }
             });
@@ -87,13 +89,6 @@
                 newWindow = window.open(url,"Edit Question",specs);
                 return false;
             });
-        });
-    }
-    function flyDown(msg){
-        $("body").append("<div class='flyDown'><img src='/static/images/check.png' id='checkmark' width='15px' alt='Check Mark' title='Success'/>"+msg+"</div>");
-        var flydown = $(".flyDown").last();
-        $(flydown).slideDown(500).delay(1500).fadeOut(1000, function(){
-            flydown.remove();
         });
     }
 </script>

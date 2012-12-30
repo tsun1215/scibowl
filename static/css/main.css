@@ -70,7 +70,7 @@ a{
 }
 .flyDown{
     position: fixed;
-    top:0;
+    top:30px;
     left:0;
     right:0;
     margin:0 auto;
@@ -79,12 +79,19 @@ a{
     -webkit-border-radius: 0px 0px 10px 10px;
     border-radius: 0px 0px 10px 10px;
     background-color: #333333;
-    color:lime;
     border:2px solid #222222;
     text-align: center;
     border-top: none;
     padding: 5px;
     display:none;
+}
+
+.success{
+    color:lime;
+}
+
+.fail{
+    color:red;
 }
 .flyDown #checkmark{
     vertical-align: middle;

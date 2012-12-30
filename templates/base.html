@@ -5,6 +5,7 @@
 	<title>{% block title%}Scibowl Project{%endblock%}</title>
     <link rel="stylesheet" href="/static/css/main.css"/>
     <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/main.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
             $("#userOptions").hover(function(){
@@ -20,10 +21,7 @@
                 $("#userOptionsMenu").hide();
             });
         });
-        function questionPopup(){
-            var specs = "width=450,height=430,menubar=0,scrollbars=0,toolbar=0,status=0,toolbar=0,resizable=0,location=0";
-            newWindow = window.open("/question/add/","Add Question",specs);
-        }
+        
     </script>
     {%block head%}{%endblock%}
 </head>
