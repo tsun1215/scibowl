@@ -72,7 +72,7 @@
             $(".del").click(function(){
                 var q_id = $(this).attr("data-id");
                 var ok = confirm("Are you sure you want to delete this entry?");
-                if (ok = true){
+                if (ok == true){
                     $.get('/question/delete/'+q_id+"/", function(data){
                         if(data.success="true"){
                             flyDown("Entry Successfully Deleted.",0);
