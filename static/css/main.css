@@ -65,6 +65,7 @@ a{
     display: none;
     padding:10px;
     background-color: #EEEEEE;
+    z-index:1;
 }
 #loginbox-errors{
     text-align: center;
