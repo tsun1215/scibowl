@@ -8,12 +8,13 @@ from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.html import escape
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.template import RequestContext
 
 
 @login_required
-def viewQuestions(request):
-    return render_to_response('qset/questionlist.html', {"questions": Question.objects.filter(creator=request.user)})
+def filterQuestions(request):
+    return render_to_response('qset/question_list.html', {"subjects": Subject.objects.all(), "users": User.objects.all()}, context_instance=RequestContext(request))
 
 
 @login_required
@@ -117,7 +118,6 @@ def finalizeSet(request):
 def getQuestions(request):
     if request.method == "GET":
         qlist = []
-
         # Parse GET Parameters
         kwargs = {
             "creator": request.user,
@@ -133,14 +133,14 @@ def getQuestions(request):
 
         # Allows staff to access other user's questions (not allowed for regular users)
         if request.user.is_staff and request.GET.get('creator', False):
-            kwargs['creator'] = request.GET['creator']
+            kwargs['creator'] = User.objects.get(pk=request.GET['creator'])
         elif request.user.is_staff and request.GET.get('all', False):
             del kwargs['creator']
 
         if request.GET.get("random", False):
             querydict = Question.objects.filter(**kwargs).order_by("?")
         else:
-            querydict = Question.objects.filter(**kwargs)
+            querydict = Question.objects.filter(**kwargs).order_by(request.GET.get('order', '-creation_date'))
 
         # Add questions to json object
         for q in querydict:
@@ -152,6 +152,7 @@ def getQuestions(request):
                 "answer": escape(q.ans()),
                 "id": q.id,
                 "user": q.creator.get_full_name(),
+                "used": q.is_used,
             }
             if q.type == 0:
                 curr["w"] = escape(q.choice_w)

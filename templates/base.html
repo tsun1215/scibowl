@@ -44,12 +44,13 @@
                 <a href="/home">Home</a>
                 <a href="javascript:questionPopup()">Add Question</a>
                 {%if user.is_staff%}
-                <a href="/set/add">Set Creation</a>
+                <a href="/set/add/">Set Creation</a>
+                <a href="/question/list/">View All Questions</a>
                 {%endif%}
             </div>
             <div id="userOptions">
                 {%if user.is_authenticated%}
-                Logged in as {{user.username}} <img class="midimg" src="/static/images/arrow_down.png"/>
+                Logged in as <strong>{{user.username}}</strong> <img class="midimg" src="/static/images/arrow_down.png"/>
                 {%else%}
                 <a>Login</a>
                 {%endif%}

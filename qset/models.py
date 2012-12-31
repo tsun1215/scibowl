@@ -6,21 +6,21 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 SUBJECT_CHOICES = (
-    ('ES', 'Earth Science'),
     ('A', 'Astronomy'),
-    ('P', 'Physics'),
-    ('C', 'Chemistry'),
-    ('M', 'Math'),
     ('B', 'Biology'),
+    ('C', 'Chemistry'),
     ('E', 'Energy'),
-    ('OC', 'Chemistry (NOSB)'),
-    ('PO', 'Physical Oceanography(NOSB)'),
-    ('MB', 'Marine Biology (NOSB)'),
-    ('T', 'Technology (NOSB)'),
-    ('MP', 'Marine Policy (NOSB)'),
-    ('GL', 'Geology (NOSB)'),
+    ('ES', 'Earth Science'),
     ('GG', 'Geography (NOSB)'),
+    ('GL', 'Geology (NOSB)'),
+    ('M', 'Math'),
+    ('MB', 'Marine Biology (NOSB)'),
+    ('MP', 'Marine Policy (NOSB)'),
+    ('OC', 'Chemistry (NOSB)'),
+    ('P', 'Physics'),
+    ('PO', 'Physical Oceanography(NOSB)'),
     ('SS', 'Social Sciences (NOSB)'),
+    ('T', 'Technology (NOSB)'),
 )
 SUBJECT_CHOICES_DICT = {
     'ES': 'Earth Science',

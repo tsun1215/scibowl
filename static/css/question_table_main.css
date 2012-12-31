@@ -1,0 +1,46 @@
+#questions{
+    width:100%;
+    border-spacing: 0px 0px;
+}
+.type{
+    width:20px;
+    text-align: center
+}
+td{
+ margin:0px;
+ border:none; 
+}
+a:visited{
+    color:black;
+}
+a{
+    color:black;
+}
+a:hover{
+    color:blue;
+    text-decoration: underline;
+}
+th{
+    text-align: left;
+    font-size: 1.3em;
+    border-bottom: 2px solid black;
+    padding:5px;
+}
+.del{
+    float:right;
+    display:none;
+    opacity: 0.4;
+    cursor: pointer;
+}
+.subject{
+    width:150px;
+}
+.question td{
+    border-bottom: 1px solid #DDDDDD;
+}
+.orderable{
+    cursor: pointer;        
+}
+.orderable:hover{
+    background-color: #EEEEEE;
+}

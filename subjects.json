@@ -1,105 +1,105 @@
 [
     {
         "model": "qset.subject",
-        "pk": 1,
+        "pk": 5,
         "fields": {
             "name": "ES"
         }
     },
     {
         "model": "qset.subject",
-        "pk": 2,
+        "pk": 1,
         "fields": {
             "name": "A"
         }
     },
     {
         "model": "qset.subject",
-        "pk": 3,
+        "pk": 12,
         "fields": {
             "name": "P"
         }
     },
     {
         "model": "qset.subject",
-        "pk": 4,
+        "pk": 3,
         "fields": {
             "name": "C"
         }
     },
     {
         "model": "qset.subject",
-        "pk": 5,
+        "pk": 8,
         "fields": {
             "name": "M"
         }
     },
     {
         "model": "qset.subject",
-        "pk": 6,
+        "pk": 2,
         "fields": {
             "name": "B"
         }
     },
     {
         "model": "qset.subject",
-        "pk": 7,
+        "pk": 4,
         "fields": {
             "name": "E"
         }
     },
     {
         "model": "qset.subject",
-        "pk": 8,
+        "pk": 11,
         "fields": {
             "name": "OC"
         }
     },
     {
         "model": "qset.subject",
-        "pk": 9,
+        "pk": 13,
         "fields": {
             "name": "PO"
         }
     },
     {
         "model": "qset.subject",
-        "pk": 10,
+        "pk": 9,
         "fields": {
             "name": "MB"
         }
     },
     {
         "model": "qset.subject",
-        "pk": 11,
+        "pk": 15,
         "fields": {
             "name": "T"
         }
     },
     {
         "model": "qset.subject",
-        "pk": 12,
+        "pk": 10,
         "fields": {
             "name": "MP"
         }
     },
     {
         "model": "qset.subject",
-        "pk": 13,
+        "pk": 7,
         "fields": {
             "name": "GL"
         }
     },
     {
         "model": "qset.subject",
-        "pk": 14,
+        "pk": 6,
         "fields": {
             "name": "GG"
         }
     },
     {
         "model": "qset.subject",
-        "pk": 15,
+        "pk": 14,
         "fields": {
             "name": "SS"
         }

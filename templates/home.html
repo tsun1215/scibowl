@@ -1,49 +1,16 @@
 {%extends 'base.html'%}
 {%block head%}
-<style>
-    #questions{
-        width:100%;
-        border-spacing: 0px 0px;
-    }
-    .type{
-        width:20px;
-        text-align: center
-    }
-    td{
-       margin:0px;
-       border:none; 
-    }
-    a:visited{
-        color:black;
-    }
-    a{
-        color:black;
-    }
-    a:hover{
-        color:blue;
-        text-decoration: underline;
-    }
-    th{
-        text-align: left;
-        font-size: 1.3em;
-        border-bottom: 2px solid black;
-        padding:5px;
-    }
-    .del{
-        float:right;
-        display:none;
-        opacity: 0.4;
-        cursor: pointer;
-    }
-    .subject{
-        width:150px;
-    }
-    .question td{
-        border-bottom: 1px solid #DDDDDD;
+<link rel="stylesheet" type="text/css" href="/static/css/question_table_main.css"/>
+<style>    
+    header{
+        background-color: #EEEEEE;
+        text-align: center;
+        padding:10px;
     }
 </style>
 {% if user.is_authenticated %}
 <script>
+    var currOrder="";
     $(document).ready(function(){     
         if(opener!=null){
             window.close();
@@ -51,11 +18,14 @@
             update();
         }
     });
-    function update(){
-        $.get('/getall/', function(data){
+    function update(order=""){
+        $.get('/getall/?'+order, function(data){
             var table = $("#questions");
+            $(".question").unbind();
+            $(".del").unbind();
+            $("#questions .text a").unbind();
             table.html("");
-            table.append("<tr><th>Subject</th><th>Type</th><th>Question</th></tr>");
+            table.append("<tr><th class='orderable' data-order='subject'>Subject</th><th class='orderable' data-order='type'>Type</th><th>Question</th></tr>");
             for(var x = 0; x<data.length; x++){
                 var q = data[x];
                 table.append("<tr class='question' title='Ans: "+q.answer+"'></tr>");
@@ -64,6 +34,15 @@
                 question.append("<td class='type'>"+((q.type==0)?"MC":"SA")+"</td>");
                 question.append("<td class='text'><a href='/question/edit/"+q.id+"/'>"+q.text+"</a><img class='del' data-id='"+q.id+"' src='/static/images/trash.png'/></td>");
             }    
+            $(".orderable").click(function(){
+                var temp = $(this).attr("data-order");
+                if(currOrder.trim() == temp.trim()){
+                    currOrder = "-"+currOrder;
+                }else{
+                    currOrder = temp;
+                }
+                update("order="+currOrder);
+            });
             $(".question").hover(
                 function(){
                     $(this).css('background-color','#BFEDFF');
@@ -110,6 +89,9 @@
 
 {%block content%}
         {%if user.is_authenticated%}
+        <header>
+            <h1>My Questions</h1>
+        </header>
         <table id="questions">
         </table>
         {%else%}
