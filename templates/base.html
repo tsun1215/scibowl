@@ -8,17 +8,29 @@
     <script src="/static/js/main.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
-            $("#userOptions").hover(function(){
-                $("#userOptions").css("color","lightblue");
-            },
-            function(){
-                $("#userOptions").css("color","white");
-            });
             $("#userOptions").toggle(function(){
                 $("#userOptionsMenu").show();
             },
             function(){
                 $("#userOptionsMenu").hide();
+            });
+            $("#login-form").submit(function(){
+                if($("#id_username").val().trim()==""){
+                    $("#loginbox-errors").html("").append("Please enter a username");
+                    return false;
+                }
+                if($("#id_password").val().trim()==""){
+                    $("#loginbox-errors").html("").append("Please enter a password");
+                    return false;
+                }
+                $.post("/ajax/login/", $(this).serialize(), function(response){
+                    if(response.success){
+                        window.location.reload();
+                    }else{
+                        $("#loginbox-errors").text(response.error_msg);
+                    }
+                });
+                return false;
             });
         });
         
@@ -39,18 +51,24 @@
                 {%if user.is_authenticated%}
                 Logged in as {{user.username}} <img class="midimg" src="/static/images/arrow_down.png"/>
                 {%else%}
-                <button>Login</button>
+                <a>Login</a>
                 {%endif%}
             </div>
-            <div id="userOptionsMenu">
+            <div id="userOptionsMenu" class="triangle-isosceles top">
                 {%if user.is_authenticated%}
-                <button onclick="window.location.href='/logout/'">Logout</button>
+                <div id="user-button-container">
+                    <button onclick="window.location.href='/logout/'">Logout</button>
+                </div>
                 {%else%}
                 <div id="loginbox">
+                    <div id="loginbox-errors" class="error">
+                    </div>
+                    <form id="login-form">
+                       <p><label for="id_username">Username:</label> <input type="text" maxlength="30" name="username" id="id_username"></p>
+                       <p><label for="id_password">Password:</label> <input type="password" id="id_password" name="password"></p>
+                       <input type="submit" value="Login">
+                   </form>
                 </div>
-                <script type="text/javascript">
-                    $("#loginbox").load("/login/?next=/home/");
-                </script>
                 {%endif%}
             </div>
         {%endblock%}

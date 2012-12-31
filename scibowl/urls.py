@@ -29,6 +29,7 @@ urlpatterns = patterns('',
     url(r'^set/add/$', 'qset.views.addSet'),
     url(r'^set/finalize/$', 'qset.views.finalizeSet'),
     url(r'^set/(?P<set_id>\d+)/$', 'qset.views.viewSet'),
+    url(r'^ajax/login/$', 'usermanage.views.ajaxLogin'),
 )
 
 urlpatterns += patterns('bookkeeping.views',

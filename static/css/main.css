@@ -32,7 +32,7 @@ a{
     margin-left: 20px;
     padding:2px;
 }
-#topbar #nav a{
+#topbar #nav a, #userOptions a{
     color:#BBBBBB;
     text-decoration: none;
     margin:0 10px;
@@ -40,9 +40,15 @@ a{
 #topbar #nav a:hover{
     color:orange;
 }
+#userOptions a:hover{
+    color:lightBlue;
+}
+#userOptions:hover{
+    color:lightBlue;
+}
 #userOptions{
     position:absolute;
-    right:20px;
+    right:30px;
     padding:2px;
     bottom:0;
     top:0;
@@ -51,17 +57,46 @@ a{
 #userOptionsMenu{
     color:black;
     width:300px;
-    height:200px;
+    min-height: 30px;
     position:absolute;
     right:5px;
     top:35px;
-    border:1px dashed gray;
+    border:1px solid gray;
     display: none;
-    padding:5px;
-    background-color: white;
+    padding:10px;
+    background-color: #EEEEEE;
+}
+#loginbox-errors{
+    text-align: center;
+}
+#user-button-container{
+    position:absolute;
+    bottom:10px;
+}
+button, input[type=button], input[type=submit]{
+    background-color: #E3E3E3;
+    border: 1px solid #BBBBBB;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 0 1px 1px #F6F6F6 inset;
+    color:#333333;
+    padding: 5px 20px;
+    text-shadow: 0 1px 0 #FFFFFF;
+    text-align: center;
+    font-variant: small-caps;
+}
+button:hover, input[type=button]:hover, input[type=submit]:hover{
+    background-color: #D9D9D9;
+    box-shadow: 0 0 1px 1px #EAEAEA inset;
+    cursor:pointer;
+    color:#222222;
+}
+button:active, input[type=button]:active, input[type=submit]:active{
+    background: none repeat scroll 0 0 #D0D0D0;
+    box-shadow: 0 0 1px 1px #E3E3E3 inset;
+    color: #000000;
 }
 .midimg{
-    vertical-align: text-bottom;
+    vertical-align: middle;
 }
 #content-container{
     width:800px;
@@ -90,10 +125,49 @@ a{
     color:lime;
 }
 
+.error{
+    color:red;
+}
+
 .fail{
     color:red;
 }
 .flyDown #checkmark{
     vertical-align: middle;
     margin:0 5px;
+}
+
+
+.triangle-isosceles {
+    position:relative;
+    padding:15px;
+    margin:1em 0 3em;
+    color:#000;
+    background:#DDDDDD; /* default background for browsers without gradient support */
+    /* css3 */
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
+    border-radius:10px;
+}
+
+.triangle-isosceles:after {
+    content:"";
+    position:absolute;
+    bottom:-15px; /* value = - border-top-width - border-bottom-width */
+    left:50px; /* controls horizontal position */
+    border-width:15px 15px 0; /* vary these values to change the angle of the vertex */
+    border-style:solid;
+    border-color:#EEEEEE transparent;
+    /* reduce the damage in FF3.0 */
+    display:block; 
+    width:0;
+}
+
+.triangle-isosceles.top:after {
+    top:-15px; /* value = - border-top-width - border-bottom-width */
+    right:40px; /* controls horizontal position */
+    bottom:auto;
+    left:auto;
+    border-width:0 15px 15px; /* vary these values to change the angle of the vertex */
+    border-color:#EEEEEE transparent;
 }

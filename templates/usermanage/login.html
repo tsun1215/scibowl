@@ -1,6 +1,16 @@
-<h3>Login</h3>
+{%extends 'form_base.html'%}
+{%block head%}
+<style type="text/css">
+    #userOptions{
+        display:none;
+    }
+</style>
+{%endblock%}
+{%block form%}
+<h1>Login</h1>
 <form method="post" action="/login/?next={{next}}">
    {% csrf_token %}
    {{form.as_p}}
    <input type="submit" value="Login"/>
 </form>
+{%endblock%}

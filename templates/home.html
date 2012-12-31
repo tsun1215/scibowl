@@ -3,18 +3,28 @@
 <style>
     #questions{
         width:100%;
+        border-spacing: 0px 0px;
     }
     .type{
         width:20px;
         text-align: center
     }
-    th{
-        text-align: left;
+    td{
+       margin:0px;
+       border:none; 
     }
     a:visited{
+        color:black;
+    }
+    a{
+        color:black;
+    }
+    a:hover{
         color:blue;
+        text-decoration: underline;
     }
     th{
+        text-align: left;
         font-size: 1.3em;
         border-bottom: 2px solid black;
         padding:5px;
@@ -27,6 +37,9 @@
     }
     .subject{
         width:150px;
+    }
+    .question td{
+        border-bottom: 1px solid #DDDDDD;
     }
 </style>
 {% if user.is_authenticated %}
@@ -53,7 +66,7 @@
             }    
             $(".question").hover(
                 function(){
-                    $(this).css('background-color','lightBlue');
+                    $(this).css('background-color','#BFEDFF');
                     $($(this).children(".text").children(".del")).show();
                 }, 
                 function(){
