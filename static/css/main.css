@@ -1,14 +1,14 @@
 @font-face{
     font-family:Nexa;
-    src: url('/static/css/Nexa Light.otf');
+    src: url('Nexa Light.otf');
 }
 @font-face{
     font-family:sanspro;
-    src: url('/static/css/SourceSansPro-Regular.otf');
+    src: url('SourceSansPro-Regular.otf');
 }
 @font-face{
     font-family:raleway;
-    src: url('/static/css/raleway_thin.otf');
+    src: url('raleway_thin.otf');
 }
 html, body{
     margin: 0;
