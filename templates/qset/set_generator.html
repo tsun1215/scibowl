@@ -33,7 +33,7 @@
 <script>
     var template = "<div class='question'><span class='q_id'></span><p class='type'></p><div class='num'></div> <div class='qbody'><span class='subject'></span> <span class='sub_type'></span> <span class='text'></span><div class='choices'></div><span class='answer'></span></div></div>";
     $(document).ready(function(){
-        $.get("/getall/?all=true&random=true", function(data){
+        $.get("/getall/?all=true&random=true&num={{num}}", function(data){
             var container = $("#question-container");
             for(var x=0; x<data.length; x++){
                 var question = data[x];

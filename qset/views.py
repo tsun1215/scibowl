@@ -142,6 +142,9 @@ def getQuestions(request):
         else:
             querydict = Question.objects.filter(**kwargs).order_by(request.GET.get('order', '-creation_date'))
 
+        if request.GET.get("num", False):
+            querydict = querydict[:request.GET.get('num')]
+
         # Add questions to json object
         for q in querydict:
             curr = {
