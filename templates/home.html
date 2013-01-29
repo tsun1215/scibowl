@@ -25,14 +25,15 @@
             $(".del").unbind();
             $("#questions .text a").unbind();
             table.html("");
-            table.append("<tr><th class='orderable' data-order='subject'>Subject</th><th class='orderable' data-order='type'>Type</th><th>Question</th></tr>");
+            table.append("<tr><th class='orderable' data-order='subject'>Subject</th><th class='orderable' data-order='type'>Type</th><th>Question</th><th></th></tr>");
             for(var x = 0; x<data.length; x++){
                 var q = data[x];
                 table.append("<tr class='question' title='Ans: "+q.answer+"'></tr>");
                 var question = $(".question").last();
                 question.append("<td class='subject'>"+q.subject+"</td>");
                 question.append("<td class='type'>"+((q.type==0)?"MC":"SA")+"</td>");
-                question.append("<td class='text'><a href='/question/edit/"+q.id+"/'>"+q.text+"</a><img class='del' data-id='"+q.id+"' src='/static/images/trash.png'/></td>");
+                question.append("<td class='text'><a href='/question/edit/"+q.id+"/'>"+q.text+"</a></td>");
+                question.append("<td class='options'><img class='del icons' data-id='"+q.id+"' src='/static/images/trash.png'/></td>")
             }    
             $(".orderable").click(function(){
                 var temp = $(this).attr("data-order");
@@ -46,14 +47,14 @@
             $(".question").hover(
                 function(){
                     $(this).css('background-color','#BFEDFF');
-                    $($(this).children(".text").children(".del")).show();
+                    $($(this).children(".options").children(".icons")).show();
                 }, 
                 function(){
                     $(this).css('background-color','transparent');
-                    $($(this).children(".text").children(".del")).hide();
+                    $($(this).children(".options").children(".icons")).hide();
                 }
             );
-            $(".del").hover(
+            $(".icons").hover(
                 function(){
                     $(this).css("opacity",1);
                 },

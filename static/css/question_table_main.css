@@ -26,8 +26,7 @@ th{
     border-bottom: 2px solid black;
     padding:5px;
 }
-.del{
-    float:right;
+.del,.edit{
     display:none;
     opacity: 0.4;
     cursor: pointer;
@@ -43,4 +42,13 @@ th{
 }
 .orderable:hover{
     background-color: #EEEEEE;
+}
+.icons{
+    height:18px;
+}
+.options{
+    width:40px;
+    text-align: center;
+    vertical-align: middle;
+    height:25px;
 }

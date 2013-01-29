@@ -85,7 +85,7 @@
             $(".del").unbind();
             $("#questions .text a").unbind();
             table.html("");
-            table.append("<tr><th class='orderable' data-order='subject'>Subject</th><th class='orderable' data-order='type'>Type</th><th class='orderable' data-order='creator'>User</th><th>Question</th><th class='orderable' data-order='is_used'>Used</th></tr>");
+            table.append("<tr><th class='orderable' data-order='subject'>Subject</th><th class='orderable' data-order='type'>Type</th><th class='orderable' data-order='creator'>User</th><th>Question</th><th></th><th class='orderable' data-order='is_used'>Used</th></tr>");
             for(var x = 0; x<data.length; x++){
                 var q = data[x];
                 table.append("<tr class='question' title='Ans: "+q.answer+"'></tr>");
@@ -93,7 +93,8 @@
                 question.append("<td class='subject'>"+q.subject+"</td>");
                 question.append("<td class='type'>"+((q.type==0)?"MC":"SA")+"</td>");
                 question.append("<td class='user'>"+q.user+"</td>");
-                question.append("<td class='text'><a href='/question/edit/"+q.id+"/'>"+q.text+"</a><img class='del' data-id='"+q.id+"' src='/static/images/trash.png'/></td>");
+                question.append("<td class='text'>"+q.text+"</td>");
+                question.append("<td class='options'><img class='edit icons' data-id='"+q.id+"' src='/static/images/edit.png'/><img class='del icons' data-id='"+q.id+"' src='/static/images/trash.png'/></td>");
                 question.append("<td class='used'>"+((q.used==1)?"<img height='15px' src='/static/images/check.png'/>":"<img height='15px' src='/static/images/cancel.png'/>")+"</td>");
             }    
             $(".orderable").click(function(){
@@ -108,14 +109,14 @@
             $(".question").hover(
                 function(){
                     $(this).css('background-color','#BFEDFF');
-                    $($(this).children(".text").children(".del")).show();
+                    $($(this).children(".options").children(".icons")).show();
                 }, 
                 function(){
                     $(this).css('background-color','transparent');
-                    $($(this).children(".text").children(".del")).hide();
+                    $($(this).children(".options").children(".icons")).hide();
                 }
             );
-            $(".del").hover(
+            $(".icons").hover(
                 function(){
                     $(this).css("opacity",1);
                 },
@@ -136,6 +137,13 @@
                         update();
                     });
                 }
+            });
+            $(".edit").click(function(){
+                var q_id = $(this).attr("data-id");
+                var url = "/question/edit/"+q_id+"/"
+                var specs = "width=450,height=500,menubar=0,scrollbars=0,toolbar=0,status=0,toolbar=0,resizable=0,location=0";
+                newWindow = window.open(url,"Edit Question",specs);
+                return false;
             });
             $("#questions .text a").click(function(){
                 var url = $(this).attr('href');            
