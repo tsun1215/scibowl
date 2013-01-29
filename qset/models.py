@@ -102,8 +102,9 @@ class Question(models.Model):
 
 class Set(models.Model):
     questions = models.ManyToManyField(Question, through='Set_questions')
+    name = models.CharField(max_length=100)
     subjects = models.ManyToManyField(Subject)
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=1000)
     creation_date = models.DateTimeField(auto_now=True)
     creator = models.ForeignKey(User)
     is_used = models.BooleanField(default=False)
@@ -113,8 +114,10 @@ class Set(models.Model):
 
 
 class SetForm(ModelForm):
-    description = forms.CharField(max_length=200, widget=forms.Textarea)
-    num_questions = forms.IntegerField()
+    description = forms.CharField(max_length=200, widget=forms.Textarea, help_text='A meaningful description to differentiate from other sets.')
+    num_questions = forms.IntegerField(min_value=1, max_value=100, label="Number of Questions")
+    name = forms.CharField(help_text='A short name to identify the set.')
+    subjects = forms.MultipleChoiceField(choices=SUBJECT_CHOICES, help_text='Subjects covered by set. (Hold down "Ctrl" to select more than one)')
 
     class Meta:
         model = Set

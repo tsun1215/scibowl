@@ -75,7 +75,7 @@ def addSet(request):
             return render_to_response('qset/set_generator.html', {"num": request.POST['num_questions'], "set": new_set})
     else:
         form = SetForm()
-    return render_to_response('form_base.html', {"form": form, "action": action, "title": "Add Question"})
+    return render_to_response('qset/set_creation.html', {"form": form, "action": action, "title": "Add Question"}, context_instance=RequestContext(request))
 
 
 @login_required

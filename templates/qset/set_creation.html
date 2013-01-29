@@ -1,0 +1,74 @@
+{%extends "base.html"%}
+{%block head%}
+<style type="text/css">
+    #id_subjects{
+        vertical-align: top;
+        height:165px;
+    }
+    #id_subjects, #id_description, #id_name{
+        width:300px;
+    }
+    textarea{
+        vertical-align: top;
+        resize: vertical;
+        height:80px;
+    }
+    h1{
+        background-color: #EEEEEE;
+        text-align: center;
+        padding:10px;
+    }
+    #id_num_questions{
+        width:30px;
+    }
+    .labels{
+        font-size: 1.2em;
+        padding:5px;
+        text-align: right;
+        vertical-align: top;
+    }
+    table{
+        width:600px;
+        margin: 0 auto;        
+    }
+    #form-container{
+        border:1px dashed green;
+        padding:10px;
+    }
+    #form-container h2{
+        margin: 0px;
+    }
+    .fields{
+        padding:5px;
+    }
+    input[type=submit]{
+        margin:20px 0px;
+        font-weight: bold;
+    }
+    .help_text{
+        font-size: .7em;
+        color:gray;
+        width:75px;
+    }
+</style>
+{%endblock%}
+
+{%block content%}
+    <h1>Set Creation</h1>   
+    <form method="post">
+        <div id="form-container">
+            <h2>Options</h2>
+            <table>
+                {%for field in form%}
+                    <tr>
+                        <td class="labels">{{field.label_tag}}</td>
+                        <td class="fields">{{field}}</td>
+                        <td class="help_text">{{field.help_text}}</td>
+                    </tr>
+                {%endfor%}
+            </table>
+        </div>
+        <input type="submit" value="Submit"/> 
+    </form>      
+    
+{%endblock%}
