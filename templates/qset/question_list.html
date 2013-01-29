@@ -94,7 +94,7 @@
                 question.append("<td class='type'>"+((q.type==0)?"MC":"SA")+"</td>");
                 question.append("<td class='user'>"+q.user+"</td>");
                 question.append("<td class='text'><a href='/question/edit/"+q.id+"/'>"+q.text+"</a><img class='del' data-id='"+q.id+"' src='/static/images/trash.png'/></td>");
-                question.append("<td class='used'>"+((q.used)?"<img height='15px' src='/static/images/check.png'/>":"<img height='15px' src='/static/images/cancel.png'/>")+"</td>");
+                question.append("<td class='used'>"+((q.used==1)?"<img height='15px' src='/static/images/check.png'/>":"<img height='15px' src='/static/images/cancel.png'/>")+"</td>");
             }    
             $(".orderable").click(function(){
                 var temp = $(this).attr("data-order");

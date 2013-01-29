@@ -68,7 +68,11 @@ class Question(models.Model):
     subject = models.ForeignKey(Subject)
     type = models.IntegerField(choices=QUESTION_SUBTYPE_CHOICES, default=0)
     creation_date = models.DateTimeField(auto_now=True)
-    is_used = models.BooleanField(default=False)
+    # is_used:
+    #   0: unused
+    #   1: used
+    #   2: holding
+    is_used = models.IntegerField(default=0)
     text = models.CharField(max_length=500)
     choice_w = models.CharField(max_length=100, blank=True)
     choice_x = models.CharField(max_length=100, blank=True)
