@@ -18,7 +18,7 @@
             update();
         }
     });
-    function update(order=""){
+    function update(order){
         $.get('/getall/?'+order, function(data){
             var table = $("#questions");
             $(".question").unbind();

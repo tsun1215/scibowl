@@ -6,22 +6,8 @@
     .question{
         font-family: "Times New Roman", Georgia, Serif;
     }
-    .num{
-        display:inline-block;
-        vertical-align: top;
-    }
-    .question .qbody{
-        display:inline-block;
-    }
     .type{
-        text-align: center;
-
-    }
-    .subject{
-        font-weight: bold;
-    }
-    .sub_type{
-        font-style: italic;
+        margin:20px 0;
     }
     .choices{
         margin:1em 0;
@@ -29,16 +15,37 @@
     .q_id{
         display:none;
     }
+    #content-container{
+        margin-top:60px;
+    }
 </style>
 <script>
-    var template = "<div class='question'><span class='q_id'></span><p class='type'></p><div class='num'></div> <div class='qbody'><span class='subject'></span> <span class='sub_type'></span> <span class='text'></span><div class='choices'></div><span class='answer'></span></div></div>";
+    var template = "\
+    <div class='question'> \
+        <span class='q_id'></span> \
+        <center class='type'></center> \
+        <div class='qbody'> \
+            <span class='num'></span> \
+            <strong class='subject'></strong> \
+            <em class='sub_type'></em> \
+            <span class='text'></span> \
+            <div class='choices'></div> \
+            <span class='answer'></span> \
+        </div> \
+    </div>";
+    var subjects = "{{subjects}}";
+    var toss_up_round = Boolean("{{toss_up_round}}");
     $(document).ready(function(){
-        $.get("/getall/?all=true&random=true&num={{num}}", function(data){
+        $.get("/getall/?all=true&random=true&num={{num}}&subject={{subjects}}", function(data){
             var container = $("#question-container");
             for(var x=0; x<data.length; x++){
                 var question = data[x];
                 container.append(template);
-                $('.question .type').last().text((x%2==0)?"TOSS-UP":"BONUS");
+                if(toss_up_round){
+                    $('.question .type').last().text("TOSS-UP");
+                }else{
+                    $('.question .type').last().text((x%2==0)?"TOSS-UP":"BONUS");                    
+                }
                 $('.question .num').last().text((x+1)+".");
                 $('.question .subject').last().text(question.subject);
                 $('.question .sub_type').last().text((question.type==0)?"Multiple Choice":"Short Answer");
@@ -49,8 +56,8 @@
                     choices.append("Y) "+question.y+"<br/>");
                     choices.append("Z) "+question.z+"<br/>");
                 }
-                $('.question .text').last().text(question.text);
-                $('.question .answer').last().text("ANSWER: "+question.answer);
+                $('.question .text').last().html(question.text);
+                $('.question .answer').last().html("ANSWER: "+question.answer);
                 $('.question .q_id').last().text(question.id);
             }
         });
@@ -59,7 +66,7 @@
             var data = $(".question");
             for(var x = 0; x<data.length; x++){
                 var id = $(data[x]).children('.q_id').text();
-                var type = ($($(data[x]).children('.type')).text()=="TOSS-UP")?0:1;
+                var type = ($($(data[x]).children('.type')).text()=="BONUS")?1:0;
                 questions.push({id:id,type:type,q_num:(x+1)});
             }
             $("#questions").val(JSON.stringify(questions));

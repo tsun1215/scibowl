@@ -11,16 +11,16 @@ SUBJECT_CHOICES = (
     ('C', 'Chemistry'),
     ('E', 'Energy'),
     ('ES', 'Earth Science'),
-    ('GG', 'Geography (NOSB)'),
-    ('GL', 'Geology (NOSB)'),
+    ('GG', 'Ocean Geography'),
+    ('GL', 'Ocean Geology'),
     ('M', 'Math'),
-    ('MB', 'Marine Biology (NOSB)'),
-    ('MP', 'Marine Policy (NOSB)'),
-    ('OC', 'Chemistry (NOSB)'),
+    ('MB', 'Marine Biology'),
+    ('MP', 'Marine Policy'),
+    ('OC', 'Ocean Chemistry'),
     ('P', 'Physics'),
-    ('PO', 'Physical Oceanography(NOSB)'),
-    ('SS', 'Social Sciences (NOSB)'),
-    ('T', 'Technology (NOSB)'),
+    ('PO', 'Physical Oceanography'),
+    ('SS', 'Ocean Social Sciences'),
+    ('T', 'Technology'),
 )
 SUBJECT_CHOICES_DICT = {
     'ES': 'Earth Science',
@@ -30,14 +30,14 @@ SUBJECT_CHOICES_DICT = {
     'M': 'Math',
     'B': 'Biology',
     'E': 'Energy',
-    'OC': 'Chemistry (NOSB)',
-    'PO': 'Physical Oceanography (NOSB)',
-    'MB': 'Marine Biology (NOSB)',
-    'T': 'Technology (NOSB)',
-    'MP': 'Marine Policy (NOSB)',
-    'GL': 'Geology (NOSB)',
-    'GG': 'Geography (NOSB)',
-    'SS': 'Social Sciences (NOSB)',
+    'OC': 'Ocean Chemistry',
+    'PO': 'Physical Oceanography',
+    'MB': 'Marine Biology',
+    'T': 'Technology',
+    'MP': 'Marine Policy',
+    'GL': 'Ocean Geology',
+    'GG': 'Ocean Geography',
+    'SS': 'Ocean Social Sciences',
 }
 QUESTION_SUBTYPE_CHOICES = (
     (0, 'Multiple Choice'),
@@ -117,7 +117,8 @@ class SetForm(ModelForm):
     description = forms.CharField(max_length=200, widget=forms.Textarea, help_text='A meaningful description to differentiate from other sets.')
     num_questions = forms.IntegerField(min_value=1, max_value=100, label="Number of Questions")
     name = forms.CharField(help_text='A short name to identify the set.')
-    subjects = forms.MultipleChoiceField(choices=SUBJECT_CHOICES, help_text='Subjects covered by set. (Hold down "Ctrl" to select more than one)')
+    subjects = forms.ModelMultipleChoiceField(queryset=Subject.objects.all(), help_text='Subjects covered by set. (Hold down "Ctrl" to select more than one)')
+    toss_up = forms.BooleanField(label="Toss-Up Only")
 
     class Meta:
         model = Set

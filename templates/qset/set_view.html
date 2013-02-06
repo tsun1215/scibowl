@@ -4,29 +4,17 @@
         .question{
             font-family: "Times New Roman", Georgia, Serif;
         }
-        .num{
-            position:absolute;
-            top:0;
-            left:0;
-        }
-        .question .qbody{
-            position: relative;
-            padding-left:2em;
-        }
         .type{
-            text-align: center;
-        }
-        .subject{
-            font-weight: bold;
-        }
-        .sub_type{
-            font-style: italic;
+            margin:20px 0;
         }
         .choices{
             margin:1em 0;
         }
         .q_id{
             display:none;
+        }
+        #content-container{
+            margin-top:60px;
         }
     </style>
 {%endblock%}
@@ -35,11 +23,11 @@
     {%for q in questions%}
         <div class='question'>
             <span class='q_id'>{{q.id}}</span>
-            <p class='type'>{{q.type}}</p>        
+            <center class='type'>{{q.type}}</center>        
             <div class='qbody'>
                 <span class='num'>{{q.num}}.</span> 
-                <span class='subject'>{{q.subject}}</span> 
-                <span class='sub_type'>{{q.subtype}}</span> 
+                <strong class='subject'>{{q.subject}}</strong> 
+                <em class='sub_type'>{{q.subtype}}</em> 
                 <span class='text'>{{q.text}}</span>
                 <div class='choices'>
                     {%if q.subtypenum == 0%}

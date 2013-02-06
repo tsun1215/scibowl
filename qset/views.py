@@ -10,6 +10,7 @@ from django.utils.html import escape
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.template import RequestContext
+from django.db.models import Q
 
 
 @login_required
@@ -72,7 +73,11 @@ def addSet(request):
             new_set = form.save(commit=False)
             new_set.creator = request.user
             new_set.save()
-            return render_to_response('qset/set_generator.html', {"num": request.POST['num_questions'], "set": new_set})
+            new_set.subjects = form.cleaned_data['subjects']
+            subjects = ""
+            for x in new_set.subjects.all():
+                subjects += str(x.id) + ","
+            return render_to_response('qset/set_generator.html', {"num": request.POST['num_questions'], "set": new_set, "subjects": subjects.rstrip(','), "toss_up_round": form.cleaned_data['toss_up']})
     else:
         form = SetForm()
     return render_to_response('qset/set_creation.html', {"form": form, "action": action, "title": "Add Question"}, context_instance=RequestContext(request))
@@ -122,10 +127,14 @@ def getQuestions(request):
         kwargs = {
             "creator": request.user,
         }
+        s_query = Q()
         if request.GET.get('id', False):
             kwargs['pk'] = request.GET.get('id')
         if request.GET.get('subject', False):
-            kwargs['subject'] = Subject.objects.filter(name=request.GET.get('subject'))
+            subjects = request.GET.get('subject').split(',')
+            for s in subjects:
+                s_query = s_query | Q(subject=Subject.objects.get(pk=s))
+            # kwargs['subject'] = Subject.objects.filter(name=request.GET.get('subject'))
         if request.GET.get('type', False):
             kwargs['type'] = request.GET.get('type')
         if request.GET.get('used', False):
@@ -138,7 +147,7 @@ def getQuestions(request):
             del kwargs['creator']
 
         if request.GET.get("random", False):
-            querydict = Question.objects.filter(**kwargs).order_by("?")
+            querydict = Question.objects.filter(s_query, **kwargs).order_by("?")
         else:
             querydict = Question.objects.filter(**kwargs).order_by(request.GET.get('order', '-creation_date'))
 
