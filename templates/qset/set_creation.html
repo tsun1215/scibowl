@@ -17,6 +17,7 @@
         background-color: #EEEEEE;
         text-align: center;
         padding:10px;
+        margin: 0;
     }
     #id_num_questions{
         width:30px;
@@ -50,25 +51,139 @@
         color:gray;
         width:75px;
     }
+    .question{
+        font-family: "Times New Roman", Georgia, Serif;
+    }
+    .type{
+        margin:20px 0;
+    }
+    .choices{
+        margin:1em 0;
+    }
+    .q_id{
+        display:none;
+    }
+    #q_selection{
+        display: none;
+    }
+    #q_op_toggle{
+        font-size: .5em;
+        display:none;
+        text-decoration: underline;
+    }
 </style>
+<script>
+    var template = "\
+    <div class='question'> \
+        <span class='q_id'></span> \
+        <center class='type'></center> \
+        <div class='qbody'> \
+            <span class='num'></span> \
+            <strong class='subject'></strong> \
+            <em class='sub_type'></em> \
+            <span class='text'></span> \
+            <div class='choices'></div> \
+            <span class='answer'></span> \
+        </div> \
+    </div>";
+    var form_data;
+    $(document).ready(function(){      
+        $("#set_creation_form").submit(function(){
+            form_data = {
+                "name": $("#id_name").val(),
+                "description": $("#id_description").val(),
+                "subjects": $("#id_subjects").val().join(','),
+                "num_q": $("#id_num_questions").val(),
+                "toss_up_round": Boolean($("#id_toss_up").val()),
+            }
+            $("#q_op_toggle").show();
+            $("#q_op_toggle").click();
+            getQuestions();         
+            return false;
+        });
+        $("#q_op_toggle").click(function(){
+            if($("#q_options").css("display")=="none"){
+                $("#q_options").slideDown();
+                $(this).text("Hide");
+            }else{
+                $("#q_options").slideUp();
+                $(this).text("Show");
+            }                
+        });
+        $("#finalize").submit(function(){
+            questions = [];
+            var data = $(".question");
+            for(var x = 0; x<data.length; x++){
+                var id = $(data[x]).children('.q_id').text();
+                var type = ($($(data[x]).children('.type')).text()=="BONUS")?1:0;
+                questions.push({id:id,type:type,q_num:(x+1)});
+            }
+            $("#questions").val(JSON.stringify(questions));
+            $("#form_data").val(JSON.stringify(form_data));
+        });
+    });
+
+    function getQuestions(){
+        var num=form_data.num_q;
+        var subjects=form_data.subjects;
+        var toss_up_round=form_data.toss_up_round;
+        $("#q_selection").slideDown();
+        $.get("/getall/?all=true&used=0&random=true&num="+num+"&subject="+subjects, function(data){
+            var container = $("#question-container");
+            container.html("");
+            for(var x=0; x<data.length; x++){
+                var question = data[x];
+                container.append(template);
+                if(toss_up_round){
+                    $('.question .type').last().text("TOSS-UP");
+                }else{
+                    $('.question .type').last().text((x%2==0)?"TOSS-UP":"BONUS");                    
+                }
+                $('.question .num').last().text((x+1)+".");
+                $('.question .subject').last().text(question.subject);
+                $('.question .sub_type').last().text((question.type==0)?"Multiple Choice":"Short Answer");
+                if(question.type == 0){
+                    var choices = $(".question .choices").last();
+                    choices.append("W) "+question.w+"<br/>");
+                    choices.append("X) "+question.x+"<br/>");
+                    choices.append("Y) "+question.y+"<br/>");
+                    choices.append("Z) "+question.z+"<br/>");
+                }
+                $('.question .text').last().html(question.text);
+                $('.question .answer').last().html("ANSWER: "+question.answer);
+                $('.question .q_id').last().text(question.id);
+            }
+        });
+    }
+</script>
 {%endblock%}
 
 {%block content%}
     <h1>Set Creation</h1>   
-    <form method="post">
+    <form id="set_creation_form" method="post">
         <div id="form-container">
-            <h2>Options</h2>
-            <table>
-                {%for field in form%}
-                    <tr>
-                        <td class="labels">{{field.label_tag}}</td>
-                        <td class="fields">{{field}}</td>
-                        <td class="help_text">{{field.help_text}}</td>
-                    </tr>
-                {%endfor%}
-            </table>
+            <h2>Options <a href="#" id="q_op_toggle">Show</a></h2>
+            <div id="q_options">
+                <table>
+                    {%for field in form%}
+                        <tr>
+                            <td class="labels">{{field.label_tag}}</td>
+                            <td class="fields">{{field}}</td>
+                            <td class="help_text">{{field.help_text}}</td>
+                        </tr>
+                    {%endfor%}
+                </table>
+                <input type="submit" value="Submit Query"/> 
+            </div>
+        </div>        
+    </form>
+    <div id="q_selection">
+        <div id="question-container">
         </div>
-        <input type="submit" value="Submit"/> 
-    </form>      
-    
+        <form id="finalize" method="post" action="/set/add/">
+            <input type="hidden" id="questions" name="questions"/>
+            <input type="hidden" name="form_data" id="form_data"/>
+            <input type="submit" value="Submit Set"/>
+        </form>
+    </div>
 {%endblock%}

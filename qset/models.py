@@ -19,7 +19,7 @@ SUBJECT_CHOICES = (
     ('OC', 'Ocean Chemistry'),
     ('P', 'Physics'),
     ('PO', 'Physical Oceanography'),
-    ('SS', 'Ocean Social Sciences'),
+    ('SS', 'Ocean History'),
     ('T', 'Technology'),
 )
 SUBJECT_CHOICES_DICT = {
@@ -37,7 +37,7 @@ SUBJECT_CHOICES_DICT = {
     'MP': 'Marine Policy',
     'GL': 'Ocean Geology',
     'GG': 'Ocean Geography',
-    'SS': 'Ocean Social Sciences',
+    'SS': 'Ocean History',
 }
 QUESTION_SUBTYPE_CHOICES = (
     (0, 'Multiple Choice'),

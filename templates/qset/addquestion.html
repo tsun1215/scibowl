@@ -52,7 +52,7 @@
             });
         });
         function closeWindow(){
-            if(opener!=null){
+            if(opener!=null&&opener.location.href.indexOf("/home/")!=-1){
                 opener.location.reload(true);
             }
             window.close();

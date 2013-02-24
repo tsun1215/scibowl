@@ -28,7 +28,6 @@ urlpatterns = patterns('',
     url(r'^home/$', direct_to_template, {'template': 'home.html'}),
     url(r'^$', direct_to_template, {'template': 'home.html'}),
     url(r'^set/add/$', 'qset.views.addSet'),
-    url(r'^set/finalize/$', 'qset.views.finalizeSet'),
     url(r'^set/(?P<set_id>\d+)/$', 'qset.views.viewSet'),
     url(r'^ajax/login/$', 'usermanage.views.ajaxLogin'),
 )

@@ -68,16 +68,19 @@ def editQuestion(request, q_id):
 def addSet(request):
     action = "/set/add/"
     if(request.method == "POST"):
-        form = SetForm(data=request.POST)
-        if form.is_valid():
-            new_set = form.save(commit=False)
-            new_set.creator = request.user
-            new_set.save()
-            new_set.subjects = form.cleaned_data['subjects']
-            subjects = ""
-            for x in new_set.subjects.all():
-                subjects += str(x.id) + ","
-            return render_to_response('qset/set_generator.html', {"num": request.POST['num_questions'], "set": new_set, "subjects": subjects.rstrip(','), "toss_up_round": form.cleaned_data['toss_up']})
+        data = simplejson.loads(request.POST['form_data'])
+        new_set = Set(name=data['name'], description=data['description'], creator=request.user)
+        new_set.save()
+        for s in data['subjects'].split(','):
+            new_set.subjects.add(Subject.objects.get(pk=s))
+        questions = simplejson.loads(request.POST['questions'])
+        for q in questions:
+            question = Question.objects.get(pk=q['id'])
+            s = Set_questions(set=new_set, question=question, q_num=q["q_num"], q_type=q['type'])
+            s.save()
+            question.is_used = 1
+            question.save()
+        return HttpResponseRedirect("/set/" + str(new_set.id) + "/")
     else:
         form = SetForm()
     return render_to_response('qset/set_creation.html', {"form": form, "action": action, "title": "Add Question"}, context_instance=RequestContext(request))
@@ -108,18 +111,6 @@ def viewSet(request, set_id):
 
 
 @login_required
-def finalizeSet(request):
-    if(request.method == "POST"):
-        set = Set.objects.get(pk=request.POST['set_id'])
-        questions = simplejson.loads(request.POST['questions'])
-        for q in questions:
-            question = Question.objects.get(pk=q['id'])
-            s = Set_questions(set=set, question=question, q_num=q["q_num"], q_type=q['type'])
-            s.save()
-        return HttpResponseRedirect('/')
-
-
-@login_required
 def getQuestions(request):
     if request.method == "GET":
         qlist = []
@@ -130,18 +121,18 @@ def getQuestions(request):
         s_query = Q()
         if request.GET.get('id', False):
             kwargs['pk'] = request.GET.get('id')
-        if request.GET.get('subject', False):
+        if request.GET.get('subject', False) and request.GET.get('subject') != "":
             subjects = request.GET.get('subject').split(',')
             for s in subjects:
                 s_query = s_query | Q(subject=Subject.objects.get(pk=s))
             # kwargs['subject'] = Subject.objects.filter(name=request.GET.get('subject'))
-        if request.GET.get('type', False):
+        if request.GET.get('type', False) and request.GET.get('type') != "":
             kwargs['type'] = request.GET.get('type')
         if request.GET.get('used', False):
             kwargs['is_used'] = request.GET.get('used')
 
         # Allows staff to access other user's questions (not allowed for regular users)
-        if request.user.is_staff and request.GET.get('creator', False):
+        if request.user.is_staff and request.GET.get('creator', False) and request.GET.get('creator') != "":
             kwargs['creator'] = User.objects.get(pk=request.GET['creator'])
         elif request.user.is_staff and request.GET.get('all', False):
             del kwargs['creator']
@@ -149,7 +140,10 @@ def getQuestions(request):
         if request.GET.get("random", False):
             querydict = Question.objects.filter(s_query, **kwargs).order_by("?")
         else:
-            querydict = Question.objects.filter(**kwargs).order_by(request.GET.get('order', '-creation_date'))
+            if request.GET.get('order', False) and request.GET.get('order') != "":
+                querydict = Question.objects.filter(s_query, **kwargs).order_by(request.GET.get('order'))
+            else:
+                querydict = Question.objects.filter(s_query, **kwargs).order_by("-creation_date")
 
         if request.GET.get("num", False):
             querydict = querydict[:request.GET.get('num')]

@@ -1,19 +1,20 @@
 {%extends 'base.html'%}
 {%block head%}
 <link rel="stylesheet" type="text/css" href="/static/css/question_table_main.css"/>
+<link rel="stylesheet" type="text/css" href="/static/css/chosen.css"/>
+<script type="text/javascript" src="/static/js/chosen.jquery.js"></script>
 <style>
     .user{
         width:120px;
         overflow:hidden;
-    }
-    .used{
-        width:50px;
-        text-align: center;
-    }
+    }    
     #filter-options{
         background-color:#EEEEEE;
         padding:10px;
         text-align: center;
+    }
+    .chzn-results{
+        text-align: left;
     }
 </style>
 {% if user.is_authenticated %}
@@ -22,31 +23,32 @@
     var selectedSubject="";
     var selectedUser="";
     var selectedType="";
-    var selectedUsed="used=0";
+    var selectedUsed="0";
     $(document).ready(function(){     
+        $("#subject-select").chosen();
         if(opener!=null){
             window.close();
         }else{
-            if($("#subject-select").val()!="---"){
-                selectedSubject = "subject="+$("#subject-select").val();
+            if($("#subject-select").val()!=null){
+                selectedSubject = $("#subject-select").val().join(",");
             }
             if($("#user-select").val()!="---"){
-                selectedUser = "creator="+$("#user-select").val();
+                selectedUser = $("#user-select").val();
             }
             if($("#type-select").val()!="---"){
-                selectedType = "type="+$("#type-select").val();
+                selectedType = $("#type-select").val();
             }
             if($("#show-used").attr("checked")!=undefined){
-                selectedUsed = "";
+                selectedUsed = "1";
             }
             update();
         }        
         $("#subject-select").change(function(){
             var subject = $(this).val();
-            if(subject=="---"){
+            if(subject==null){
                 selectedSubject="";
             }else{
-                selectedSubject = "subject="+subject;
+                selectedSubject = subject.join(",");
             }
             update();
         });
@@ -55,7 +57,7 @@
             if(user=="---"){
                 selectedUser="";
             }else{
-                selectedUser = "creator="+user;
+                selectedUser = user;
             }
             update();
         });
@@ -64,22 +66,22 @@
             if(type=="---"){
                 selectedType="";
             }else{
-                selectedType = "type="+type;
+                selectedType = type;
             }
             update();
         });
         $("#show-used").change(function(){
             if($(this).attr("checked") != undefined){
-                selectedUsed="";
+                selectedUsed="1";
             }else{
-                selectedUsed="used=0";
+                selectedUsed="0";
             }
             update();
         });        
     });
-    function update(order=""){
-        var filterString = selectedSubject+"&"+selectedUser+"&"+selectedType + "&" + selectedUsed;
-        $.get('/getall/?all=true&'+order+"&"+filterString, function(data){
+    function update(){
+        // var filterString = selectedSubject+"&"+selectedUser+"&"+selectedType + "&" + selectedUsed;
+        $.get('/getall/?subject='+selectedSubject,{"order":currOrder, "all":true, "used":selectedUsed, "type":selectedType, "creator":selectedUser}, function(data){
             var table = $("#questions");
             $(".question").unbind();
             $(".del").unbind();
@@ -104,7 +106,7 @@
                 }else{
                     currOrder = temp;
                 }
-                update("order="+currOrder);
+                update();
             });
             $(".question").hover(
                 function(){
@@ -162,10 +164,9 @@
         <div id="filter-options">
             <h1>All Questions</h1>
             Subject
-            <select id="subject-select">
-                <option selected="selected">---</option>
+            <select id="subject-select" multiple="multiple" data-placeholder="Type subjects to filter">
                 {%for subject in subjects%}
-                    <option value="{{subject.name}}">{{subject}}</option>
+                    <option value="{{subject.id}}">{{subject}}</option>
                 {%endfor%}
             </select>
             Type <select id="type-select">
