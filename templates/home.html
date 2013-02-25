@@ -19,7 +19,7 @@
         }
     });
     function update(order){
-        $.get('/getall/?is_used=true&'+order, function(data){
+        $.get('/getall/',{"is_used": true, "order": currOrder}, function(data){
             var table = $("#questions");
             $(".question").unbind();
             $(".del").unbind();
@@ -44,7 +44,7 @@
                 }else{
                     currOrder = temp;
                 }
-                update("order="+currOrder);
+                update();
             });
             $(".question").hover(
                 function(){

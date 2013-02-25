@@ -2,6 +2,8 @@ from django.db import models
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
+import random
+from hashlib import sha1
 
 # Create your models here.
 
@@ -79,12 +81,21 @@ class Question(models.Model):
     choice_y = models.CharField(max_length=100, blank=True)
     choice_z = models.CharField(max_length=100, blank=True)
     answer = models.CharField(max_length=100)
+    uid = models.CharField(max_length=200, unique=True)
 
     class Meta:
         ordering = ['-creation_date']
 
     def __unicode__(self):
         return "(" + self.subject.__str__() + ") " + self.creator.__str__()
+
+    def save(self, *args, **kwargs):
+        if self.uid == None or self.uid == "":
+            key = hex(random.getrandbits(32)).rstrip("L").lstrip("0x")
+            while Question.objects.filter(uid=key).count() > 0:
+                key = hex(random.getrandbits(32)).rstrip("L").lstrip("0x")
+            self.uid = key
+        super(Question, self).save(*args, **kwargs)
 
     def ans(self):
         if self.type == 1:
@@ -99,6 +110,12 @@ class Question(models.Model):
             if self.answer.strip().lower() == "z":
                 return "Z) " + self.choice_z
 
+    def get_view_url(self):
+        return "/set/" + self.uid + "/"
+
+    def get_edit_url(self):
+        return "/set/edit/" + self.uid + "/"
+
 
 class Set(models.Model):
     questions = models.ManyToManyField(Question, through='Set_questions')
@@ -108,9 +125,27 @@ class Set(models.Model):
     creation_date = models.DateTimeField(auto_now=True)
     creator = models.ForeignKey(User)
     is_used = models.BooleanField(default=False)
+    uid = models.CharField(max_length=200, unique=True)
 
     def __unicode__(self):
         return self.description
+
+    def save(self, *args, **kwargs):
+        if self.uid == None or self.uid == "":
+            uid = sha1(str(random.random())).hexdigest()
+            while Set.objects.filter(uid=uid).count() > 0:
+                uid = sha1(str(random.random())).hexdigest()
+            self.uid = uid
+        super(Set, self).save(*args, **kwargs)
+
+    def get_view_url(self):
+        return "/set/" + self.uid + "/"
+
+    def get_edit_url(self):
+        return "/set/edit/" + self.uid + "/"
+
+    def has_bonus(self):
+        return self.set_questions_set.filter(q_type=1).count() > 0
 
 
 class SetForm(ModelForm):
@@ -120,9 +155,15 @@ class SetForm(ModelForm):
     subjects = forms.ModelMultipleChoiceField(queryset=Subject.objects.all(), help_text='Subjects covered by set. (Hold down "Ctrl" to select more than one)')
     toss_up = forms.BooleanField(label="Toss-Up Only")
 
+    def __init__(self, *args, **kwargs):
+        super(SetForm, self).__init__(*args, **kwargs)
+        if kwargs.get("instance", False):
+            self.fields['num_questions'].initial = self.instance.questions.all().count()
+            self.fields['toss_up'].initial = not self.instance.has_bonus()
+
     class Meta:
         model = Set
-        exclude = ('is_used', 'creation_date', 'creator', 'questions')
+        exclude = ('uid', 'is_used', 'creation_date', 'creator', 'questions')
 
 
 class Set_questions(models.Model):

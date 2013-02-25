@@ -1,10 +1,26 @@
-#questions{
+table{
     width:100%;
     border-spacing: 0px 0px;
+}
+#filter-options{
+    background-color:#EEEEEE;
+    padding:10px;
+    text-align: center;
 }
 .type{
     width:20px;
     text-align: center
+}
+.user{
+    width:120px;
+    overflow:hidden;
+} 
+.subject{
+    width:150px;
+}
+.used{
+    width:50px;
+    text-align: center;
 }
 td{
  margin:0px;
@@ -31,10 +47,7 @@ th{
     opacity: 0.4;
     cursor: pointer;
 }
-.subject{
-    width:150px;
-}
-.question td{
+tr td{
     border-bottom: 1px solid #DDDDDD;
 }
 .orderable{
@@ -52,7 +65,13 @@ th{
     vertical-align: middle;
     height:25px;
 }
-.used{
-    width:50px;
-    text-align: center;
+.icon{
+    opacity: 0.4;
+    cursor: pointer;
+    height:19px;
+    vertical-align: middle;
+    display:none;
+}
+.icon:hover{
+    opacity: 1;
 }

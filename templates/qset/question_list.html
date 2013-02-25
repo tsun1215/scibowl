@@ -3,16 +3,7 @@
 <link rel="stylesheet" type="text/css" href="/static/css/question_table_main.css"/>
 <link rel="stylesheet" type="text/css" href="/static/css/chosen.css"/>
 <script type="text/javascript" src="/static/js/chosen.jquery.js"></script>
-<style>
-    .user{
-        width:120px;
-        overflow:hidden;
-    }    
-    #filter-options{
-        background-color:#EEEEEE;
-        padding:10px;
-        text-align: center;
-    }
+<style>      
     .chzn-results{
         text-align: left;
     }
@@ -96,7 +87,7 @@
                 question.append("<td class='type'>"+((q.type==0)?"MC":"SA")+"</td>");
                 question.append("<td class='user'>"+q.user+"</td>");
                 question.append("<td class='text'>"+q.text+"</td>");
-                question.append("<td class='options'><img class='edit icons' data-id='"+q.id+"' src='/static/images/edit.png'/><img class='del icons' data-id='"+q.id+"' src='/static/images/trash.png'/></td>");
+                question.append("<td class='options'><img class='edit icon' data-id='"+q.id+"' src='/static/images/edit.png'/><img class='del icon' data-id='"+q.id+"' src='/static/images/trash.png'/></td>");
                 question.append("<td class='used'>"+((q.used==1)?"<img height='15px' src='/static/images/check.png'/>":"<img height='15px' src='/static/images/cancel.png'/>")+"</td>");
             }    
             $(".orderable").click(function(){
@@ -111,19 +102,11 @@
             $(".question").hover(
                 function(){
                     $(this).css('background-color','#BFEDFF');
-                    $($(this).children(".options").children(".icons")).show();
+                    $($(this).children(".options").children(".icon")).show();
                 }, 
                 function(){
                     $(this).css('background-color','transparent');
-                    $($(this).children(".options").children(".icons")).hide();
-                }
-            );
-            $(".icons").hover(
-                function(){
-                    $(this).css("opacity",1);
-                },
-                function(){
-                    $(this).css("opacity",.4);
+                    $($(this).children(".options").children(".icon")).hide();
                 }
             );
             $(".del").click(function(){

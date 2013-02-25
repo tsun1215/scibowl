@@ -1,0 +1,105 @@
+{%extends 'base.html'%}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/css/question_table_main.css"/>
+    <style type="text/css">
+        .display{
+            padding:10px 0px;
+            height:18px;
+            font-size: 1.1em;
+        }
+        .details{
+            padding-left: 2em;
+            font-size: .8em;
+            display:none;
+        }
+        .details p{
+            margin:0;
+        }
+        .icon{
+            vertical-align: top;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("tr").hover(
+                function(){
+                    $(this).css('background-color','#BFEDFF');
+                    $($(this).find(".icon")).show();
+                }, 
+                function(){
+                    $(this).css('background-color','transparent');
+                    $($(this).find(".icon")).hide();
+                }
+            );
+            $("tr").toggle(
+                function(){
+                    $(this).find(".details").slideDown(200);
+                },
+                function(){
+                    $(this).find(".details").slideUp(200);
+                }
+            );
+            $(".icon").click(function(){
+                var url = $(this).attr("data-link");
+                window.location.href = url;
+                return false;
+            });
+            $(".display a").click(function(){
+                var url = $(this).attr("href");
+                window.location.href = url;
+                return false;
+            });
+        });
+    </script>
+{% endblock head %}
+{% block content %}
+    <div id="filter-options">
+        <h1>All Sets</h1>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Used</th>
+            </tr>
+        </thead>
+        {%for set in sets%}
+            <tr>
+                <td>
+                    <div class="display">
+                        <a title="View Set" href="{{set.get_view_url}}">{{set.name}}</a>
+                        <img title="Edit Set" data-link="{{set.get_edit_url}}" class="icon" src="/static/images/edit.png"/>
+                    </div>
+                    <div class="details">
+                        <p class="creation_date">
+                            <strong>Creation Date: </strong>
+                            {{set.creation_date}}
+                        </p>
+                        <p class="subjects">
+                            <strong>Subjects: </strong>
+                            {%for s in set.subjects.all%}                                
+                                {%if not forloop.last%}
+                                    {{s.get_name_display}},&nbsp;
+                                {%else%}
+                                    {{s.get_name_display}}
+                                {%endif%}
+                            {%endfor%}
+                        </p>
+                        <p class="description">
+                            <strong>Description: </strong>
+                            {{set.description}}
+                        </p>
+                        <p>
+                            <strong>Has Bonus:</strong> {{set.has_bonus}}
+                        </p>
+                    </div>
+                </td>
+                {%if set.is_used%}
+                    <td class='used'><img height='15px' src="/static/images/check.png"/></td>
+                {%else%}
+                    <td class='used'><img height='15px' src="/static/images/cancel.png"/></td>
+                {%endif%}
+            </tr>
+        {%endfor%}
+    </table>
+{% endblock content %}

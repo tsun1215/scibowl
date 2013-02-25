@@ -16,19 +16,22 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    #url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+
     url(r'^login/', login, {'template_name': 'usermanage/login.html'}),
     url(r'^logout/', logout, {'next_page': '/'}),
     url(r'^question/add/', 'qset.views.addQuestion'),
     url(r'^question/list/', 'qset.views.filterQuestions'),
-    url(r'^question/edit/(?P<q_id>\d+)', 'qset.views.editQuestion'),
-    url(r'^question/delete/(?P<q_id>\d+)', 'qset.views.removeQuestion'),
+    url(r'^question/edit/(?P<q_id>[a-zA-Z0-9]+)', 'qset.views.editQuestion'),
+    url(r'^question/delete/(?P<q_id>[a-zA-Z0-9]+)', 'qset.views.removeQuestion'),
     url(r'^getall/$', 'qset.views.getQuestions'),
     url(r'^register/$', 'usermanage.views.registerUser'),
     url(r'^home/$', direct_to_template, {'template': 'home.html'}),
+    url(r'^account/questions/$', direct_to_template, {'template': 'home.html'}),
     url(r'^$', direct_to_template, {'template': 'home.html'}),
     url(r'^set/add/$', 'qset.views.addSet'),
-    url(r'^set/(?P<set_id>\d+)/$', 'qset.views.viewSet'),
+    url(r'^set/edit/(?P<set_id>[a-zA-Z0-9]+)', 'qset.views.editSet'),
+    url(r'^account/sets/$', 'qset.views.listSets'),
+    url(r'^set/(?P<set_id>[a-zA-Z0-9]+)/$', 'qset.views.viewSet'),
     url(r'^ajax/login/$', 'usermanage.views.ajaxLogin'),
 )
 
