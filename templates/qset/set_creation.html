@@ -71,10 +71,16 @@
         display:none;
         text-decoration: underline;
     }
+    .options{
+        float:right;
+    }
 </style>
 <script>
     var template = "\
     <div class='question'> \
+        <div class='options'> \
+            <a href='#' class='new_q'>Reroll Question</a> \
+        </div> \
         <span class='q_id'></span> \
         <center class='type'></center> \
         <div class='qbody'> \
@@ -87,6 +93,10 @@
         </div> \
     </div>";
     var form_data;
+    var q_arr = [];
+    {%if set_questions%}
+        q_arr = {{set_questions|safe}};
+    {%endif%}
     $(document).ready(function(){      
         $("#set_creation_form").submit(function(){
             form_data = {
@@ -95,10 +105,17 @@
                 "subjects": $("#id_subjects").val().join(','),
                 "num_q": $("#id_num_questions").val(),
                 "toss_up_round": Boolean($("#id_toss_up").attr("checked")),
+                {%if set%}
+                "set_id": "{{set.uid}}",
+                {%endif%}
             }
             $("#q_op_toggle").show();
             $("#q_op_toggle").click();
-            getQuestions();         
+            if(q_arr.length == 0){
+                initializeQuestions();
+            }else{
+                displayQuestions();
+            }
             return false;
         });        
         $("#q_op_toggle").click(function(){
@@ -111,53 +128,78 @@
             }                
         });
         $("#finalize").submit(function(){
-            questions = [];
-            var data = $(".question");
-            for(var x = 0; x<data.length; x++){
-                var id = $(data[x]).children('.q_id').text();
-                var type = ($($(data[x]).children('.type')).text()=="BONUS")?1:0;
+            var questions = [];
+            for(var x = 0; x<q_arr.length; x++){
+                var id = q_arr[x].id;
+                var type = (!form_data.toss_up_round&&x%2!=0)?1:0;
                 questions.push({id:id,type:type,q_num:(x+1)});
             }
             $("#questions").val(JSON.stringify(questions));
             $("#form_data").val(JSON.stringify(form_data));
-        });
-        {%if set%}
-            $("#q_op_toggle").show();
-            $("#q_op_toggle").click();
-            $("#q_selection").slideDown();
-        {%endif%}
+        });        
+        if(q_arr.length > 0){
+            $("#set_creation_form").submit();
+        }
     });
 
-    function getQuestions(){
-        var num=form_data.num_q;
+    function getQuestion(replace_num){
+        var questions = [];
+        var data = $(".question");
+        for(var x = 0; x<data.length; x++){
+            var id = $(data[x]).children('.q_id').text();
+            questions.push(id);
+        }
         var subjects=form_data.subjects;
-        var toss_up_round=form_data.toss_up_round;
-        $("#q_selection").slideDown();
+        $.post("/getall/?all=true&used=0&random=true&num=1&subject="+subjects, {"questions": JSON.stringify(questions)}, function(data){
+            q_arr[replace_num] = data[0];
+            displayQuestions();
+        });
+    }
+
+    function initializeQuestions(){    
+        var num=form_data.num_q;
+        var subjects=form_data.subjects;        
         $.get("/getall/?all=true&used=0&random=true&num="+num+"&subject="+subjects, function(data){
-            var container = $("#question-container");
-            container.html("");
+            q_arr = [];
             for(var x=0; x<data.length; x++){
-                var question = data[x];
-                container.append(template);
-                if(toss_up_round){
-                    $('.question .type').last().text("TOSS-UP");
-                }else{
-                    $('.question .type').last().text((x%2==0)?"TOSS-UP":"BONUS");                    
-                }
-                $('.question .num').last().text((x+1)+".");
-                $('.question .subject').last().text(question.subject);
-                $('.question .sub_type').last().text((question.type==0)?"Multiple Choice":"Short Answer");
-                if(question.type == 0){
-                    var choices = $(".question .choices").last();
-                    choices.append("W) "+question.w+"<br/>");
-                    choices.append("X) "+question.x+"<br/>");
-                    choices.append("Y) "+question.y+"<br/>");
-                    choices.append("Z) "+question.z+"<br/>");
-                }
-                $('.question .text').last().html(question.text);
-                $('.question .answer').last().html("ANSWER: "+question.answer);
-                $('.question .q_id').last().text(question.id);
+                q_arr.push(data[x]);
             }
+            displayQuestions();
+        });
+    }
+
+    function displayQuestions(){
+        $("#q_selection").slideDown();
+        var toss_up_round=form_data.toss_up_round;
+        var container = $("#question-container");
+        container.html("");
+        for(var x=0; x<q_arr.length; x++){
+            var question = q_arr[x];
+            container.append(template);
+            if(toss_up_round){
+                $('.question .type').last().text("TOSS-UP");
+            }else{
+                $('.question .type').last().text((x%2==0)?"TOSS-UP":"BONUS");                    
+            }
+            $('.question .num').last().text((x+1)+".");
+            $('.question .subject').last().text(question.subject);
+            $('.question .sub_type').last().text((question.type==0)?"Multiple Choice":"Short Answer");
+            if(question.type == 0){
+                var choices = $(".question .choices").last();
+                choices.append("W) "+question.w+"<br/>");
+                choices.append("X) "+question.x+"<br/>");
+                choices.append("Y) "+question.y+"<br/>");
+                choices.append("Z) "+question.z+"<br/>");
+            }
+            $('.question .text').last().html(question.text);
+            $('.question .answer').last().html("ANSWER: "+question.answer);
+            $('.question .q_id').last().text(question.id);
+        }
+        $(".new_q").unbind();
+        $(".new_q").click(function(){
+            var currDiv = $(this).parent().parent(".question");
+            getQuestion($(".question").index(currDiv));
+            return false;
         });
     }
 </script>
@@ -184,27 +226,6 @@
     </form>
     <div id="q_selection">
         <div id="question-container">
-            {%for q in set_questions%}
-                <div class='question'> 
-                    <span class='q_id'>{{q.uid}}</span> 
-                    <center class='type'>{{q.set_questions_set.all.0.get_q_type_display}}</center> 
-                    <div class='qbody'> 
-                        <span class='num'>{{q.set_questions_set.all.0.q_num}}.</span> 
-                        <strong class='subject'>{{q.subject}}</strong> 
-                        <em class='sub_type'>{{q.get_type_display}}</em> 
-                        <span class='text'>{{q.text}}</span> 
-                        <div class='choices'>                            
-                            {%if q.type == 0%}
-                                W) {{q.choice_w}}<br/>
-                                X) {{q.choice_x}}<br/>
-                                Y) {{q.choice_y}}<br/>
-                                Z) {{q.choice_z}}<br/>
-                            {%endif%}
-                        </div> 
-                        <span class='answer'>ANSWER: {{q.ans}}</span> 
-                    </div> 
-                </div>
-            {%endfor%}
         </div>
         <form id="finalize" method="post">
             <input type="hidden" id="questions" name="questions"/>

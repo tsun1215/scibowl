@@ -121,66 +121,87 @@ def editSet(request, set_id):
     curr_set = get_object_or_404(Set, uid=set_id)
     form = SetForm(instance=curr_set)
     questions = sorted(curr_set.questions.all(), key=lambda q: q.set_questions_set.all()[0].q_num)
-    return render_to_response('qset/set_creation.html', {"form": form, "set": curr_set, "set_questions": questions}, context_instance=RequestContext(request))
+    qlist = []
+    for q in questions:
+        curr = {
+            "type": escape(q.type),
+            "subject": q.subject.get_name_display(),
+            "date": q.creation_date.date().__str__(),
+            "text": escape(q.text),
+            "answer": escape(q.ans()),
+            "id": q.uid,
+            "user": q.creator.get_full_name(),
+            "used": q.is_used,
+        }
+        if q.type == 0:
+            curr["w"] = escape(q.choice_w)
+            curr["x"] = escape(q.choice_x)
+            curr["y"] = escape(q.choice_y)
+            curr["z"] = escape(q.choice_z)
+        qlist.append(curr)
+    qlist = simplejson.dumps(qlist)
+    return render_to_response('qset/set_creation.html', {"form": form, "set": curr_set, "set_questions": qlist}, context_instance=RequestContext(request))
 
 
 @login_required
 def getQuestions(request):
-    if request.method == "GET":
-        qlist = []
-        # Parse GET Parameters
-        kwargs = {
-            "creator": request.user,
-        }
-        s_query = Q()
-        if request.GET.get('uid', False):
-            kwargs['uid'] = request.GET.get('uid')
-        if request.GET.get('subject', False) and request.GET.get('subject') != "":
-            subjects = request.GET.get('subject').split(',')
-            for s in subjects:
-                s_query = s_query | Q(subject=Subject.objects.get(pk=s))
-            # kwargs['subject'] = Subject.objects.filter(name=request.GET.get('subject'))
-        if request.GET.get('type', False) and request.GET.get('type') != "":
-            kwargs['type'] = request.GET.get('type')
-        if request.GET.get('used', False) and request.GET.get('used') != "1":
-            kwargs['is_used'] = request.GET.get('used')
+    qlist = []
+    # Parse GET Parameters
+    kwargs = {
+        "creator": request.user,
+    }
+    s_query = Q()
+    if request.GET.get('uid', False):
+        kwargs['uid'] = request.GET.get('uid')
+    if request.GET.get('subject', False) and request.GET.get('subject') != "":
+        subjects = request.GET.get('subject').split(',')
+        for s in subjects:
+            s_query = s_query | Q(subject=Subject.objects.get(pk=s))
+        # kwargs['subject'] = Subject.objects.filter(name=request.GET.get('subject'))
+    if request.GET.get('type', False) and request.GET.get('type') != "":
+        kwargs['type'] = request.GET.get('type')
+    if request.GET.get('used', False) and request.GET.get('used') != "1":
+        kwargs['is_used'] = request.GET.get('used')
 
-        # Allows staff to access other user's questions (not allowed for regular users)
-        if request.user.is_staff and request.GET.get('creator', False) and request.GET.get('creator') != "":
-            kwargs['creator'] = User.objects.get(pk=request.GET['creator'])
-        elif request.user.is_staff and request.GET.get('all', False):
-            del kwargs['creator']
+    # Allows staff to access other user's questions (not allowed for regular users)
+    if request.user.is_staff and request.GET.get('creator', False) and request.GET.get('creator') != "":
+        kwargs['creator'] = User.objects.get(pk=request.GET['creator'])
+    elif request.user.is_staff and request.GET.get('all', False):
+        del kwargs['creator']
 
-        if request.GET.get("random", False):
-            querydict = Question.objects.filter(s_query, **kwargs).order_by("?")
+    if request.GET.get("random", False):
+        querydict = Question.objects.filter(s_query, **kwargs).order_by("?")
+    else:
+        if request.GET.get('order', False) and request.GET.get('order') != "":
+            querydict = Question.objects.filter(s_query, **kwargs).order_by(request.GET.get('order'))
         else:
-            if request.GET.get('order', False) and request.GET.get('order') != "":
-                querydict = Question.objects.filter(s_query, **kwargs).order_by(request.GET.get('order'))
-            else:
-                querydict = Question.objects.filter(s_query, **kwargs).order_by("-creation_date")
+            querydict = Question.objects.filter(s_query, **kwargs).order_by("-creation_date")
 
-        if request.GET.get("num", False):
-            querydict = querydict[:request.GET.get('num')]
+    if request.POST.get("questions", False):
+        exclude = simplejson.loads(request.POST.get("questions"))
+        querydict = querydict.exclude(uid__in=exclude)
+        if querydict.count() == 0:
+            return HttpResponse(simplejson.dumps({"success": False, "msg": "No questions remain"}), mimetype='application/json')
 
-        # Add questions to json object
-        for q in querydict:
-            curr = {
-                "type": escape(q.type),
-                "subject": q.subject.get_name_display(),
-                "date": q.creation_date.date().__str__(),
-                "text": escape(q.text),
-                "answer": escape(q.ans()),
-                "id": q.uid,
-                "user": q.creator.get_full_name(),
-                "used": q.is_used,
-            }
-            if q.type == 0:
-                curr["w"] = escape(q.choice_w)
-                curr["x"] = escape(q.choice_x)
-                curr["y"] = escape(q.choice_y)
-                curr["z"] = escape(q.choice_z)
-            qlist.append(curr)
-        return HttpResponse(simplejson.dumps(qlist), mimetype='application/json')
+    if request.GET.get("num", False):
+        querydict = querydict[:request.GET.get('num')]
 
-
-# Get random questions method, takes
+    # Add questions to json object
+    for q in querydict:
+        curr = {
+            "type": escape(q.type),
+            "subject": q.subject.get_name_display(),
+            "date": q.creation_date.date().__str__(),
+            "text": escape(q.text),
+            "answer": escape(q.ans()),
+            "id": q.uid,
+            "user": q.creator.get_full_name(),
+            "used": q.is_used,
+        }
+        if q.type == 0:
+            curr["w"] = escape(q.choice_w)
+            curr["x"] = escape(q.choice_x)
+            curr["y"] = escape(q.choice_y)
+            curr["z"] = escape(q.choice_z)
+        qlist.append(curr)
+    return HttpResponse(simplejson.dumps(qlist), mimetype='application/json')
