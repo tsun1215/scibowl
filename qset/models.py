@@ -69,7 +69,7 @@ class Question(models.Model):
     creator = models.ForeignKey(User)
     subject = models.ForeignKey(Subject)
     type = models.IntegerField(choices=QUESTION_SUBTYPE_CHOICES, default=0)
-    creation_date = models.DateTimeField(auto_now=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
     # is_used:
     #   0: unused
     #   1: used
@@ -196,4 +196,4 @@ class QuestionForm(ModelForm):
 
     class Meta:
         model = Question
-        exclude = ('is_used', 'creation_date', 'creator')
+        exclude = ('uid', 'is_used', 'creation_date', 'creator')

@@ -25,12 +25,11 @@
             $(".del").unbind();
             $("#questions .text a").unbind();
             table.html("");
-            table.append("<tr><th></th><th class='orderable' data-order='subject'>Subject</th><th class='orderable' data-order='type'>Type</th><th>Question</th><th></th><th class='orderable' data-order='is_used'>Used</th></tr></tr>");
+            table.append("<tr><th class='orderable' data-order='subject'>Subject</th><th class='orderable' data-order='type'>Type</th><th>Question</th><th></th><th class='orderable' data-order='is_used'>Used</th></tr></tr>");
             for(var x = 0; x<data.length; x++){
                 var q = data[x];
                 table.append("<tr class='question' title='Ans: "+q.answer+"'></tr>");
                 var question = $(".question").last();
-                question.append("<td class='selection'><input type='checkbox'/></td>")
                 question.append("<td class='subject'>"+q.subject+"</td>");
                 question.append("<td class='type'>"+((q.type==0)?"MC":"SA")+"</td>");
                 question.append("<td class='text'><a href='/question/edit/"+q.id+"/'>"+q.text+"</a></td>");

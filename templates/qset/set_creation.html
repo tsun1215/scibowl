@@ -151,12 +151,16 @@
         }
         var subjects=form_data.subjects;
         $.post("/getall/?all=true&used=0&random=true&num=1&subject="+subjects, {"questions": JSON.stringify(questions)}, function(data){
-            q_arr[replace_num] = data[0];
-            displayQuestions();
+            if(data.success == undefined){
+                q_arr[replace_num] = data[0];
+                displayQuestions();                
+            }else{
+                alert(data.msg);
+            }
         });
     }
 
-    function initializeQuestions(){    
+    function initializeQuestions(){
         var num=form_data.num_q;
         var subjects=form_data.subjects;        
         $.get("/getall/?all=true&used=0&random=true&num="+num+"&subject="+subjects, function(data){
@@ -192,7 +196,7 @@
                 choices.append("Z) "+question.z+"<br/>");
             }
             $('.question .text').last().html(question.text);
-            $('.question .answer').last().html("ANSWER: "+question.answer);
+            // $('.question .answer').last().html("ANSWER: "+question.answer);
             $('.question .q_id').last().text(question.id);
         }
         $(".new_q").unbind();

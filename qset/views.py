@@ -50,7 +50,7 @@ def removeQuestion(request, q_id):
 def editQuestion(request, q_id):
     question = get_object_or_404(Question, uid=q_id)
     action = question.get_edit_url()
-    if(request.user == question.creator or request.user.is_staff):
+    if(question.is_used == 0 and request.user == question.creator) or request.user.is_staff:
         if request.method == "POST":
             form = QuestionForm(data=request.POST, instance=question)
             if form.is_valid():
@@ -59,6 +59,8 @@ def editQuestion(request, q_id):
         else:
             form = QuestionForm(instance=question)
         return render_to_response('qset/addquestion.html', {"form": form, "action": action, "type": "question", "title": "Edit question", "success": "false"})
+    elif question.is_used != 0:
+        return render_to_response('qset/question_view.html', {"question": question, "msg": "Sorry, this question is being used in a set. You may not edit it."})
     else:
         # Is the user is not the creator of the question (or staff)
         return HttpResponseRedirect('/')
@@ -87,7 +89,7 @@ def addSet(request):
 
 @user_passes_test(lambda u: u.is_staff)
 def listSets(request):
-    sets = Set.objects.filter(creator=request.user)
+    sets = Set.objects.filter(creator=request.user).order_by('-creation_date')
     return render_to_response('qset/set_list.html', {"sets": sets}, context_instance=RequestContext(request))
 
 
@@ -119,28 +121,50 @@ def viewSet(request, set_id):
 @user_passes_test(lambda u: u.is_staff)
 def editSet(request, set_id):
     curr_set = get_object_or_404(Set, uid=set_id)
-    form = SetForm(instance=curr_set)
-    questions = sorted(curr_set.questions.all(), key=lambda q: q.set_questions_set.all()[0].q_num)
-    qlist = []
-    for q in questions:
-        curr = {
-            "type": escape(q.type),
-            "subject": q.subject.get_name_display(),
-            "date": q.creation_date.date().__str__(),
-            "text": escape(q.text),
-            "answer": escape(q.ans()),
-            "id": q.uid,
-            "user": q.creator.get_full_name(),
-            "used": q.is_used,
-        }
-        if q.type == 0:
-            curr["w"] = escape(q.choice_w)
-            curr["x"] = escape(q.choice_x)
-            curr["y"] = escape(q.choice_y)
-            curr["z"] = escape(q.choice_z)
-        qlist.append(curr)
-    qlist = simplejson.dumps(qlist)
-    return render_to_response('qset/set_creation.html', {"form": form, "set": curr_set, "set_questions": qlist}, context_instance=RequestContext(request))
+    if request.method == "POST":
+        data = simplejson.loads(request.POST['form_data'])
+        curr_set.name = data['name']
+        curr_set.description = data['description']
+        curr_set.save()
+        for s in data['subjects'].split(','):
+            curr_set.subjects.add(Subject.objects.get(pk=s))
+        # Set original question to unused
+        for q in curr_set.questions.all():
+            q.is_used = 0
+            q.save()
+        curr_set.questions.clear()
+        # Add questions from the form
+        questions = simplejson.loads(request.POST['questions'])
+        for q in questions:
+            question = Question.objects.get(uid=q['id'])
+            s = Set_questions(set=curr_set, question=question, q_num=q["q_num"], q_type=q['type'])
+            s.save()
+            question.is_used = 1
+            question.save()
+        return HttpResponseRedirect("/set/" + str(curr_set.uid) + "/")
+    else:
+        form = SetForm(instance=curr_set)
+        questions = sorted(curr_set.questions.all(), key=lambda q: q.set_questions_set.all()[0].q_num)
+        qlist = []
+        for q in questions:
+            curr = {
+                "type": escape(q.type),
+                "subject": q.subject.get_name_display(),
+                "date": q.creation_date.date().__str__(),
+                "text": escape(q.text),
+                "answer": escape(q.ans()),
+                "id": q.uid,
+                "user": q.creator.get_full_name(),
+                "used": q.is_used,
+            }
+            if q.type == 0:
+                curr["w"] = escape(q.choice_w)
+                curr["x"] = escape(q.choice_x)
+                curr["y"] = escape(q.choice_y)
+                curr["z"] = escape(q.choice_z)
+            qlist.append(curr)
+        qlist = simplejson.dumps(qlist)
+        return render_to_response('qset/set_creation.html', {"form": form, "set": curr_set, "set_questions": qlist}, context_instance=RequestContext(request))
 
 
 @login_required

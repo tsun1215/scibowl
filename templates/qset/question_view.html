@@ -1,0 +1,54 @@
+{%extends 'base.html'%}
+
+{% block head %}
+    <script type="text/javascript">
+    function closeWindow(){
+        if(opener!=null&&opener.location.href.indexOf("/home/")!=-1){
+            opener.location.reload(true);
+        }
+        window.close();
+    }
+    </script>
+    <style type="text/css">
+    #content-container{
+        width:auto;
+        padding: 2em;
+    }
+    #nav a{
+        position:absolute;
+        right:5px;
+    }
+    .type{
+        margin:20px 0;
+    }
+    .choices{
+        margin:1em 0;
+    }
+    </style>
+{% endblock head %}
+
+{%block topbar%}
+<div id="nav">
+    <a href="javascript:closeWindow()">Close</a>
+</div>
+{%endblock%}
+
+{% block content %}
+    <div class='question'>
+        <h4 class='error'>{{msg}}</h4>
+        <div class='qbody'>
+            <strong class='subject'>{{question.subject}}</strong>
+            <em class='sub_type'>{{question.get_type_display}}</em>
+            <span class='text'>{{question.text}}</span>
+            <div class='choices'>
+                {%if question.type == 0%}
+                    W) {{question.choice_w}}<br/>
+                    X) {{question.choice_x}}<br/>
+                    Y) {{question.choice_y}}<br/>
+                    Z) {{question.choice_z}}<br/>
+                {%endif%}
+            </div>
+            <span class='answer'>ANSWER: {{question.ans}}</span>
+        </div>
+    </div>
+{% endblock content %}
