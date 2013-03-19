@@ -111,10 +111,10 @@ class Question(models.Model):
                 return "Z) " + self.choice_z
 
     def get_view_url(self):
-        return "/set/" + self.uid + "/"
+        return "/question/" + self.uid + "/"
 
     def get_edit_url(self):
-        return "/set/edit/" + self.uid + "/"
+        return "/question/edit/" + self.uid + "/"
 
 
 class Set(models.Model):
