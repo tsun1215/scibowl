@@ -81,7 +81,7 @@
             table.append("<tr><th class='orderable' data-order='subject'>Subject</th><th class='orderable' data-order='type'>Type</th><th class='orderable' data-order='creator'>User</th><th>Question</th><th></th><th class='orderable' data-order='is_used'>Used</th></tr>");
             for(var x = 0; x<data.length; x++){
                 var q = data[x];
-                table.append("<tr class='question' title='Ans: "+q.answer+"'></tr>");
+                table.append("<tr class='question'></tr>");
                 var question = $(".question").last();
                 question.append("<td class='subject'>"+q.subject+"</td>");
                 question.append("<td class='type'>"+((q.type==0)?"MC":"SA")+"</td>");

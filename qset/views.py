@@ -50,7 +50,7 @@ def removeQuestion(request, q_id):
 def editQuestion(request, q_id):
     question = get_object_or_404(Question, uid=q_id)
     action = question.get_edit_url()
-    if(question.is_used == 0 and request.user == question.creator) or request.user.is_staff:
+    if(question.is_used == 0 and request.user == question.creator) or (request.GET.get("f", False) == "1" and request.user.is_staff):
         if request.method == "POST":
             form = QuestionForm(data=request.POST, instance=question)
             if form.is_valid():
@@ -60,7 +60,10 @@ def editQuestion(request, q_id):
             form = QuestionForm(instance=question)
         return render_to_response('qset/addquestion.html', {"form": form, "action": action, "type": "question", "title": "Edit question", "success": "false"})
     elif question.is_used != 0:
-        return render_to_response('qset/question_view.html', {"question": question, "msg": "Sorry, this question is being used in a set. You may not edit it."})
+        message = "Sorry, this question is being used in a set. You may not edit it."
+        if request.user.is_staff:
+            message = "This set is already in a set, are you sure you want to edit it? <a href='/question/edit/" + question.uid + "/?f=1'>Continue</a>"
+        return render_to_response('qset/question_view.html', {"question": question, "msg": message})
     else:
         # Is the user is not the creator of the question (or staff)
         return HttpResponseRedirect('/')

@@ -35,7 +35,7 @@
 
 {% block content %}
     <div class='question'>
-        <h4 class='error'>{{msg}}</h4>
+        <h4 class='error'>{{msg|safe}}</h4>
         <div class='qbody'>
             <strong class='subject'>{{question.subject}}</strong>
             <em class='sub_type'>{{question.get_type_display}}</em>

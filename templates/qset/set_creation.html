@@ -53,6 +53,10 @@
     }
     .question{
         font-family: "Times New Roman", Georgia, Serif;
+        border: 1px solid #EEEEEE;
+    }
+    .question:hover{
+        border-color: #cccccc;
     }
     .type{
         margin:20px 0;
@@ -73,13 +77,22 @@
     }
     .options{
         float:right;
+        opacity: .4;
+    }
+    .options:hover{
+        opacity:1;
+    }
+    .options img{
+        float:right;
+        cursor:move;
     }
 </style>
 <script>
     var template = "\
     <div class='question'> \
         <div class='options'> \
-            <a href='#' class='new_q'>Reroll Question</a> \
+            <a href='#' class='new_q'>Reroll Question</a><br/> \
+            <img src='/static/images/move.png'/> \
         </div> \
         <span class='q_id'></span> \
         <center class='type'></center> \
