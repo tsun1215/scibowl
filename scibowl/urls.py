@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.views import login, logout
-from django.views.generic.simple import direct_to_template
+from django.views.generic import TemplateView
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -25,9 +25,9 @@ urlpatterns = patterns('',
     url(r'^question/delete/(?P<q_id>[a-zA-Z0-9]+)', 'qset.views.removeQuestion'),
     url(r'^getall/$', 'qset.views.getQuestions'),
     url(r'^register/$', 'usermanage.views.registerUser'),
-    url(r'^home/$', direct_to_template, {'template': 'home.html'}),
-    url(r'^account/questions/$', direct_to_template, {'template': 'home.html'}),
-    url(r'^$', direct_to_template, {'template': 'home.html'}),
+    url(r'^home/$', TemplateView.as_view(template_name="home.html")),
+    url(r'^account/questions/$', TemplateView.as_view(template_name="home.html")),
+    url(r'^$', TemplateView.as_view(template_name="home.html")),
     url(r'^set/add/$', 'qset.views.addSet'),
     url(r'^set/edit/(?P<set_id>[a-zA-Z0-9]+)', 'qset.views.editSet'),
     url(r'^account/sets/$', 'qset.views.listSets'),
