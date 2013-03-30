@@ -50,7 +50,7 @@ def removeQuestion(request, q_id):
 def editQuestion(request, q_id):
     question = get_object_or_404(Question, uid=q_id)
     action = question.get_edit_url()
-    if(question.is_used == 0 and request.user == question.creator) or (request.GET.get("f", False) == "1" and request.user.is_staff):
+    if(question.is_used == 0 and (request.user == question.creator or request.user.is_staff)) or (request.GET.get("f", False) == "1" and request.user.is_staff):
         if request.method == "POST":
             form = QuestionForm(data=request.POST, instance=question)
             if form.is_valid():
