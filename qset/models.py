@@ -2,6 +2,7 @@ from django.db import models
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
+from usermanage.models import Group
 import random
 from hashlib import sha1
 
@@ -68,6 +69,7 @@ class Subject(models.Model):
 class Question(models.Model):
     creator = models.ForeignKey(User)
     subject = models.ForeignKey(Subject)
+    group = models.ForeignKey(Group, blank=True, null=True)
     type = models.IntegerField(choices=QUESTION_SUBTYPE_CHOICES, default=0)
     creation_date = models.DateTimeField(auto_now_add=True)
     # is_used:
@@ -90,7 +92,7 @@ class Question(models.Model):
         return "(" + self.subject.__str__() + ") " + self.creator.__str__()
 
     def save(self, *args, **kwargs):
-        if self.uid == None or self.uid == "":
+        if self.uid is None or self.uid == "":
             key = hex(random.getrandbits(32)).rstrip("L").lstrip("0x")
             while Question.objects.filter(uid=key).count() > 0:
                 key = hex(random.getrandbits(32)).rstrip("L").lstrip("0x")
@@ -119,6 +121,7 @@ class Question(models.Model):
 
 class Set(models.Model):
     questions = models.ManyToManyField(Question, through='Set_questions')
+    group = models.ForeignKey(Group, blank=True)
     name = models.CharField(max_length=100)
     subjects = models.ManyToManyField(Subject)
     description = models.CharField(max_length=1000)
@@ -131,7 +134,7 @@ class Set(models.Model):
         return self.description
 
     def save(self, *args, **kwargs):
-        if self.uid == None or self.uid == "":
+        if self.uid is None or self.uid == "":
             uid = sha1(str(random.random())).hexdigest()
             while Set.objects.filter(uid=uid).count() > 0:
                 uid = sha1(str(random.random())).hexdigest()
@@ -175,6 +178,7 @@ class Set_questions(models.Model):
 
 class Round(models.Model):
     set = models.ForeignKey(Set)
+    group = models.ForeignKey(Group)
     date = models.DateField()
     players = models.ManyToManyField(User)
 

@@ -1,11 +1,31 @@
-# from django.db import models
+from django.db import models
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate
 import re
+import random
 
-# Create your models here.
+
+class Group(models.Model):
+    name = models.CharField(max_length=100)
+    admins = models.ManyToManyField(User, through="Membership")
+    creation_date = models.DateTimeField()
+    uid = models.CharField(max_length=200, unique=True)
+
+    def save(self, *args, **kwargs):
+        if self.uid is None or self.uid == "":
+            key = hex(random.getrandbits(32)).rstrip("L").lstrip("0x")
+            while Group.objects.filter(uid=key).count() > 0:
+                key = hex(random.getrandbits(32)).rstrip("L").lstrip("0x")
+            self.uid = key
+        super(Group, self).save(*args, **kwargs)
+
+
+class Membership(models.Model):
+    group = models.ForeignKey(Group)
+    user = models.ForeignKey(User)
+    is_staff = models.BooleanField(default=False)
 
 
 class UserCreateForm(UserCreationForm):

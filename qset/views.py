@@ -39,9 +39,12 @@ def removeQuestion(request, q_id):
         question = Question.objects.get(uid=q_id)
     except ObjectDoesNotExist:
         return HttpResponse(simplejson.dumps({"success": False}))
-    if question.creator == request.user:
+    if question.creator == request.user and question.is_used == 0:
         question.delete()
         return HttpResponse(simplejson.dumps({"success": True, "q_id": q_id}))
+    elif question.is_used != 0:
+        # Prevent normal users from deleting
+        return HttpResponseForbidden("Question already in set")
     else:
         return HttpResponseForbidden("Access Denied")
 

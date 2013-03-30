@@ -1,138 +1,920 @@
 [
-    {
-        "pk": 8, 
-        "model": "qset.question", 
-        "fields": {
-            "creator": 1, 
-            "text": "Salt + Water = ?", 
-            "creation_date": "2012-12-28T06:19:00.604Z", 
-            "choice_w": "Salty Water", 
-            "choice_x": "Acid + Base", 
-            "is_used": false, 
-            "answer": "z", 
-            "type": 0, 
-            "choice_y": "Electrolytic Mixture", 
-            "choice_z": "Saline Solution", 
-            "subject": 4
-        }
-    }, 
-    {
-        "pk": 7, 
-        "model": "qset.question", 
-        "fields": {
-            "creator": 1, 
-            "text": "Classify the type of rock that comes from earth.", 
-            "creation_date": "2012-12-28T06:18:25.524Z", 
-            "choice_w": "", 
-            "choice_x": "", 
-            "is_used": false, 
-            "answer": "None", 
-            "type": 1, 
-            "choice_y": "", 
-            "choice_z": "", 
-            "subject": 1
-        }
-    }, 
-    {
-        "pk": 6, 
-        "model": "qset.question", 
-        "fields": {
-            "creator": 1, 
-            "text": "Is 2 a prime number?", 
-            "creation_date": "2012-12-28T06:17:59.292Z", 
-            "choice_w": "", 
-            "choice_x": "", 
-            "is_used": false, 
-            "answer": "Yes", 
-            "type": 1, 
-            "choice_y": "", 
-            "choice_z": "", 
-            "subject": 5
-        }
-    }, 
-    {
-        "pk": 5, 
-        "model": "qset.question", 
-        "fields": {
-            "creator": 1, 
-            "text": "What kind of energy is used to power your computer?\r\n", 
-            "creation_date": "2012-12-28T06:17:38.185Z", 
-            "choice_w": "", 
-            "choice_x": "", 
-            "is_used": false, 
-            "answer": "electrical", 
-            "type": 1, 
-            "choice_y": "", 
-            "choice_z": "", 
-            "subject": 7
-        }
-    }, 
-    {
-        "pk": 4, 
-        "model": "qset.question", 
-        "fields": {
-            "creator": 1, 
-            "text": "1+1=?", 
-            "creation_date": "2012-12-28T06:16:50.604Z", 
-            "choice_w": "1", 
-            "choice_x": "2", 
-            "is_used": false, 
-            "answer": "x", 
-            "type": 0, 
-            "choice_y": "3", 
-            "choice_z": "4", 
-            "subject": 5
-        }
-    }, 
-    {
-        "pk": 3, 
-        "model": "qset.question", 
-        "fields": {
-            "creator": 1, 
-            "text": "Why is biology so dumb?", 
-            "creation_date": "2012-12-28T06:16:37.223Z", 
-            "choice_w": "", 
-            "choice_x": "", 
-            "is_used": false, 
-            "answer": "Its biology", 
-            "type": 1, 
-            "choice_y": "", 
-            "choice_z": "", 
-            "subject": 6
-        }
-    }, 
-    {
-        "pk": 2, 
-        "model": "qset.question", 
-        "fields": {
-            "creator": 1, 
-            "text": "What is the bigger version of the small dipper?", 
-            "creation_date": "2012-12-28T06:16:23.811Z", 
-            "choice_w": "", 
-            "choice_x": "", 
-            "is_used": false, 
-            "answer": "Big Dipper", 
-            "type": 1, 
-            "choice_y": "", 
-            "choice_z": "", 
-            "subject": 2
-        }
-    }, 
-    {
-        "pk": 1, 
-        "model": "qset.question", 
-        "fields": {
-            "creator": 1, 
-            "text": "What kinds of trees to rocks grow on?", 
-            "creation_date": "2012-12-28T06:15:45.703Z", 
-            "choice_w": "Apple", 
-            "choice_x": "Banana", 
-            "is_used": false, 
-            "answer": "z", 
-            "type": 0, 
-            "choice_y": "Pineapple", 
-            "choice_z": "None", 
-            "subject": 1
-        }
+{
+    "pk": 12, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "d95723eb", 
+        "creator": 1, 
+        "text": "A sidereal day is how much shorter than a solar day?", 
+        "creation_date": "2013-02-24T23:02:43Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "4 minutes", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
     }
+},
+{
+    "pk": 13, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "9158ccf6", 
+        "creator": 1, 
+        "text": "What time will it be in a city with a longitude of 30 degrees East if it is 3:00pm GMT?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "2:00pm", 
+        "choice_x": "3:00pm", 
+        "is_used": 0, 
+        "answer": "z", 
+        "type": 0, 
+        "choice_y": "4:00pm", 
+        "choice_z": "5:00pm", 
+        "subject": 13
+    }
+},
+{
+    "pk": 14, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "4df89c74", 
+        "creator": 1, 
+        "text": "At the Summer Solstice, which latitude (by name or degrees) does the Sun not sink below?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Arctic Circle (66.5 deg North)", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 15, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "d729776a", 
+        "creator": 1, 
+        "text": "Bathymetry is the study of which of the following?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "The bathysphere", 
+        "choice_x": "The depth of bodies of water", 
+        "is_used": 0, 
+        "answer": "x", 
+        "type": 0, 
+        "choice_y": "SONAR and SOFAR technologies", 
+        "choice_z": "Pressure underwater", 
+        "subject": 13
+    }
+},
+{
+    "pk": 16, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "829283fb", 
+        "creator": 1, 
+        "text": "One nautical mile is the equivalent to what arc measure of longitude or latitude?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "One minute of an arc", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 17, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "51c15e23", 
+        "creator": 1, 
+        "text": "Who was the person to have the first ever sea voyage (in 3200 BC)?", 
+        "creation_date": "2013-02-24T22:57:06Z", 
+        "choice_w": "Erik the Red", 
+        "choice_x": "Hannu", 
+        "is_used": 0, 
+        "answer": "z", 
+        "type": 0, 
+        "choice_y": "Eratosthenes", 
+        "choice_z": "Pharaoh Snefru", 
+        "subject": 14
+    }
+},
+{
+    "pk": 18, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "54fac22d", 
+        "creator": 1, 
+        "text": "What was the goal of Bartolomeu Dias in his expedition in the 15th century?", 
+        "creation_date": "2013-02-24T22:57:06Z", 
+        "choice_w": "To find the Cape of Good Hope", 
+        "choice_x": "To find an efficient way to India", 
+        "is_used": 0, 
+        "answer": "x", 
+        "type": 0, 
+        "choice_y": "To sail around the world", 
+        "choice_z": "To map the coasts of S. Africa", 
+        "subject": 14
+    }
+},
+{
+    "pk": 19, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "2da17edc", 
+        "creator": 1, 
+        "text": "Which of the following was not a destination of the HMS Challenger?", 
+        "creation_date": "2013-02-24T22:57:06Z", 
+        "choice_w": "India", 
+        "choice_x": "New Zealand", 
+        "is_used": 0, 
+        "answer": "w", 
+        "type": 0, 
+        "choice_y": "China", 
+        "choice_z": "Japan", 
+        "subject": 14
+    }
+},
+{
+    "pk": 20, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "4cf2f066", 
+        "creator": 1, 
+        "text": "Who was the first to theorize a relationship between tides and the moon?", 
+        "creation_date": "2013-02-24T22:57:06Z", 
+        "choice_w": "Pytheas", 
+        "choice_x": "Aristotle", 
+        "is_used": 0, 
+        "answer": "w", 
+        "type": 0, 
+        "choice_y": "Strabo", 
+        "choice_z": "Ptolemy", 
+        "subject": 14
+    }
+},
+{
+    "pk": 21, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "d48aafd5", 
+        "creator": 1, 
+        "text": "What was the title of Ptolemy's attempt at a world atlas in the 15th century?", 
+        "creation_date": "2013-02-24T22:57:06Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Geographia", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 14
+    }
+},
+{
+    "pk": 22, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "f85f2f6b", 
+        "creator": 1, 
+        "text": "What decade of the 20th century was deemed the IDOE or International Decade of Ocean Exploration?", 
+        "creation_date": "2013-02-24T22:57:06Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "1970s", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 14
+    }
+},
+{
+    "pk": 23, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "7aa1b489", 
+        "creator": 1, 
+        "text": "In 1002, 500 years before Columbus, who was the first person to navigate a ship to what is now known as North America?", 
+        "creation_date": "2013-02-24T22:57:06Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Leif Erikson", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 14
+    }
+},
+{
+    "pk": 24, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "5425efc9", 
+        "creator": 1, 
+        "text": "What is Marine Meteorology the study of?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Heat transfers, water cycles,  and air-water interactions", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 25, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "7a61917c", 
+        "creator": 1, 
+        "text": "What was the major flaw in Ptolemy's world atlas?", 
+        "creation_date": "2013-02-24T22:57:06Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "He accepted a smaller value of the circumference of the Earth", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 14
+    }
+},
+{
+    "pk": 26, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "69ae49c9", 
+        "creator": 1, 
+        "text": "NASA's NIMBUS-7 satellite carried a sensor package called the Coastal Zone Color Scanner. What were its images used to determine?", 
+        "creation_date": "2013-02-25T04:00:27Z", 
+        "choice_w": "Heat Radiation", 
+        "choice_x": "Biological productivity", 
+        "is_used": 0, 
+        "answer": "x", 
+        "type": 0, 
+        "choice_y": "Ocean Depth", 
+        "choice_z": "Ocean Chemical Composition", 
+        "subject": 15
+    }
+},
+{
+    "pk": 27, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "e8f4c180", 
+        "creator": 1, 
+        "text": "What kind of map projection is most commonly used for navigation?", 
+        "creation_date": "2013-02-24T22:57:06Z", 
+        "choice_w": "Meracator", 
+        "choice_x": "Polar Conic", 
+        "is_used": 0, 
+        "answer": "w", 
+        "type": 0, 
+        "choice_y": "Tangent Plane", 
+        "choice_z": "Cylindric", 
+        "subject": 14
+    }
+},
+{
+    "pk": 28, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "da92b607", 
+        "creator": 1, 
+        "text": "Which device would be the best choice for navigation at sea?", 
+        "creation_date": "2013-02-24T22:57:06Z", 
+        "choice_w": "Sextant", 
+        "choice_x": "Radar", 
+        "is_used": 0, 
+        "answer": "z", 
+        "type": 0, 
+        "choice_y": "Loran", 
+        "choice_z": "GPS", 
+        "subject": 15
+    }
+},
+{
+    "pk": 29, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "6963f70d", 
+        "creator": 1, 
+        "text": "During what season is the Sun the closest to the equator for the Northern Hemisphere?", 
+        "creation_date": "2013-02-25T04:00:27Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Winter", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 30, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "e8469be8", 
+        "creator": 1, 
+        "text": "During what day in spring is the sun directly above the equator for the Northern Hemisphere?", 
+        "creation_date": "2013-02-25T04:00:27Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "March 21", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 31, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "5d115db3", 
+        "creator": 1, 
+        "text": "What is the residence time for water in a reservoir if there are 4000 m^3 of water that flows in and out at a rate of 20 m^3/s in seconds?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "400", 
+        "choice_x": "200", 
+        "is_used": 0, 
+        "answer": "x", 
+        "type": 0, 
+        "choice_y": "20", 
+        "choice_z": "10", 
+        "subject": 13
+    }
+},
+{
+    "pk": 32, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "120a5bef", 
+        "creator": 1, 
+        "text": "Who named the Pacific Ocean?", 
+        "creation_date": "2013-02-24T22:57:06Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Ferdinand Magellan", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 14
+    }
+},
+{
+    "pk": 33, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "f504bee2", 
+        "creator": 1, 
+        "text": "What is the 2nd biggest supply of Earth's water supply?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "Oceans and Sea Ice", 
+        "choice_x": "Freshwater Lakes", 
+        "is_used": 0, 
+        "answer": "z", 
+        "type": 0, 
+        "choice_y": "Groundwater", 
+        "choice_z": "Ice caps and Glaciers", 
+        "subject": 13
+    }
+},
+{
+    "pk": 34, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "c17540f1", 
+        "creator": 1, 
+        "text": "What are soundings?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Depth measurements", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 15
+    }
+},
+{
+    "pk": 35, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "e63f34eb", 
+        "creator": 1, 
+        "text": "What are continental shelves primarily eroded by?", 
+        "creation_date": "2013-02-24T23:02:43Z", 
+        "choice_w": "Humans", 
+        "choice_x": "Winds", 
+        "is_used": 0, 
+        "answer": "y", 
+        "type": 0, 
+        "choice_y": "Storm Waves", 
+        "choice_z": "Turbidity Currents", 
+        "subject": 13
+    }
+},
+{
+    "pk": 36, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "2ffa2ae3", 
+        "creator": 1, 
+        "text": "Pelagic sediments that are 30% more biogenous material by weight are considered what?", 
+        "creation_date": "2013-02-24T22:57:06Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "ooze", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 37, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "ea5d2c78", 
+        "creator": 1, 
+        "text": "What is the compound found in siliceous ooze?", 
+        "creation_date": "2013-02-25T00:08:01Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Silicon Dioxide (SiO2)", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 38, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "5c127dc9", 
+        "creator": 1, 
+        "text": "Which of the following has the longest residence time in the Oceans?", 
+        "creation_date": "2013-02-25T03:54:46Z", 
+        "choice_w": "Iron", 
+        "choice_x": "Potassium", 
+        "is_used": 0, 
+        "answer": "y", 
+        "type": 0, 
+        "choice_y": "Sodium", 
+        "choice_z": "Sulfate", 
+        "subject": 13
+    }
+},
+{
+    "pk": 39, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "f7d3a037", 
+        "creator": 1, 
+        "text": "Which of the following is not a common method of desalination?", 
+        "creation_date": "2013-02-25T04:00:27Z", 
+        "choice_w": "Ion exchange columns", 
+        "choice_x": "Sublimation of ice", 
+        "is_used": 0, 
+        "answer": "x", 
+        "type": 0, 
+        "choice_y": "electrodialysis and reverse osmosis", 
+        "choice_z": "Evaporation and condensation", 
+        "subject": 13
+    }
+},
+{
+    "pk": 40, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "b7d7922f", 
+        "creator": 1, 
+        "text": "Caballing tends to occur up to what depth?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "10 m", 
+        "choice_x": "100 m", 
+        "is_used": 0, 
+        "answer": "x", 
+        "type": 0, 
+        "choice_y": "1000 m", 
+        "choice_z": "10000 m", 
+        "subject": 13
+    }
+},
+{
+    "pk": 41, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "2befdcd3", 
+        "creator": 1, 
+        "text": "Which of the following causes an increase in density of water?", 
+        "creation_date": "2013-02-25T04:00:27Z", 
+        "choice_w": "Decreased pressure", 
+        "choice_x": "Absorption of solar energy", 
+        "is_used": 0, 
+        "answer": "y", 
+        "type": 0, 
+        "choice_y": "Decreased temperature", 
+        "choice_z": "Decreased salinity", 
+        "subject": 13
+    }
+},
+{
+    "pk": 42, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "855740d5", 
+        "creator": 1, 
+        "text": "A pycnocline is the rapid increase in what with depth?", 
+        "creation_date": "2013-02-25T04:00:27Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Density", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 43, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "e4224c5d", 
+        "creator": 1, 
+        "text": "Why is there no shallow thermocline and a large mixed layer in winter?", 
+        "creation_date": "2013-02-25T03:54:46Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Surface cooling causes more mixing and thus a deeper wind-mixed layer", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 44, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "19c4f0f2", 
+        "creator": 1, 
+        "text": "In what season is the wind mixed layer of the ocean the most shallow?", 
+        "creation_date": "2013-02-25T00:08:01Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Summer", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 45, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "586433af", 
+        "creator": 1, 
+        "text": "Surface waters are driven by wind, against a coast and downwells. What is this also called?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "Continuity flow", 
+        "choice_x": "Convergence", 
+        "is_used": 0, 
+        "answer": "x", 
+        "type": 0, 
+        "choice_y": "Divergence", 
+        "choice_z": "Subsurface Circulation", 
+        "subject": 13
+    }
+},
+{
+    "pk": 46, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "cdc8634c", 
+        "creator": 1, 
+        "text": "What does Tritium decay into?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "An isotope of helium", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 47, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "6481138b", 
+        "creator": 1, 
+        "text": "How does North Atlantic deep water compare to Antarctic intermediate water in terms of temperature and salinity?", 
+        "creation_date": "2013-02-25T04:00:27Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Cooler and saltier", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 48, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "9e9c7e61", 
+        "creator": 1, 
+        "text": "Which of the following produces the densest water in all the Oceans?", 
+        "creation_date": "2013-02-25T00:08:01Z", 
+        "choice_w": "North Atlantic Deep Water", 
+        "choice_x": "South Atlantic Bottom Water", 
+        "is_used": 0, 
+        "answer": "z", 
+        "type": 0, 
+        "choice_y": "Antarctic intermediate water", 
+        "choice_z": "Antactic bottom water", 
+        "subject": 13
+    }
+},
+{
+    "pk": 49, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "5bb8e266", 
+        "creator": 1, 
+        "text": "List the Oceans from most volume to least volume.", 
+        "creation_date": "2013-02-25T03:54:46Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Pacific, Atlantic, Indian, Arctic", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 50, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "18970dd9", 
+        "creator": 1, 
+        "text": "NSF's North Pole Environmental Observatory was created to learn about what?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "Climate regulation of northernmost ocean", 
+        "choice_x": "Salinity of northernmost ocean", 
+        "is_used": 0, 
+        "answer": "w", 
+        "type": 0, 
+        "choice_y": "Ice sheet thickness", 
+        "choice_z": "Ice drift speed", 
+        "subject": 15
+    }
+},
+{
+    "pk": 51, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "33ea056f", 
+        "creator": 1, 
+        "text": "The Seasor is used to measure what?", 
+        "creation_date": "2013-02-25T04:00:27Z", 
+        "choice_w": "Depth profile of pressure", 
+        "choice_x": "Depth profile of Salinity", 
+        "is_used": 0, 
+        "answer": "x", 
+        "type": 0, 
+        "choice_y": "Depth profile of temperature", 
+        "choice_z": "Depth profile of oxygen", 
+        "subject": 15
+    }
+},
+{
+    "pk": 52, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "64c68505", 
+        "creator": 1, 
+        "text": "Ocean thermal energy conversion takes advantage of what property of water?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "Cohesion", 
+        "choice_x": "Tension", 
+        "is_used": 0, 
+        "answer": "z", 
+        "type": 0, 
+        "choice_y": "Triple Point", 
+        "choice_z": "Specific Heat", 
+        "subject": 15
+    }
+},
+{
+    "pk": 53, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "15d92599", 
+        "creator": 1, 
+        "text": "What is the deepest submarine canyon in the world?", 
+        "creation_date": "2013-02-24T23:02:43Z", 
+        "choice_w": "Congo Canyon", 
+        "choice_x": "Aviles Canyon", 
+        "is_used": 0, 
+        "answer": "x", 
+        "type": 0, 
+        "choice_y": "Bering Canyon", 
+        "choice_z": "Hudson Canyon", 
+        "subject": 13
+    }
+},
+{
+    "pk": 54, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "db9ec3c0", 
+        "creator": 1, 
+        "text": "What is the commonly accepted mechanism of submarine canyon formation?", 
+        "creation_date": "2013-02-25T00:08:01Z", 
+        "choice_w": "Techtonic movement", 
+        "choice_x": "Turbidity currents", 
+        "is_used": 0, 
+        "answer": "x", 
+        "type": 0, 
+        "choice_y": "Underwater erruptions", 
+        "choice_z": "Submarine crashes", 
+        "subject": 13
+    }
+},
+{
+    "pk": 55, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "53970b5d", 
+        "creator": 1, 
+        "text": "Seasonal patterns of evaporation, precipitation, and sea ice formation reflect what property of Earth's water?", 
+        "creation_date": "2013-02-25T04:00:27Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Salinity", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 56, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "f2e9d955", 
+        "creator": 1, 
+        "text": "What causes an unstable water column?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Dense water above less dense water", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 57, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "a12da2da", 
+        "creator": 1, 
+        "text": "How do CTDs or Conductivity-Temperature-Depth sensors measure salinity?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Measuring electrical conductance", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 15
+    }
+},
+{
+    "pk": 58, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "f9857916", 
+        "creator": 1, 
+        "text": "What is considered a deep-water wave?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "A wave that occurs in water of 1/2 the wave's length", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 59, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "6a6e50b", 
+        "creator": 1, 
+        "text": "The majority of waves observed are of what type?", 
+        "creation_date": "2013-02-24T23:02:43Z", 
+        "choice_w": "Storm center waves", 
+        "choice_x": "Froced waves", 
+        "is_used": 0, 
+        "answer": "y", 
+        "type": 0, 
+        "choice_y": "Progressive wind waves", 
+        "choice_z": "Conservative wind waves", 
+        "subject": 13
+    }
+},
+{
+    "pk": 60, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "ca1d3412", 
+        "creator": 1, 
+        "text": "The layers of a wave train are created by what process?", 
+        "creation_date": "2013-02-24T23:02:43Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Dispersion", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 61, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "e8e9a222", 
+        "creator": 1, 
+        "text": "The distance that wind blows in the same direction over water is called what?", 
+        "creation_date": "2013-02-25T04:00:27Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "Fetch", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+},
+{
+    "pk": 62, 
+    "model": "qset.question", 
+    "fields": {
+        "uid": "f0320767", 
+        "creator": 1, 
+        "text": "A wave will break if its ratio between height and length exceeds what?", 
+        "creation_date": "2013-02-25T04:00:26Z", 
+        "choice_w": "", 
+        "choice_x": "", 
+        "is_used": 0, 
+        "answer": "1:7", 
+        "type": 1, 
+        "choice_y": "", 
+        "choice_z": "", 
+        "subject": 13
+    }
+}
 ]
