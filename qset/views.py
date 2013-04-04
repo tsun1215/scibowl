@@ -1,16 +1,15 @@
 # Create your views here.
 from qset.models import QuestionForm, Question, SetForm, Subject, Set, Set_questions
-from django.http import HttpResponseRedirect
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.utils import simplejson
-from django.shortcuts import render_to_response
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.html import escape
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.db.models import Q
+from usermanage.models import Group
 
 
 @login_required
@@ -31,6 +30,27 @@ def addQuestion(request):
     else:
         form = QuestionForm()
     return render_to_response('qset/addquestion.html', {"form": form, "action": action, "title": "Add Question", "success": request.GET.get("success", "false")})
+
+
+@login_required
+def addQuestionToGroup(request):
+    if request.is_ajax:
+        question = get_object_or_404(Question, uid=request.GET.get("q", 0))
+        if question.is_used == 0 and request.user == question.creator:
+            group = get_object_or_404(Group, uid=request.GET.get("g", 0))
+            question.group = group
+            question.save()
+            return HttpResponse(simplejson.dumps({"success": True, "error_code": 0}), mimetype='application/json')
+        elif question.is_used != 0:
+            # Todo: require user to copy question
+            return HttpResponse(simplejson.dumps({"success": False, "error_code": 3}), mimetype='application/json')
+        return HttpResponse(simplejson.dumps({"success": False, "error_code": 2}), mimetype='application/json')
+    # Error Codes:
+    # 0: No error
+    # 1: Not ajax
+    # 2: Insufficient privileges
+    # 3: Question used, need to copy question
+    return HttpResponse(simplejson.dumps({"success": False, "error_code": 1}), mimetype='application/json')
 
 
 @login_required

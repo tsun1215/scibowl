@@ -1,0 +1,26 @@
+table{
+    border-spacing: 0px;
+    width:100%;
+}
+thead th{
+    font-variant: small-caps;
+    font-size: 1.3em;
+    border-bottom: 1px solid black;
+    text-align: left;
+}
+tbody tr{
+    background-color: #FFFFFF;
+}
+tbody td{
+    padding:10px 0px;
+    border-bottom: 1px solid #E5E5E5;
+}
+.uid{
+    width:75px;
+}
+.name{
+    width:150px;
+}
+.checkbox{
+    width:30px;
+}

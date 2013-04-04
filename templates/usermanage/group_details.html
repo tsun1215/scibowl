@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block head %}
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $("#permissions").load("{{group.get_perms_url}}");
+        $("#togglePerms").click(function(){
+            $("#permissions").slideToggle();
+            return false;
+        });
+    });
+    </script>
+    <style type="text/css">
+    #permissions{
+        display: none;
+        border:1px groove gray;
+        background-color: #E5E5E5;
+        width:300px;
+        padding:20px;
+    }
+    </style>
+{% endblock head %}
+{% block content %}
+    <header>
+        <h1>{{group.name}}</h1>
+    </header>    
+    <h2>Description</h2>
+    <p>
+        {{group.description}}
+    </p>
+    <h2>Admins</h2>
+    <ul>
+        <li>{{group.creator.get_full_name}}</li>
+        {%for x in group.admins%}
+            <li>{{x.get_full_name}}</li>
+        {%endfor%}
+    </ul>
+    <h2>Users</h2>
+    <ul>
+        {%for x in group.reg_users%}
+            <li>{{x.get_full_name}}</li>
+        {%endfor%}
+    </ul> 
+    <a id="togglePerms" href="{{group.get_perms_url}}">Edit Perms</a>
+    <div id="permissions">
+    </div>   
+{% endblock content %}

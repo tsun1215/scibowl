@@ -9,8 +9,10 @@ import random
 
 class Group(models.Model):
     name = models.CharField(max_length=100)
-    admins = models.ManyToManyField(User, through="Membership")
-    creation_date = models.DateTimeField()
+    creator = models.ForeignKey(User, related_name='+')
+    description = models.CharField(max_length=2000)
+    users = models.ManyToManyField(User, through="Membership")
+    creation_date = models.DateTimeField(auto_now_add=True)
     uid = models.CharField(max_length=200, unique=True)
 
     def save(self, *args, **kwargs):
@@ -20,6 +22,30 @@ class Group(models.Model):
                 key = hex(random.getrandbits(32)).rstrip("L").lstrip("0x")
             self.uid = key
         super(Group, self).save(*args, **kwargs)
+
+    def admins(self):
+        return User.objects.filter(group=self, membership__is_staff=True).exclude(self.creator)
+
+    def reg_users(self):
+        return User.objects.filter(group=self, membership__is_staff=False).exclude(self.creator)
+
+    def get_short_descrip(self):
+        tot_length = 70
+        return self.description[:tot_length] + "..." if len(self.description) > tot_length else self.description
+
+    def get_view_url(self):
+        return "/group/" + self.uid + "/"
+
+    def get_perms_url(self):
+        return "/group/perms/" + self.uid + "/"
+
+
+class GroupCreateForm(forms.ModelForm):
+    description = forms.CharField(max_length=2000, widget=forms.Textarea)
+
+    class Meta:
+        model = Group
+        fields = ("name", "description")
 
 
 class Membership(models.Model):

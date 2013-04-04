@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript" src="/static/js/jquery.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("form").submit(function(){
+                var arr = []
+                $(".user").each(function(index){
+                    arr.push({"id":$(this).attr("data-id"), "staff":$(this).val()});
+                });
+                $.post("{{group.get_perms_url}}", {"user_arr":JSON.stringify(arr)}, function(){
+                    $("#permissions").slideUp();
+                });
+                return false;
+            });
+        });
+    </script>
+</head>
+<body>
+    <form action="{{group.get_perms_url}}"method="post">
+        <table>
+            {% for m in memberships %}
+                <tr>
+                    <td>{{m.user.get_full_name}} ({{m.user.username}})</td>
+                    <td>
+                        <select class="user" data-id="{{m.user.id}}">
+                            <option value="0">Normal</option>
+                            {%if m.is_staff%}
+                                <option value="1" selected="selected">Admin</option>
+                            {% else %}
+                                <option value="1">Admin</option>
+                            {%endif%}
+                        </select>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value="Save"/>
+        </form>
+</body>
+</html>

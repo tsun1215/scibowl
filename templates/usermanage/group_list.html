@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/css/table.css">
+{% endblock head %}
+{% block content %}
+    <header>
+        <h1>Groups</h1>
+    </header>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>UID</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for g in groups%}
+                <tr class="row">
+                    <td class="checkbox"><input type="checkbox"/></td>
+                    <td class="name"><a href="{{g.get_view_url}}">{{g.name}}</a></td>
+                    <td class='uid'>{{g.uid}}</td>
+                    <td class='description'>{{g.get_short_descrip}}</td>
+                </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+{% endblock content %}

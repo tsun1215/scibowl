@@ -136,6 +136,11 @@ button:active, input[type=button]:active, input[type=submit]:active{
 .flyDown #checkmark{
     vertical-align: middle;
     margin:0 5px;
+} 
+header{
+    background-color: #EEEEEE;
+    text-align: center;
+    padding:10px;
 }
 
 
