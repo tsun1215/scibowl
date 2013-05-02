@@ -8,6 +8,7 @@
     <script src="/static/js/main.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
+            flashMessages();
             $("#userOptions").toggle(function(){
                 $("#userOptionsMenu").show();
             },
@@ -33,11 +34,30 @@
                 return false;
             });
         });
-        
+        function flashMessages(){
+            if($(".messages").children("li").length > 0){
+                $(".messages").fadeIn(300).delay(2500).slideUp(300);
+                $(".messages").hover(function(){
+                    $(this).clearQueue();
+                }, function(){                
+                    $(this).delay(2500).slideUp(300);
+                });
+            }
+        }
+        function flashMessage(msg){
+            $(".messages").html("");
+            $(".messages").append("<li>" + msg + "</li>");
+            flashMessages();
+        }
     </script>
     {%block head%}{%endblock%}
 </head>
 <body>
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
     <div id="topbar">
         {%block topbar%}    
             <div id="nav">

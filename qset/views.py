@@ -2,7 +2,7 @@
 from qset.models import QuestionForm, Question, SetForm, Subject, Set, Set_questions
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.utils import simplejson
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.html import escape
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -13,8 +13,16 @@ from usermanage.models import Group
 
 
 @login_required
-def filterQuestions(request):
-    return render_to_response('qset/question_list.html', {"subjects": Subject.objects.all(), "users": User.objects.all()}, context_instance=RequestContext(request))
+def filterQuestions(request, group_id=None):
+    if group_id:
+        group = get_object_or_404(Group, uid=group_id)
+        if request.user == group.creator or request.user in group.admins():
+            return render_to_response('qset/question_list.html', {"subjects": Subject.objects.all(), "users": group.all_users(), "group": group, "path": "/ajax/" + group.uid + "/getq/"}, context_instance=RequestContext(request))
+        else:
+            return redirect('usermanage.views.viewGroup', group_id=group_id)
+    else:
+        # find a way to differentiate between the group question view and my questions view
+        return render_to_response('qset/question_list.html', {"subjects": Subject.objects.all(), "path": "/ajax/getq/"}, context_instance=RequestContext(request))
 
 
 @login_required
@@ -96,7 +104,7 @@ def editQuestion(request, q_id):
 def addSet(request):
     if(request.method == "POST"):
         data = simplejson.loads(request.POST['form_data'])
-        new_set = Set(name=data['name'], description=data['description'], creator=request.user)
+        new_set = Set(name=data['name'], description=data['description'], creator=request.user, group=data['group'])
         new_set.save()
         for s in data['subjects'].split(','):
             new_set.subjects.add(Subject.objects.get(pk=s))
@@ -194,28 +202,44 @@ def editSet(request, set_id):
 
 
 @login_required
-def getQuestions(request):
+def getQuestions(request, group_id=None):
     qlist = []
     # Parse GET Parameters
     kwargs = {
         "creator": request.user,
     }
     s_query = Q()
+    u_query = Q()
+    g_query = Q()
     if request.GET.get('uid', False):
         kwargs['uid'] = request.GET.get('uid')
+
+    # Generates query object for subjects
     if request.GET.get('subject', False) and request.GET.get('subject') != "":
         subjects = request.GET.get('subject').split(',')
         for s in subjects:
             s_query = s_query | Q(subject=Subject.objects.get(pk=s))
-        # kwargs['subject'] = Subject.objects.filter(name=request.GET.get('subject'))
+
     if request.GET.get('type', False) and request.GET.get('type') != "":
         kwargs['type'] = request.GET.get('type')
+
+    # Generates query object for groups
+    if request.GET.get('group', False) and request.GET.get('group') != "":
+        groups = request.GET.get('group').split(',')
+        for g in groups:
+            g_obj = Group.objects.get(uid=g)
+            if request.user in g_obj.all_users():
+                g_query = g_query | Q(group=g_obj)
     if request.GET.get('used', False) and request.GET.get('used') != "1":
         kwargs['is_used'] = request.GET.get('used')
 
     # Allows staff to access other user's questions (not allowed for regular users)
     if request.user.is_staff and request.GET.get('creator', False) and request.GET.get('creator') != "":
-        kwargs['creator'] = User.objects.get(pk=request.GET['creator'])
+        del kwargs['creator']
+        users = request.GET.get('creator').split(',')
+        for u in users:
+            u_query = u_query | Q(creator=User.objects.get(pk=u))
+        # kwargs['creator'] = User.objects.get(pk=request.GET['creator'])
     elif request.user.is_staff and request.GET.get('all', False):
         del kwargs['creator']
 
@@ -223,9 +247,9 @@ def getQuestions(request):
         querydict = Question.objects.filter(s_query, **kwargs).order_by("?")
     else:
         if request.GET.get('order', False) and request.GET.get('order') != "":
-            querydict = Question.objects.filter(s_query, **kwargs).order_by(request.GET.get('order'))
+            querydict = Question.objects.filter(g_query, u_query, s_query, **kwargs).order_by(request.GET.get('order'))
         else:
-            querydict = Question.objects.filter(s_query, **kwargs).order_by("-creation_date")
+            querydict = Question.objects.filter(g_query, u_query, s_query, **kwargs).order_by("-creation_date")
 
     if request.POST.get("questions", False):
         exclude = simplejson.loads(request.POST.get("questions"))
@@ -240,12 +264,17 @@ def getQuestions(request):
     for q in querydict:
         curr = {
             "type": escape(q.type),
-            "subject": q.subject.get_name_display(),
+            "subject": q.subject.get_short_name(),
+            "subject-id": q.subject.id,
+            "group": q.group.name if q.group else None,
+            "group-id": q.group.uid if q.group else None,
             "date": q.creation_date.date().__str__(),
             "text": escape(q.text),
             "answer": escape(q.ans()),
             "id": q.uid,
             "user": q.creator.get_full_name(),
+            "user-short": q.creator.first_name[0] + q.creator.last_name,
+            "user-id": q.creator.id,
             "used": q.is_used,
         }
         if q.type == 0:

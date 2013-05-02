@@ -15,6 +15,9 @@ class Group(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     uid = models.CharField(max_length=200, unique=True)
 
+    def __unicode__(self):
+        return self.name
+
     def save(self, *args, **kwargs):
         if self.uid is None or self.uid == "":
             key = hex(random.getrandbits(32)).rstrip("L").lstrip("0x")
@@ -24,10 +27,16 @@ class Group(models.Model):
         super(Group, self).save(*args, **kwargs)
 
     def admins(self):
-        return User.objects.filter(group=self, membership__is_staff=True).exclude(self.creator)
+        return User.objects.filter(group=self, membership__status=1).exclude(pk=self.creator.pk)
 
     def reg_users(self):
-        return User.objects.filter(group=self, membership__is_staff=False).exclude(self.creator)
+        return User.objects.filter(group=self, membership__status=0).exclude(pk=self.creator.pk)
+
+    def all_users(self):
+        return User.objects.filter(group=self).exclude(membership__status=2)
+
+    def pending(self):
+        return User.objects.filter(group=self, membership__status=2).exclude(pk=self.creator.pk)
 
     def get_short_descrip(self):
         tot_length = 70
@@ -35,6 +44,9 @@ class Group(models.Model):
 
     def get_view_url(self):
         return "/group/" + self.uid + "/"
+
+    def get_edit_url(self):
+        return "/group/edit/" + self.uid + "/"
 
     def get_perms_url(self):
         return "/group/perms/" + self.uid + "/"
@@ -51,7 +63,17 @@ class GroupCreateForm(forms.ModelForm):
 class Membership(models.Model):
     group = models.ForeignKey(Group)
     user = models.ForeignKey(User)
-    is_staff = models.BooleanField(default=False)
+    status = models.IntegerField(default=2)
+    # Change to "status"
+    # 0: normal user
+    # 1: staff
+    # 2: pending user
+
+    def is_staff(self):
+        return self.status == 1
+
+    def get_remove_url(self):
+        return "/ajax/group/remove/" + self.group.uid + "/" + self.user.id.__str__() + "/"
 
 
 class UserCreateForm(UserCreationForm):

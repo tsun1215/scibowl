@@ -7,20 +7,17 @@ table{
     padding:10px;
     text-align: center;
 }
-.type{
-    width:20px;
-    text-align: center
+.checkbox{
+    padding:10px;
 }
-.user{
-    width:120px;
-    overflow:hidden;
-} 
-.subject{
-    width:150px;
+.tags{
+    white-space: nowrap;
+}
+.tag.subject, .tag.type, .tag.user{
+    cursor: pointer;
 }
 .used{
-    width:50px;
-    text-align: center;
+    color:red;
 }
 td{
  margin:0px;
@@ -50,8 +47,17 @@ th{
 tr td{
     border-bottom: 1px solid #DDDDDD;
 }
+.tag{
+    /*border:1px solid black;*/
+    border-radius: 2px;
+    padding:0 3px;
+    font-size: .8em;
+    margin:0 2px;
+    color:#555555;
+    background-color: #EEEEEE;
+}
 .orderable{
-    cursor: pointer;        
+    cursor: pointer;
 }
 .orderable:hover{
     background-color: #EEEEEE;

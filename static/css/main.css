@@ -17,7 +17,26 @@ html, body{
 a{
     text-decoration: none;
 }
-
+.messages{
+    position:fixed;
+    border: 2px solid gray;
+    top:0;
+    left:0;
+    right:0;
+    z-index: 1;
+    margin:0 auto;
+    background-color: #EEEEEE;
+    width:200px;
+    padding:3px 12px;
+    text-align: center;
+    -webkit-border-radius:0 0 10px 10px;
+    -moz-border-radius:0 0 10px 10px;
+    border-radius:0 0 10px 10px;
+    display:none;
+}
+.messages li{
+    list-style: none;
+}
 #topbar{
     position:absolute;
     top:0;

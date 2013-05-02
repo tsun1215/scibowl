@@ -14,21 +14,22 @@
     <header>
         <h1>{{group.name}}</h1>
     </header>
-    {%if user == group.creator or user in group.admins%}
+    {% if user in group.pending %}
+        <h2 class='success'>Your application to this group is pending approval.</h2>
+    {% else %}
         <script type="text/javascript">
-        $(document).ready(function(){
-            $("#permissions").load("{{group.get_perms_url}}");
-            $("#togglePerms").click(function(){
-                $("#permissions").slideToggle();
-                return false;
+            $(document).ready(function(){
+                $("#join").click(function(){
+                    $.get("/ajax/group/{{group.uid}}/{{user.id}}/", function(data){
+                        if(data.success){
+                            window.location.reload();
+                        }
+                    });
+                });
             });
-        });
         </script>
-        <a href="{{group.get_edit_url}}">Edit Group</a> | 
-        <a id="togglePerms" href="{{group.get_perms_url}}">Edit Perms</a>
-        <div id="permissions">
-        </div>         
-     {% endif %} 
+        <button id="join">Join Group</button>
+    {% endif %}
     <h2>Description</h2>
     <p>
         {{group.description}}

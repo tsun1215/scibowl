@@ -26,21 +26,21 @@ SUBJECT_CHOICES = (
     ('T', 'Technology'),
 )
 SUBJECT_CHOICES_DICT = {
-    'ES': 'Earth Science',
-    'A': 'Astronomy',
-    'P': 'Physics',
-    'C': 'Chemistry',
+    'ES': 'Earth Sci',
+    'A': 'Astro',
+    'P': 'Phys',
+    'C': 'Chem',
     'M': 'Math',
-    'B': 'Biology',
+    'B': 'Bio',
     'E': 'Energy',
-    'OC': 'Ocean Chemistry',
-    'PO': 'Physical Oceanography',
-    'MB': 'Marine Biology',
-    'T': 'Technology',
+    'OC': 'Ocean Chem',
+    'PO': 'Physical O.',
+    'MB': 'Marine Bio',
+    'T': 'O. Tech',
     'MP': 'Marine Policy',
-    'GL': 'Ocean Geology',
-    'GG': 'Ocean Geography',
-    'SS': 'Ocean History',
+    'GL': 'O. Geology',
+    'GG': 'O. Geography',
+    'SS': 'O. History',
 }
 QUESTION_SUBTYPE_CHOICES = (
     (0, 'Multiple Choice'),
@@ -64,6 +64,9 @@ class Subject(models.Model):
 
     def __unicode__(self):
         return self.get_name_display()
+
+    def get_short_name(self):
+        return SUBJECT_CHOICES_DICT[self.name]
 
 
 class Question(models.Model):

@@ -114,6 +114,7 @@
         $("#set_creation_form").submit(function(){
             form_data = {
                 "name": $("#id_name").val(),
+                "group": $("#id_group").val(),
                 "description": $("#id_description").val(),
                 "subjects": $("#id_subjects").val().join(','),
                 "num_q": $("#id_num_questions").val(),

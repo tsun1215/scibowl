@@ -8,15 +8,35 @@
             $("form").submit(function(){
                 var arr = []
                 $(".user").each(function(index){
-                    arr.push({"id":$(this).attr("data-id"), "staff":$(this).val()});
+                    arr.push({"id":$(this).attr("data-id"), "status":$(this).val()});
                 });
                 $.post("{{group.get_perms_url}}", {"user_arr":JSON.stringify(arr)}, function(){
                     $("#permissions").slideUp();
+                    window.location.reload();
                 });
                 return false;
             });
+            $(".icon.delete").click(function(){
+                var clicked = $(this);
+                $.get($(this).attr("data-url"), function(data){
+                    $(clicked.parent().parent("tr")).hide(500, function(){
+                        $(this).remove();  
+                    });
+                });
+            });
         });
     </script>
+    <style type="text/css">
+        .icon{
+            opacity: 0.4;
+            cursor: pointer;
+            height:19px;
+            vertical-align: middle;
+        }
+        .icon:hover{
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
     <form action="{{group.get_perms_url}}"method="post">
@@ -32,7 +52,15 @@
                             {% else %}
                                 <option value="1">Admin</option>
                             {%endif%}
+                            {% if m.status == 2 %}
+                                <option value="2" selected="selected">Pending</option>
+                            {% endif %}
                         </select>
+                    </td>
+                    <td>
+                        {%if not m.is_staff%}
+                            <img class="icon delete" src="/static/images/trash.png" data-url="{{m.get_remove_url}}"/>
+                        {%endif%}
                     </td>
                 </tr>
             {% endfor %}
