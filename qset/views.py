@@ -22,37 +22,58 @@ def filterQuestions(request, group_id=None):
             return redirect('usermanage.views.viewGroup', group_id=group_id)
     else:
         # find a way to differentiate between the group question view and my questions view
-        return render_to_response('qset/question_list.html', {"subjects": Subject.objects.all(), "path": "/ajax/getq/"}, context_instance=RequestContext(request))
+        return render_to_response('qset/question_list.html', {"subjects": Subject.objects.all(), "groups": request.user.group_set.all(), "path": "/ajax/getq/"}, context_instance=RequestContext(request))
 
 
 @login_required
 def addQuestion(request):
     action = "/question/add/"
     if(request.method == "POST"):
-        form = QuestionForm(data=request.POST)
+        form = QuestionForm(user=request.user, data=request.POST)
         if form.is_valid():
             q = form.save(commit=False)
             q.creator = request.user
             q.save()
             return HttpResponseRedirect('/question/add/?success=true')
     else:
-        form = QuestionForm()
+        form = QuestionForm(user=request.user)
     return render_to_response('qset/addquestion.html', {"form": form, "action": action, "title": "Add Question", "success": request.GET.get("success", "false")})
 
 
 @login_required
 def addQuestionToGroup(request):
-    if request.is_ajax:
-        question = get_object_or_404(Question, uid=request.GET.get("q", 0))
-        if question.is_used == 0 and request.user == question.creator:
-            group = get_object_or_404(Group, uid=request.GET.get("g", 0))
-            question.group = group
-            question.save()
-            return HttpResponse(simplejson.dumps({"success": True, "error_code": 0}), mimetype='application/json')
-        elif question.is_used != 0:
-            # Todo: require user to copy question
-            return HttpResponse(simplejson.dumps({"success": False, "error_code": 3}), mimetype='application/json')
-        return HttpResponse(simplejson.dumps({"success": False, "error_code": 2}), mimetype='application/json')
+    if request.is_ajax and request.method == "POST":
+        group = get_object_or_404(Group, uid=request.POST.get("g", 0))
+        questions = simplejson.loads(request.POST.get("q", []))
+        errors = []
+        if request.user not in group.all_users():
+            return HttpResponse(simplejson.dumps({"success": False, "error_code": 2}), mimetype='application/json')
+        for q in questions:
+            question = get_object_or_404(Question, uid=q)
+            if question.is_used == 0 and request.user == question.creator:
+                question.group = group
+                question.save()
+                errors.append({
+                    "q": question.uid,
+                    "error": None
+                })
+            elif question.is_used != 0:
+                # Todo: require user to copy question
+                errors.append({
+                    "q": question.uid,
+                    "error": 3
+                })
+        return HttpResponse(simplejson.dumps({"success": True, "error_code": 0, "errors": errors}), mimetype='application/json')
+    # if request.is_ajax:
+    #     question = get_object_or_404(Question, uid=request.GET.get("q", 0))
+    #     group = get_object_or_404(Group, uid=request.GET.get("g", 0))
+    #     if question.is_used == 0 and request.user == question.creator and request.user in group.all_users():
+    #         question.group = group
+    #         question.save()
+    #         return HttpResponse(simplejson.dumps({"success": True, "error_code": 0}), mimetype='application/json')
+    #     elif question.is_used != 0:
+    #         return HttpResponse(simplejson.dumps({"success": False, "error_code": 3}), mimetype='application/json')
+    #     return HttpResponse(simplejson.dumps({"success": False, "error_code": 2}), mimetype='application/json')
     # Error Codes:
     # 0: No error
     # 1: Not ajax
@@ -81,18 +102,18 @@ def removeQuestion(request, q_id):
 def editQuestion(request, q_id):
     question = get_object_or_404(Question, uid=q_id)
     action = question.get_edit_url()
-    if(question.is_used == 0 and (request.user == question.creator or request.user.is_staff)) or (request.GET.get("f", False) == "1" and request.user.is_staff):
+    if(question.is_used == 0 and (request.user == question.creator)) or (request.GET.get("f", False) == "1" and request.user == question.creator):
         if request.method == "POST":
-            form = QuestionForm(data=request.POST, instance=question)
+            form = QuestionForm(user=request.user, data=request.POST, instance=question)
             if form.is_valid():
                 form.save()
                 return HttpResponseRedirect('/home/')
         else:
-            form = QuestionForm(instance=question)
+            form = QuestionForm(user=request.user, instance=question)
         return render_to_response('qset/addquestion.html', {"form": form, "action": action, "type": "question", "title": "Edit question", "success": "false"})
     elif question.is_used != 0:
         message = "Sorry, this question is being used in a set. You may not edit it."
-        if request.user.is_staff:
+        if request.user == question.creator:
             message = "This set is already in a set, are you sure you want to edit it? <a href='/question/edit/" + question.uid + "/?f=1'>Continue</a>"
         return render_to_response('qset/question_view.html', {"question": question, "msg": message})
     else:
@@ -100,11 +121,14 @@ def editQuestion(request, q_id):
         return HttpResponseRedirect('/')
 
 
-@user_passes_test(lambda u: u.is_staff)
+@login_required
 def addSet(request):
     if(request.method == "POST"):
         data = simplejson.loads(request.POST['form_data'])
-        new_set = Set(name=data['name'], description=data['description'], creator=request.user, group=data['group'])
+        if data['group'] != "":
+            new_set = Set(name=data['name'], description=data['description'], creator=request.user, group=Group.objects.get(pk=data['group']))
+        else:
+            new_set = Set(name=data['name'], description=data['description'], creator=request.user)
         new_set.save()
         for s in data['subjects'].split(','):
             new_set.subjects.add(Subject.objects.get(pk=s))
@@ -115,13 +139,13 @@ def addSet(request):
             s.save()
             question.is_used = 1
             question.save()
-        return HttpResponseRedirect("/set/" + str(new_set.uid) + "/")
+        return redirect("qset.views.viewSet", set_id=new_set.uid)
     else:
-        form = SetForm()
+        form = SetForm(user=request.user)
     return render_to_response('qset/set_creation.html', {"form": form}, context_instance=RequestContext(request))
 
 
-@user_passes_test(lambda u: u.is_staff)
+@login_required
 def listSets(request):
     sets = Set.objects.filter(creator=request.user).order_by('-creation_date')
     return render_to_response('qset/set_list.html', {"sets": sets}, context_instance=RequestContext(request))
@@ -152,7 +176,7 @@ def viewSet(request, set_id):
     return render_to_response('qset/set_view.html', {"questions": qlist}, context_instance=RequestContext(request))
 
 
-@user_passes_test(lambda u: u.is_staff)
+@login_required
 def editSet(request, set_id):
     curr_set = get_object_or_404(Set, uid=set_id)
     if request.method == "POST":
@@ -177,7 +201,7 @@ def editSet(request, set_id):
             question.save()
         return HttpResponseRedirect("/set/" + str(curr_set.uid) + "/")
     else:
-        form = SetForm(instance=curr_set)
+        form = SetForm(user=request.user, instance=curr_set)
         questions = sorted(curr_set.questions.all(), key=lambda q: q.set_questions_set.all()[0].q_num)
         qlist = []
         for q in questions:
@@ -211,6 +235,9 @@ def getQuestions(request, group_id=None):
     s_query = Q()
     u_query = Q()
     g_query = Q()
+
+    if group_id:
+        group = get_object_or_404(Group, uid=group_id)
     if request.GET.get('uid', False):
         kwargs['uid'] = request.GET.get('uid')
 
@@ -234,14 +261,15 @@ def getQuestions(request, group_id=None):
         kwargs['is_used'] = request.GET.get('used')
 
     # Allows staff to access other user's questions (not allowed for regular users)
-    if request.user.is_staff and request.GET.get('creator', False) and request.GET.get('creator') != "":
+    if group_id and (request.user in group.admins() or request.user == group.creator) and request.GET.get('creator', False) and request.GET.get('creator') != "":
         del kwargs['creator']
         users = request.GET.get('creator').split(',')
         for u in users:
             u_query = u_query | Q(creator=User.objects.get(pk=u))
         # kwargs['creator'] = User.objects.get(pk=request.GET['creator'])
-    elif request.user.is_staff and request.GET.get('all', False):
+    elif group_id and (request.user in group.admins() or request.user == group.creator):
         del kwargs['creator']
+        kwargs['group'] = group
 
     if request.GET.get("random", False):
         querydict = Question.objects.filter(s_query, **kwargs).order_by("?")
@@ -273,7 +301,7 @@ def getQuestions(request, group_id=None):
             "answer": escape(q.ans()),
             "id": q.uid,
             "user": q.creator.get_full_name(),
-            "user-short": q.creator.first_name[0] + q.creator.last_name,
+            "user-short": q.creator.first_name[0] + q.creator.last_name[:6] + ("..." if len(q.creator.last_name) > 6 else ""),
             "user-id": q.creator.id,
             "used": q.is_used,
         }

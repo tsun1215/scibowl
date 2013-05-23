@@ -15,24 +15,6 @@
             function(){
                 $("#userOptionsMenu").hide();
             });
-            $("#login-form").submit(function(){
-                if($("#id_username").val().trim()==""){
-                    $("#loginbox-errors").html("").append("Please enter a username");
-                    return false;
-                }
-                if($("#id_password").val().trim()==""){
-                    $("#loginbox-errors").html("").append("Please enter a password");
-                    return false;
-                }
-                $.post("/ajax/login/", $(this).serialize(), function(response){
-                    if(response.success){
-                        window.location.reload();
-                    }else{
-                        $("#loginbox-errors").text(response.error_msg);
-                    }
-                });
-                return false;
-            });
         });
         function flashMessages(){
             if($(".messages").children("li").length > 0){
@@ -64,42 +46,45 @@
                 <a href="/home">Home</a>
                 {%if user.is_authenticated%}
                 <a href="javascript:questionPopup()">Add Question</a>
-                {%endif%}
-                {%if user.is_staff%}
                 <a href="/set/add/">Set Creation</a>
-                <a href="/question/list/">View All Questions</a>
-                <a href="/account/sets/">View Sets</a>
+                <a href="{% url 'qset.views.filterQuestions'%}">All Questions</a>
+                <a href="{% url 'qset.views.listSets'%}">Sets</a>
+                <a href="{% url 'usermanage.views.listGroups'%}">Groups</a>
                 {%endif%}
             </div>
-            <div id="userOptions">
-                {%if user.is_authenticated%}
-                Logged in as <strong>{{user.username}}</strong> <img class="midimg" src="/static/images/arrow_down.png"/>
-                {%else%}
-                <a>Login</a>
-                {%endif%}
-            </div>
-            <div id="userOptionsMenu" class="triangle-isosceles top">
-                {%if user.is_authenticated%}
-                <div id="user-button-container">
-                    <button onclick="window.location.href='/logout/'">Logout</button>
+            {%if user.is_authenticated%}
+                <div id="userOptions">
+                    Logged in as <strong>{{user.get_full_name}} ({{user.username}})</strong> <img class="midimg" src="/static/images/arrow_down.png"/>
                 </div>
-                {%else%}
-                <div id="loginbox">
-                    <div id="loginbox-errors" class="error">
+            {%else%}
+                <div id="loginbutton">
+                    <a href="{%url 'django.contrib.auth.views.login'%}">Login</a>
+                </div>
+            {%endif%}
+            <div id="userOptionsMenu">
+                <img src="/static/images/profile_icon.jpg"/>
+                <div id="userInfo">
+                    <p class="full_name">{{user.get_full_name}}</p>
+                    <p class="username">{{user.username}}</p>
+                    <div class="links">
+                        <a href="{%url 'usermanage.views.editInfo'%}">Account Info</a>
                     </div>
-                    <form id="login-form">
-                       <p><label for="id_username">Username:</label> <input type="text" maxlength="30" name="username" id="id_username"></p>
-                       <p><label for="id_password">Password:</label> <input type="password" id="id_password" name="password"></p>
-                       <input type="submit" value="Login">
-                   </form>
+                    <div id="user-button-container">
+                        <button onclick="window.location.href='/logout/'">Logout</button>
+                    </div>
                 </div>
-                {%endif%}
+                
             </div>
         {%endblock%}
     </div>
-
+    <div id="header">
+        <header>
+            {% block header %}{% endblock header %}
+        </header>
+    </div>
     <div id="content-container">
         {% block content%}{%endblock%}
+        <div class='clear'></div>
     </div>
 </body>
 </html>

@@ -1,8 +1,6 @@
 from django.db import models
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import authenticate
 import re
 import random
 
@@ -76,52 +74,42 @@ class Membership(models.Model):
         return "/ajax/group/remove/" + self.group.uid + "/" + self.user.id.__str__() + "/"
 
 
-class UserCreateForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    first_name = forms.CharField(max_length=50)
-    last_name = forms.CharField(max_length=50)
-    username = forms.CharField(help_text="")
-    password2 = forms.CharField(help_text="", widget=forms.PasswordInput, label="Retype Password")
+class InfoEditForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "username", "email", "password1", "password2")
+        fields = ('first_name', 'last_name')
+
+
+class RegistrationForm(forms.ModelForm):
+    username = forms.CharField(max_length=30)
+    first_name = forms.CharField(max_length=30, error_messages={'required': '\"First name\" cannot be left blank'})
+    last_name = forms.CharField(max_length=30, error_messages={'required': '\"Last name\" cannot be left blank'})
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput, error_messages={'required': 'Password cannot be left bank'})
+    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput, error_messages={'required': 'Please retype your password'})
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email')
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Passwords don't match")
+        return password2
+
+    def clean_email(self):
+        if User.objects.filter(email=self.cleaned_data.get("email")).count() > 0:
+            raise forms.ValidationError("Already an account under this email")
+        return self.cleaned_data.get("email")
 
     def save(self, commit=True):
-        user = super(UserCreateForm, self).save(commit=False)
-        user.email = self.cleaned_data["email"]
+        user = super(RegistrationForm, self).save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
         return user
-
-    def clean_email(self):
-        data = self.cleaned_data['email']
-        if User.objects.filter(email=data).count() > 0:
-            raise forms.ValidationError("There is an account under that email already")
-        return data
-
-    def clean_first_name(self):
-        data = self.cleaned_data['first_name']
-        if not re.match(r'^[A-Za-z\-\.]+$', data):
-            raise forms.ValidationError("That is not a valid name")
-        return data
-
-    def clean_last_name(self):
-        data = self.cleaned_data['last_name']
-        if not re.match(r'^[A-Za-z\-\.]+$', data):
-            raise forms.ValidationError("That is not a valid name")
-        return data
-
-
-class AdminAuthForm(AuthenticationForm):
-    def clean(self):
-        u = self.cleaned_data.get('username')
-        p = self.cleaned_data.get('password')
-        us = authenticate(username=u, password=p)
-        if us is not None and not us.is_staff:
-            self._errors['notadmin'] = True
-            raise forms.ValidationError("You are not authorized to view this page")
-        AuthenticationForm.clean(self)
 
 
 def getAllUsers():

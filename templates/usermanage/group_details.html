@@ -10,10 +10,12 @@
     }
     </style>
 {% endblock head %}
+
+{% block header %}
+    <h1>{{group.name}}</h1>
+{% endblock header %}
+
 {% block content %}
-    <header>
-        <h1>{{group.name}}</h1>
-    </header>
     {%if user == group.creator or user in group.admins%}
         <script type="text/javascript">
         $(document).ready(function(){

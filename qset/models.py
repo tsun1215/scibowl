@@ -124,7 +124,7 @@ class Question(models.Model):
 
 class Set(models.Model):
     questions = models.ManyToManyField(Question, through='Set_questions')
-    group = models.ForeignKey(Group, blank=True)
+    group = models.ForeignKey(Group, blank=True, null=True)
     name = models.CharField(max_length=100)
     subjects = models.ManyToManyField(Subject)
     description = models.CharField(max_length=1000)
@@ -155,17 +155,20 @@ class Set(models.Model):
 
 
 class SetForm(ModelForm):
+    group = forms.ModelChoiceField(queryset=Group.objects.all(), help_text='Group to pull questions from')
     description = forms.CharField(max_length=200, widget=forms.Textarea, help_text='A meaningful description to differentiate from other sets.')
     num_questions = forms.IntegerField(min_value=1, max_value=100, label="Number of Questions")
     name = forms.CharField(help_text='A short name to identify the set.')
     subjects = forms.ModelMultipleChoiceField(queryset=Subject.objects.all(), help_text='Subjects covered by set. (Hold down "Ctrl" to select more than one)')
     toss_up = forms.BooleanField(label="Toss-Up Only")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
         super(SetForm, self).__init__(*args, **kwargs)
+        self.fields['group'].queryset = Group.objects.filter(membership__user=user, membership__status=1)
         if kwargs.get("instance", False):
             self.fields['num_questions'].initial = self.instance.questions.all().count()
             self.fields['toss_up'].initial = not self.instance.has_bonus()
+            self.fields['group'].widget.attrs['disabled'] = True
 
     class Meta:
         model = Set
@@ -204,3 +207,8 @@ class QuestionForm(ModelForm):
     class Meta:
         model = Question
         exclude = ('uid', 'is_used', 'creation_date', 'creator')
+
+    def __init__(self, user, *args, **kwargs):
+        super(QuestionForm, self).__init__(*args, **kwargs)
+        choices = user.group_set.all()
+        self.fields['group'].queryset = choices

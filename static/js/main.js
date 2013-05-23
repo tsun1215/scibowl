@@ -11,6 +11,6 @@ function flyDown(msg, type){
 }
 
 function questionPopup(){
-    var specs = "width=450,height=430,menubar=0,scrollbars=0,toolbar=0,status=0,toolbar=0,resizable=0,location=0";
+    var specs = "width=450,height=450,menubar=0,scrollbars=0,toolbar=0,status=0,toolbar=0,resizable=0,location=0";
     newWindow = window.open("/question/add/","Add Question",specs);
 }

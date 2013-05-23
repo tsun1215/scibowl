@@ -8,8 +8,8 @@
             if({{success}}){
                 flyDown("Question Added",0);
             }    
-            window.innerWidth = $("#content-container").width()
-            window.innerHeight = $("#content-container").height()+30;    
+            window.innerWidth = $("#content-container").outerWidth();
+            window.innerHeight = $("#content-container").height()+80;
             if($("#id_type").val()==0){
                 $($("#id_choice_w").parent().parent("tr")).show();
                 $($("#id_choice_x").parent().parent("tr")).show();
@@ -60,11 +60,19 @@
     </script>
     <style type="text/css">
     #content-container{
+        margin:0;
         width:auto;
+        padding:10px;
     }
     #nav a{
         position:absolute;
         right:5px;
+    }
+    header h1{
+        margin:0;
+    }
+    textarea{
+        resize:vertical;
     }
     </style>
 {%endblock%}
@@ -74,6 +82,10 @@
     <a href="javascript:closeWindow()">Close</a>
 </div>
 {%endblock%}
+
+{% block header %}
+    <h1>{{title}}</h1>
+{% endblock header %}
 
 {%block form%}
 <form method="post" action="{{action}}">

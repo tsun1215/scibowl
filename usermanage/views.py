@@ -1,8 +1,7 @@
 # Create your views here.
-from usermanage.models import UserCreateForm, Group, GroupCreateForm, Membership
+from usermanage.models import Group, GroupCreateForm, Membership, InfoEditForm, RegistrationForm
 from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.utils import simplejson
 from django.http import HttpResponse
@@ -49,7 +48,7 @@ def editGroup(request, group_id):
     group = get_object_or_404(Group, uid=group_id)
     if request.user != group.creator and request.user not in group.admins():
         # message about authentication
-        return redirect("/account/group/")
+        return redirect("usermanage.views.listGroups")
     try:
         membership = Membership.objects.get(group=group, user=request.user)
         if membership.is_staff():
@@ -58,12 +57,12 @@ def editGroup(request, group_id):
                 if form.is_valid():
                     group = form.save()
                     # need to check if permissions change
-                    return redirect('/account/group')
+                    return redirect("usermanage.views.listGroups")
             else:
                 form = GroupCreateForm(instance=group)
             return render_to_response('form_base.html', {"form": form, "heading": "Edit Group"}, context_instance=RequestContext(request))
     except ObjectDoesNotExist or MultipleObjectsReturned:
-        return redirect("/account/group/")
+        return redirect("usermanage.views.listGroups")
 
 
 @login_required
@@ -71,12 +70,12 @@ def deleteGroup(request, group_id):
     group = get_object_or_404(Group, uid=group_id)
     if request.user != group.creator:
         # message about authentication
-        return redirect("/account/group/")
+        return redirect("usermanage.views.listGroups")
     # Do some "are you sure you want to delete this group"
     # you are removing x questions etc..
     group.delete()
     # message about group deletion
-    return redirect("/account/group")
+    return redirect("usermanage.views.listGroups")
 
 
 @login_required
@@ -85,7 +84,7 @@ def editGroupPerms(request, group_id):
     memberships = Membership.objects.filter(group=group).exclude(user=group.creator)
     if request.user != group.creator and request.user not in group.admins():
         # message about authentication
-        return redirect("/account/group/")
+        return redirect("usermanage.views.listGroups")
     if request.method == "POST":
         user_perms = simplejson.loads(request.POST.get("user_arr"))
         for u in user_perms:
@@ -129,30 +128,25 @@ def removeUserFromGroup(request, group_id, user_id):
     return HttpResponse(simplejson.dumps({"success": False, "error_code": 1}), mimetype='application/json')
 
 
-def registerUser(request):
-    if request.method == 'POST':
-        form = UserCreateForm(request.POST)
+@login_required
+def editInfo(request, msg=""):
+    if request.method == "POST":
+        form = InfoEditForm(data=request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('/')
+            messages.add_message(request, messages.INFO, 'User information changed.')
+            return redirect("/home/")
     else:
-        form = UserCreateForm()
-    return render_to_response("form_base.html", {'form': form})
+        form = InfoEditForm(instance=request.user)
+    return render_to_response("usermanage/edit_info.html", {"form": form, "new_user": request.GET.get("nu", False)}, context_instance=RequestContext(request))
 
 
-def ajaxLogin(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        if user.is_active:
-            login(request, user)
-            return HttpResponse(simplejson.dumps({"success": True, "error_code": 0}), mimetype='application/json')
-        else:
-            # Error codes:
-            # 0 = No Error
-            # 1 = Auth Error
-            # 2 = Inactive User Error
-            return HttpResponse(simplejson.dumps({"success": False, "error_code": 2, "error_msg": "Sorry, that user is inactive."}), mimetype='application/json')
+def registerUser(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            new_user = form.save()
+            return redirect("/")
     else:
-        return HttpResponse(simplejson.dumps({"success": False, "error_code": 1, "error_msg": "Invalid login. The username and password did not match."}), mimetype='application/json')
+        form = RegistrationForm()
+    return render_to_response("form_base.html", {"form": form, "heading": "New User Registeration"})

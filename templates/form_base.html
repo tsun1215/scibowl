@@ -6,12 +6,30 @@
         text-align: center;
         padding:10px;
     }
+    #content-container{
+        margin:0 auto;
+    }
+    #form-container{
+        width:400px;
+        text-align: right;
+        margin:0 auto;
+        padding:20px;
+    }
+    aside{
+        display:none;
+    }
+    input[type=submit]{
+        font-weight: bold;
+        margin:1em;
+    }
     </style>
 {% endblock head %}
+
+{% block header %}
+    <h1>{{heading}}</h1>
+{% endblock header %}
+
 {%block content%}
-    <header>
-        <h1>{{heading}}</h1>
-    </header> 
     <div id="form-container">
         {% block form%}
         <form method="post">

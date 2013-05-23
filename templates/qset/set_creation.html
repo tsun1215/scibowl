@@ -1,5 +1,7 @@
 {%extends "base.html"%}
 {%block head%}
+<link rel="stylesheet" type="text/css" href="/static/css/chosen.css"/>
+<script type="text/javascript" src="/static/js/chosen.jquery.js"></script>
 <style type="text/css">
     #id_subjects{
         vertical-align: top;
@@ -110,7 +112,9 @@
     {%if set_questions%}
         q_arr = {{set_questions|safe}};
     {%endif%}
-    $(document).ready(function(){      
+    $(document).ready(function(){
+        $("#id_subjects").chosen();      
+        $("#id_group").chosen();      
         $("#set_creation_form").submit(function(){
             form_data = {
                 "name": $("#id_name").val(),
@@ -164,7 +168,7 @@
             questions.push(id);
         }
         var subjects=form_data.subjects;
-        $.post("/getall/?all=true&used=0&random=true&num=1&subject="+subjects, {"questions": JSON.stringify(questions)}, function(data){
+        $.post("/ajax/getq/?all=true&used=0&random=true&num=1&subject="+subjects, {"questions": JSON.stringify(questions)}, function(data){
             if(data.success == undefined){
                 q_arr[replace_num] = data[0];
                 displayQuestions();                
@@ -177,7 +181,7 @@
     function initializeQuestions(){
         var num=form_data.num_q;
         var subjects=form_data.subjects;        
-        $.get("/getall/?all=true&used=0&random=true&num="+num+"&subject="+subjects, function(data){
+        $.get("/ajax/getq/?all=true&used=0&random=true&num="+num+"&subject="+subjects, function(data){
             q_arr = [];
             for(var x=0; x<data.length; x++){
                 q_arr.push(data[x]);
@@ -223,8 +227,11 @@
 </script>
 {%endblock%}
 
-{%block content%}
-    <h1>Set Creation</h1>   
+{% block header %}
+    <h1>Set Creation</h1>  
+{% endblock header %}
+
+{%block content%} 
     <form id="set_creation_form" method="post">
         <div id="form-container">
             <h2>Options <a href="#" id="q_op_toggle">Show</a></h2>

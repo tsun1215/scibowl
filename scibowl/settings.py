@@ -141,11 +141,46 @@ INSTALLED_APPS = (
     'usermanage',
     'qset',
     'bookkeeping',
+    'social_auth',
 )
 
-LOGIN_URL = "/login/"
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/account/info/edit/?nu=1'
+SOCIAL_AUTH_UID_LENGTH = 222
+SOCIAL_AUTH_NONCE_SERVER_URL_LENGTH = 200
+SOCIAL_AUTH_ASSOCIATION_SERVER_URL_LENGTH = 135
+SOCIAL_AUTH_ASSOCIATION_HANDLE_LENGTH = 125
+LOGIN_ERROR_URL = '/login-error/'
 
-LOGIN_REDIRECT_URL = '/home/'
+AUTHENTICATION_BACKENDS = (
+    # 'social_auth.backends.google.GoogleOAuthBackend',
+    'social_auth.backends.google.GoogleOAuth2Backend',
+    # 'social_auth.backends.google.GoogleBackend',
+    # 'social_auth.backends.contrib.github.GithubBackend',
+    # 'social_auth.backends.OpenIDBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+GOOGLE_OAUTH2_CLIENT_ID = '935494916500.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET = '-0cNOquc6o6XP6qprx9iGZgq'
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'social_auth.context_processors.social_auth_by_name_backends',
+    'social_auth.context_processors.social_auth_backends',
+    # 'social_auth.context_processors.social_auth_by_type_backends',
+    # 'social_auth.context_processors.social_auth_login_redirect',
+)
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_auth.backends.pipeline.social.social_auth_user',
+    'social_auth.backends.pipeline.associate.associate_by_email',
+    'social_auth.backends.pipeline.user.get_username',
+    'social_auth.backends.pipeline.user.create_user',
+    'social_auth.backends.pipeline.social.associate_user',
+    'social_auth.backends.pipeline.social.load_extra_data',
+    # 'social_auth.backends.pipeline.user.update_user_details'
+)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

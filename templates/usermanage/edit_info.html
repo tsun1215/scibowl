@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block head %}
+    <style type="text/css">
+        th{
+            text-align: left;
+        }
+        #content-container{
+            width:400px;
+        }
+        form{
+            margin-left:50px;
+        }
+        table td{
+            padding:2px 5px;
+        }
+        input[type=submit]{
+            float:right;
+        }
+    </style>
+{% endblock head %}
+
+{% block header %}    
+    {% if new_user %}
+        <h1>Registration</h1>
+    {% else %}
+        <h1>Edit Account Information</h1>        
+    {% endif %}
+{% endblock header %}
+
+{% block content %}
+    <form method="post" action="/account/info/edit/">
+        <table>
+            <tr>
+                <th>Email:</th>
+                <td>{{user.email}}</td>
+            </tr>
+            <tr>
+                <th>Username:</th>
+                <td>{{user.username}}</td>
+            </tr>
+            {{form.as_table}}
+        </table>
+        <input type="submit" value="Submit"/>
+    </form>
+{% endblock content %}

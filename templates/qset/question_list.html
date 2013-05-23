@@ -7,16 +7,21 @@
     .chzn-results{
         text-align: left;
     }
+    #selection-options{
+        display:none;
+    }
 </style>
 <script>
     var currOrder="";
     var selectedSubject="";
     var selectedUser="";
     var selectedType="";
+    var selectedGroup="";
     var selectedUsed="0";
     $(document).ready(function(){     
         $("#subject-select").chosen();
         $("#user-select").chosen();
+        $("#group-select").chosen();
         if(opener!=null){
             window.close();
         }else{
@@ -68,32 +73,69 @@
                 selectedUsed="0";
             }
             update();
-        });        
+        });
+        $("#group-select").change(function(){
+            var group = $(this).val();
+            if(group==null){
+                selectedGroup = "";
+            }else{
+                selectedGroup = group.join(",");
+            }
+            update();
+        });
+        $("#selection-options #selection-group-select").change(function(){
+            if($(this).val()!=0){
+                var selected = $("#questions input[type='checkbox']:checked");
+                var group = $(this).val();
+                var questions = []
+                for(var x = 0; x<selected.length; x++){
+                    questions.push($(selected[x]).parent().parent(".question").attr("data-uid"));
+                }
+                $.post("{% url 'qset.views.addQuestionToGroup' %}", {"q":JSON.stringify(questions), "g": group}, function(data){
+                    if(data.success){
+                        flashMessage("Questions added to group.");
+                        selected.removeAttr("checked");
+                        $("#selection-group-select").val(0);
+                        $("#questions input[type='checkbox']").change();
+                    }
+                    update();
+                });
+            }
+        });    
     });
 
     function update(){
-        $.get('{{path}}?creator='+selectedUser+'&subject='+selectedSubject,{"order":currOrder, "all":true, "used":selectedUsed, "type":selectedType}, function(data){
+        $.get('{{path}}', {"creator":selectedUser, "subject":selectedSubject, "order":currOrder, "all":true, "used":selectedUsed, "type":selectedType, "group": selectedGroup}, function(data){
             var table = $("#questions");
             $(".question").unbind();
             $(".del").unbind();
             $("#questions .text a").unbind();
             table.html("");
-            // table.append("<tr><th class='orderable' data-order='subject'>Subject</th><th class='orderable' data-order='type'>Type</th><th class='orderable' data-order='creator'>User</th><th>Question</th><th></th><th class='orderable' data-order='is_used'>Used</th></tr>");
             for(var x = 0; x<data.length; x++){
                 var q = data[x];
-                table.append("<tr class='question'></tr>");
+                table.append("<div class='question-container'><div class='question'></div></div>");
                 var question = $(".question").last();
-                question.append("<td class='checkbox'><input type='checkbox' /></td>");
-                question.append("<td class='tags'></td>");
-                question.append("<td class='text'>"+q.text+"</td>");
+                question.append("<div class='checkbox'><input type='checkbox' /></div>");
+                question.append("<div class='tags'></div>");
+                {% if groups %}
+                    question.append("<div class='text'><a href='/question/edit/"+q.id+"/'>"+q.text+"</a></div>");
+                {% else %}
+                    question.append("<div class='text'>"+q.text+"</div>");
+                {% endif %}
+                question.attr("data-uid", q.id);
+                question.append("<div class='used'>"+((q.used==1)?"<img height='15px' src='/static/images/check.png'/>":"<img height='15px' src='/static/images/cancel.png'/>")+"</div>");
+
                 //Add tags
                 var tags = $(".tags").last();
-                tags.append("<span class='tag subject' title='Filter similar subject' data-id='"+q['subject-id']+"'>"+q.subject+"</span>");
-                tags.append("<span class='tag user' title='Filter similar user' data-id='"+q['user-id']+"'>"+q['user-short']+"</span>");
-                tags.append("<span class='tag type' title='Filter similar type' data-id='"+q.type+"''>"+((q.type==0)?"MC":"SA")+"</span>");
-                if(q.used==1){
-                    tags.append("<span class='tag used'>Used</span>");
-                }
+                tags.append("<span class='tag subject' title='Filter by "+q['subject']+"' data-id='"+q['subject-id']+"'>"+q.subject+"</span>");
+                tags.append("<span class='tag type' title='Filter by "+((q.type==0)?"Multiple Choice":"Short Answer")+"' data-id='"+q.type+"''>"+((q.type==0)?"MC":"SA")+"</span>");
+                {% if groups %}
+                    if(q.group!=null){
+                        tags.append("<span class='tag group' title='Filter question in "+q.group+"' data-id='"+q['group-id']+"'>"+q.group+"</span>");
+                    }           
+                {% else %}
+                    tags.append("<span class='tag user' title='Filter questions by "+q['user']+"' data-id='"+q['user-id']+"'>"+q['user-short']+"</span>");
+                {% endif %}
             }   
             addTableListeners();
         });
@@ -103,6 +145,10 @@
         $(".tag.subject").click(function(){
             $("#subject-select").find('[value='+$(this).attr('data-id')+']').attr("selected", true).change();
             $("#subject-select").trigger("liszt:updated");
+        });
+        $(".tag.group").click(function(){
+            $("#group-select").find('[value='+$(this).attr('data-id')+']').attr("selected", true).change();
+            $("#group-select").trigger("liszt:updated");
         });
         $(".tag.user").click(function(){
             $("#user-select").find('[value='+$(this).attr('data-id')+']').attr("selected", true).change();
@@ -147,31 +193,69 @@
             newWindow = window.open(url,"Edit Question",specs);
             return false;
         });
+        $("#questions input[type='checkbox']").change(function(){
+            if($(this).attr("checked")){
+                $(this).parent().parent().parent('.question-container').addClass('selected');
+            }else{
+                $(this).parent().parent().parent('.question-container').removeClass('selected');
+            }
+            if($("#questions input[type='checkbox']:checked").length>0){
+                $("#selection-options").slideDown();
+                $("#filter-options").slideUp();
+            }else{
+                $("#selection-options").slideUp();
+                $("#filter-options").slideDown();
+            }
+        });    
     }
 </script>
 {%endblock%}
 
-{%block content%}
+{% block header %}
+    <h1>{{group.name}} Questions</h1>
     <div id="filter-options">
-        <h1>{{group.name}} Questions</h1>
         Subject
         <select id="subject-select" multiple="multiple" data-placeholder="Subjects to filter">
             {%for subject in subjects%}
                 <option value="{{subject.id}}">{{subject}}</option>
             {%endfor%}
         </select>
-        Type <select id="type-select">
+        Type 
+        <select id="type-select">
             <option selected="selected">---</option>
             <option value="0">Multiple Choice</option>
             <option value="1">Short Answer</option>
         </select>
-        User <select id="user-select" multiple="multiple" data-placeholder="Users to filter">
-            {%for user in users%}
-                <option value="{{user.id}}">{{user.get_full_name}} ({{user}})</option>
-            {%endfor%}
-        </select>
+        {%if users%}
+            User 
+            <select id="user-select" multiple="multiple" data-placeholder="Users to filter">
+                {%for user in users%}
+                    <option value="{{user.id}}">{{user.get_full_name}} ({{user}})</option>
+                {%endfor%}
+            </select>
+        {%endif%}
+        {%if groups%}
+            Group 
+            <select id="group-select" multiple="multiple" data-placeholder="Group to filter">
+                {%for group in groups%}
+                    <option value="{{group.uid}}">{{group.name}}</option>
+                {%endfor%}
+            </select>
+        {%endif%}
         Show Used <input type="checkbox" id="show-used" name="used"/> <br/>            
     </div>
-    <table id="questions">
-    </table>
+    <div id="selection-options">
+        Move to 
+        <select id="selection-group-select">
+            <option selected="selected" value="0">---</option>
+            {%for g in groups%}
+                <option value="{{g.uid}}">{{g.name}}</option>
+            {%endfor%}
+        </select>
+    </div>
+{% endblock header %}
+
+{%block content%}    
+    <div id="questions">
+    </div>
 {%endblock%}
