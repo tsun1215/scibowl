@@ -1,23 +1,22 @@
 @font-face{
-    font-family:Nexa;
-    src: url('Nexa Light.otf');
-}
-@font-face{
     font-family:sanspro;
     src: url('SourceSansPro-Regular.otf');
-}
-@font-face{
-    font-family:raleway;
-    src: url('raleway_thin.otf');
 }
 @font-face{
     font-family:Amble;
     src: url('Amble-Regular.ttf');
 }
+@font-face{
+    font-family: Molengo;
+    src: url('Molengo-Regular.ttf');
+}
 html, body{
     margin: 0;
     font-family: Amble;
     background-color: #F5F5F5;
+}
+h1,h2,h3,h4{
+    font-family: sanspro;
 }
 a{
     text-decoration: none;

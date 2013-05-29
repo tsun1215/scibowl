@@ -24,3 +24,20 @@ tbody td{
 .checkbox{
     width:30px;
 }
+.icon{
+    opacity: 0.4;
+    cursor: pointer;
+    height:19px;
+    vertical-align: middle;
+    display:none;
+}
+.icon:hover{
+    opacity: 1;
+}
+.used{
+    width:80px;
+    text-align: center;
+}
+.date{
+    width:220px;
+}

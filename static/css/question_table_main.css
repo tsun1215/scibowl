@@ -1,27 +1,26 @@
 .questions{
-    width:100%;
+    background-color: white;
 }
 .question-container{
     border-bottom: 1px solid #DDDDDD;
     background-color: white;
-    padding:5px;
     width:100%;
     display:table;
-    margin-bottom: 3px;
-}
-.question-container:hover{
 }
 .selected{
-    -webkit-box-shadow: 1px 1px 1px 1px #AAAAAA;
+    /*-webkit-box-shadow: 1px 1px 1px 1px #AAAAAA;
     box-shadow: 1px 1px 1px 1px #AAAAAA; 
     margin-left:-5px;
     border:none;
-    margin-top:-4px;
-    /*background-color: orange;*/
+    margin-top:4px;*/
+    background-color: #FBFCC2;
 }
 .question{
     position: relative;    
     display:table-row;
+}
+.question div{
+    padding:5px;
 }
 #filter-options{
     text-align: center;

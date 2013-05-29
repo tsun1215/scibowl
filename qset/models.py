@@ -164,7 +164,14 @@ class SetForm(ModelForm):
 
     def __init__(self, user, *args, **kwargs):
         super(SetForm, self).__init__(*args, **kwargs)
-        self.fields['group'].queryset = Group.objects.filter(membership__user=user, membership__status=1)
+        # self.fields['group'].queryset = Group.objects.filter(membership__user=user, membership__status=1)
+        # Group uid + group name
+        # ((value, name), (value, name))
+        groups = Group.objects.filter(membership__user=user, membership__status=1)
+        choices = []
+        for g in groups:
+            choices.append([g.uid, g.name])
+        self.fields['group'].choices = choices
         if kwargs.get("instance", False):
             self.fields['num_questions'].initial = self.instance.questions.all().count()
             self.fields['toss_up'].initial = not self.instance.has_bonus()
@@ -208,7 +215,11 @@ class QuestionForm(ModelForm):
         model = Question
         exclude = ('uid', 'is_used', 'creation_date', 'creator')
 
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, user, s_subject=None, s_group=None, *args, **kwargs):
         super(QuestionForm, self).__init__(*args, **kwargs)
         choices = user.group_set.all()
         self.fields['group'].queryset = choices
+        if s_subject:
+            self.fields['subject'].initial = s_subject
+        if s_group:
+            self.fields['group'].initial = s_group

@@ -10,6 +10,11 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.db.models import Q
 from usermanage.models import Group
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.enums import TA_CENTER
+from reportlab.lib.units import inch
 
 
 @login_required
@@ -34,7 +39,8 @@ def addQuestion(request):
             q = form.save(commit=False)
             q.creator = request.user
             q.save()
-            return HttpResponseRedirect('/question/add/?success=true')
+            form = QuestionForm(user=request.user, s_group=(q.group.id if q.group is not None else None), s_subject=q.subject.id)
+            return render_to_response('qset/addquestion.html', {"form": form, "action": action, "title": "Add Question", "success": "true"})
     else:
         form = QuestionForm(user=request.user)
     return render_to_response('qset/addquestion.html', {"form": form, "action": action, "title": "Add Question", "success": request.GET.get("success", "false")})
@@ -126,7 +132,7 @@ def addSet(request):
     if(request.method == "POST"):
         data = simplejson.loads(request.POST['form_data'])
         if data['group'] != "":
-            new_set = Set(name=data['name'], description=data['description'], creator=request.user, group=Group.objects.get(pk=data['group']))
+            new_set = Set(name=data['name'], description=data['description'], creator=request.user, group=Group.objects.get(uid=data['group']))
         else:
             new_set = Set(name=data['name'], description=data['description'], creator=request.user)
         new_set.save()
@@ -173,7 +179,56 @@ def viewSet(request, set_id):
             curr["y"] = escape(q.choice_y)
             curr["z"] = escape(q.choice_z)
         qlist.append(curr)
-    return render_to_response('qset/set_view.html', {"questions": qlist}, context_instance=RequestContext(request))
+    return render_to_response('qset/set_view.html', {"questions": qlist, "set": curr_set}, context_instance=RequestContext(request))
+
+
+def setToPDF(request, set_id):
+    curr_set = get_object_or_404(Set, uid=set_id)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'filename="output.pdf"'
+
+    doc = SimpleDocTemplate(response, pagesize=letter, leftMargin=inch, rightmargin=inch, topMargin=inch, bottomMargin=inch)
+    Elements = []
+    bodytext = ParagraphStyle(
+        name='bodytext',
+        fontName='Times-Roman',
+        fontSize=12
+    )
+    choicestext = ParagraphStyle(
+        name="choicestext",
+        fontName='Times-Roman',
+        fontSize=12,
+    )
+    qtypetext = ParagraphStyle(
+        name='qtypetext',
+        fontName='Times-Roman',
+        fontSize=12,
+        alignment=TA_CENTER
+    )
+
+    def addFooter(canvas, doc):
+        canvas.saveState()
+        canvas.setFont("Times-Roman", 8)
+        canvas.drawString(inch, 0.75 * inch, "Page %d" % (doc.page))
+        canvas.restoreState()
+
+    for sq in Set_questions.objects.filter(set=curr_set).order_by("q_num"):
+        q = sq.question
+        heading = Paragraph(sq.get_q_type_display(), qtypetext)
+        Elements.append(heading)
+        q_text = Paragraph(sq.q_num.__str__()+". <b>"+q.subject.__str__()+"</b> <i>"+q.get_type_display()+"</i> "+q.text, bodytext)
+        Elements.append(q_text)
+        if q.type == 0:
+            Elements.append(Paragraph("<indent left='1cm'>W) "+q.choice_w+"</indent>", choicestext))
+            Elements.append(Paragraph("<indent left='1in'>X) "+q.choice_x+"</indent>", choicestext))
+            Elements.append(Paragraph("<indent left='1in'>Y) "+q.choice_y+"</indent>", choicestext))
+            Elements.append(Paragraph("<indent left='1in'>Z) "+q.choice_z+"</indent>", choicestext))
+        ans = Paragraph("ANSWER: "+q.ans(), bodytext)
+        Elements.append(ans)
+        Elements.append(Spacer(1, 0.2 * inch))
+    doc.build(Elements, onFirstPage=addFooter, onLaterPages=addFooter)
+    return response
 
 
 @login_required
@@ -263,6 +318,7 @@ def getQuestions(request, group_id=None):
     # Allows staff to access other user's questions (not allowed for regular users)
     if group_id and (request.user in group.admins() or request.user == group.creator) and request.GET.get('creator', False) and request.GET.get('creator') != "":
         del kwargs['creator']
+        kwargs['group'] = group
         users = request.GET.get('creator').split(',')
         for u in users:
             u_query = u_query | Q(creator=User.objects.get(pk=u))

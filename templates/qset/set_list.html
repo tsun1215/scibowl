@@ -1,9 +1,9 @@
 {%extends 'base.html'%}
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="/static/css/question_table_main.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/table.css"/>
     <style type="text/css">
         .display{
-            padding:10px 0px;
+            padding:5px 5px;
             height:18px;
             font-size: 1.1em;
         }
@@ -18,10 +18,14 @@
         .icon{
             vertical-align: top;
         }
+        .bonus{
+            width:80px;
+            text-align: center;
+        }
     </style>
     <script type="text/javascript">
         $(document).ready(function(){
-            $("tr").hover(
+            $("tbody tr").hover(
                 function(){
                     $(this).css('background-color','#BFEDFF');
                     $($(this).find(".icon")).show();
@@ -31,7 +35,7 @@
                     $($(this).find(".icon")).hide();
                 }
             );
-            $("tr").toggle(
+            $("tbody tr").toggle(
                 function(){
                     $(this).find(".details").slideDown(200);
                 },
@@ -52,17 +56,22 @@
         });
     </script>
 {% endblock head %}
+
+{% block header %}
+    <h1>All Sets</h1>
+{% endblock header %}
+
 {% block content %}
-    <div id="filter-options">
-        <h1>All Sets</h1>
-    </div>
     <table>
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Used</th>
+                <th>Creation Date</th>
+                <th class="bonus">Bonus</th>
+                <th class="used">Used</th>
             </tr>
         </thead>
+        <tbody>
         {%for set in sets%}
             <tr>
                 <td>
@@ -94,6 +103,12 @@
                         </p>
                     </div>
                 </td>
+                <td class="date">
+                    {{set.creation_date}}
+                </td>
+                <td class="bonus">
+                    {%if set.has_bonus%}Yes{%else%}No{%endif%}
+                </td>
                 {%if set.is_used%}
                     <td class='used'><img height='15px' src="/static/images/check.png"/></td>
                 {%else%}
@@ -101,5 +116,6 @@
                 {%endif%}
             </tr>
         {%endfor%}
+        </tbody>
     </table>
 {% endblock content %}

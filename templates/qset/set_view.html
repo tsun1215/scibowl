@@ -1,5 +1,6 @@
 {%extends 'base.html'%}
 {%block head%}
+    <link rel="stylesheet" media="print" type="text/css" href="/static/css/set_print.css">
     <style>
         .question{
             font-family: "Times New Roman", Georgia, Serif;
@@ -13,8 +14,17 @@
         .q_id{
             display:none;
         }
+        #content-container{
+            padding:0.5em 1em;
+        }
     </style>
 {%endblock%}
+
+{% block header %}
+    <h1>{{set.name}}</h1>
+    <a href="#" onclick="window.print();return false;">Print</a> - 
+    <a href="{%url 'qset.views.setToPDF' set.uid%}">PDF Version</a>
+{% endblock header %}
 
 {%block content%}
     {%for q in questions%}

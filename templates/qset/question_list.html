@@ -10,6 +10,22 @@
     #selection-options{
         display:none;
     }
+    #select-options{
+        float: left;
+        background-color: #EEEEEE;
+        border:1px solid gray;
+        width:50px;
+    }
+    #select-options input[type=checkbox]{
+        margin:10px;
+    }
+    #options{
+        position: relative;
+        margin:0 auto;
+        width:1024px;
+        height: 30px;
+    }
+
 </style>
 <script>
     var currOrder="";
@@ -83,6 +99,15 @@
             }
             update();
         });
+        $("#selAll").change(function(){
+            if($(this).attr("checked")=="checked"){
+                $("#questions input[type=checkbox]").attr("checked", true);
+                $("#questions input[type='checkbox']").change();
+            }else{
+                $("#questions input[type=checkbox]").removeAttr("checked");
+                $("#questions input[type='checkbox']").change();
+            }            
+        });
         $("#selection-options #selection-group-select").change(function(){
             if($(this).val()!=0){
                 var selected = $("#questions input[type='checkbox']:checked");
@@ -97,6 +122,7 @@
                         selected.removeAttr("checked");
                         $("#selection-group-select").val(0);
                         $("#questions input[type='checkbox']").change();
+                        $("#selAll").removeAttr("checked");
                     }
                     update();
                 });
@@ -213,45 +239,50 @@
 
 {% block header %}
     <h1>{{group.name}} Questions</h1>
-    <div id="filter-options">
-        Subject
-        <select id="subject-select" multiple="multiple" data-placeholder="Subjects to filter">
-            {%for subject in subjects%}
-                <option value="{{subject.id}}">{{subject}}</option>
-            {%endfor%}
-        </select>
-        Type 
-        <select id="type-select">
-            <option selected="selected">---</option>
-            <option value="0">Multiple Choice</option>
-            <option value="1">Short Answer</option>
-        </select>
-        {%if users%}
-            User 
-            <select id="user-select" multiple="multiple" data-placeholder="Users to filter">
-                {%for user in users%}
-                    <option value="{{user.id}}">{{user.get_full_name}} ({{user}})</option>
+    <div id="options">
+        <div id="select-options">
+            <input type="checkbox" id="selAll"/>
+        </div>
+        <div id="filter-options">        
+            Subject
+            <select id="subject-select" multiple="multiple" data-placeholder="Subjects to filter">
+                {%for subject in subjects%}
+                    <option value="{{subject.id}}">{{subject}}</option>
                 {%endfor%}
             </select>
-        {%endif%}
-        {%if groups%}
-            Group 
-            <select id="group-select" multiple="multiple" data-placeholder="Group to filter">
-                {%for group in groups%}
-                    <option value="{{group.uid}}">{{group.name}}</option>
+            Type 
+            <select id="type-select">
+                <option selected="selected">---</option>
+                <option value="0">Multiple Choice</option>
+                <option value="1">Short Answer</option>
+            </select>
+            {%if users%}
+                User 
+                <select id="user-select" multiple="multiple" data-placeholder="Users to filter">
+                    {%for user in users%}
+                        <option value="{{user.id}}">{{user.get_full_name}} ({{user}})</option>
+                    {%endfor%}
+                </select>
+            {%endif%}
+            {%if groups%}
+                Group 
+                <select id="group-select" multiple="multiple" data-placeholder="Group to filter">
+                    {%for group in groups%}
+                        <option value="{{group.uid}}">{{group.name}}</option>
+                    {%endfor%}
+                </select>
+            {%endif%}
+            Show Used <input type="checkbox" id="show-used" name="used"/> <br/>            
+        </div>
+        <div id="selection-options">
+            Move to 
+            <select id="selection-group-select">
+                <option selected="selected" value="0">---</option>
+                {%for g in groups%}
+                    <option value="{{g.uid}}">{{g.name}}</option>
                 {%endfor%}
             </select>
-        {%endif%}
-        Show Used <input type="checkbox" id="show-used" name="used"/> <br/>            
-    </div>
-    <div id="selection-options">
-        Move to 
-        <select id="selection-group-select">
-            <option selected="selected" value="0">---</option>
-            {%for g in groups%}
-                <option value="{{g.uid}}">{{g.name}}</option>
-            {%endfor%}
-        </select>
+        </div>
     </div>
 {% endblock header %}
 

@@ -34,6 +34,7 @@ urlpatterns = patterns('',
     url(r'^set/edit/(?P<set_id>[a-zA-Z0-9]+)', 'qset.views.editSet'),
     url(r'^account/sets/$', 'qset.views.listSets'),
     url(r'^set/(?P<set_id>[a-zA-Z0-9]+)/$', 'qset.views.viewSet'),
+    url(r'^set/(?P<set_id>[a-zA-Z0-9]+)/pdf/$', 'qset.views.setToPDF'),
     url(r'^ajax/moveq/$', 'qset.views.addQuestionToGroup'),
 )
 

@@ -2,6 +2,7 @@
 {%block head%}
 <link rel="stylesheet" type="text/css" href="/static/css/chosen.css"/>
 <script type="text/javascript" src="/static/js/chosen.jquery.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <style type="text/css">
     #id_subjects{
         vertical-align: top;
@@ -14,12 +15,6 @@
         vertical-align: top;
         resize: vertical;
         height:80px;
-    }
-    h1{
-        background-color: #EEEEEE;
-        text-align: center;
-        padding:10px;
-        margin: 0;
     }
     #id_num_questions{
         width:30px;
@@ -35,8 +30,8 @@
         margin: 0 auto;        
     }
     #form-container{
-        border:1px dashed green;
         padding:10px;
+        border-bottom: 1px solid #DDDDDD
     }
     #form-container h2{
         margin: 0px;
@@ -129,11 +124,11 @@
             }
             $("#q_op_toggle").show();
             $("#q_op_toggle").click();
-            if(q_arr.length == 0){
+            // if(q_arr.length == 0){
                 initializeQuestions();
-            }else{
-                displayQuestions();
-            }
+            // }else{
+                // displayQuestions();
+            // }
             return false;
         });        
         $("#q_op_toggle").click(function(){
@@ -158,6 +153,20 @@
         if(q_arr.length > 0){
             $("#set_creation_form").submit();
         }
+        $("#question-container").sortable({
+            revert: true,
+            revertDuration: 100,
+            stop: function() {
+                var questions = $(".question");
+                var temp = [];
+                for(var x = 0; x<questions.length; x++){
+                    // console.log(q_arr[x]);
+                    temp.push(q_arr[$(questions[x]).attr("data-index")]);
+                }
+                q_arr = temp;
+                displayQuestions();
+            },
+        });
     });
 
     function getQuestion(replace_num){
@@ -168,7 +177,7 @@
             questions.push(id);
         }
         var subjects=form_data.subjects;
-        $.post("/ajax/getq/?all=true&used=0&random=true&num=1&subject="+subjects, {"questions": JSON.stringify(questions)}, function(data){
+        $.post("/ajax/"+form_data['group']+"/getq/?all=true&used=0&random=true&num=1&subject="+subjects, {"questions": JSON.stringify(questions)}, function(data){
             if(data.success == undefined){
                 q_arr[replace_num] = data[0];
                 displayQuestions();                
@@ -178,10 +187,18 @@
         });
     }
 
+    function renumberQuestions(){
+        var questions = $(".question");
+        for(var x = 0; x<questions.length; x++){
+            var question = questions[x];
+            $(question).attr("data-index", x);
+        }
+    }
+
     function initializeQuestions(){
         var num=form_data.num_q;
         var subjects=form_data.subjects;        
-        $.get("/ajax/getq/?all=true&used=0&random=true&num="+num+"&subject="+subjects, function(data){
+        $.get("/ajax/"+form_data['group']+"/getq/?all=true&used=0&random=true&num="+num+"&subject="+subjects, function(data){
             q_arr = [];
             for(var x=0; x<data.length; x++){
                 q_arr.push(data[x]);
@@ -223,6 +240,7 @@
             getQuestion($(".question").index(currDiv));
             return false;
         });
+        renumberQuestions();
     }
 </script>
 {%endblock%}
