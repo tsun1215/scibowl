@@ -208,8 +208,7 @@ def setToPDF(request, set_id):
         })
     import urllib
     params = urllib.urlencode({"set": set_data})
-    f = urllib.urlopen("http://localhost:8000/pdf/", params)
-    # f.read()
+    f = urllib.urlopen("http://ancient-reef-6651.herokuapp.com/pdf/", params)
     return HttpResponse(f, content_type="application/pdf")
 
 
