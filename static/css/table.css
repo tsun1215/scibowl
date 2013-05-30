@@ -1,3 +1,6 @@
+#content-container{
+    padding:0;
+}
 table{
     border-spacing: 0px;
     width:100%;

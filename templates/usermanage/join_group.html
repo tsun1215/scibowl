@@ -8,14 +8,22 @@
         width:300px;
         padding:20px;
     }
+    header h3{
+        margin:0;
+    }
+    header .success{
+        color:#EEEEEE;
+    }
+    /*#content-container{
+        padding:2em;
+    }*/
     </style>
 {% endblock head %}
-{% block content %}
-    <header>
+
+{% block header %}
         <h1>{{group.name}}</h1>
-    </header>
-    {% if user in group.pending %}
-        <h2 class='success'>Your application to this group is pending approval.</h2>
+        {% if user in group.pending %}
+        <h3 class="success">Your application to this group is pending approval.</h3>
     {% else %}
         <script type="text/javascript">
             $(document).ready(function(){
@@ -30,6 +38,10 @@
         </script>
         <button id="join">Join Group</button>
     {% endif %}
+{% endblock header %}
+
+{% block content %}    
+    
     <h2>Description</h2>
     <p>
         {{group.description}}

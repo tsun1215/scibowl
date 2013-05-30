@@ -23,7 +23,7 @@
         position: relative;
         margin:0 auto;
         width:1024px;
-        height: 30px;
+        min-height: 30px;
     }
 
 </style>
@@ -143,11 +143,7 @@
                 var question = $(".question").last();
                 question.append("<div class='checkbox'><input type='checkbox' /></div>");
                 question.append("<div class='tags'></div>");
-                {% if groups %}
-                    question.append("<div class='text'><a href='/question/edit/"+q.id+"/'>"+q.text+"</a></div>");
-                {% else %}
-                    question.append("<div class='text'>"+q.text+"</div>");
-                {% endif %}
+                question.append("<div class='text'><a href='/question/edit/"+q.id+"/'>"+q.text+"</a></div>");
                 question.attr("data-uid", q.id);
                 question.append("<div class='used'>"+((q.used==1)?"<img height='15px' src='/static/images/check.png'/>":"<img height='15px' src='/static/images/cancel.png'/>")+"</div>");
 

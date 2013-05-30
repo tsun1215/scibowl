@@ -170,6 +170,7 @@ header{
     margin:0 auto;
     width:1024px;
     background-color: white;
+    padding:2em;
 }
 #content-container p{
     margin:0;
