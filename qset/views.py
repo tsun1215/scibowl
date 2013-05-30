@@ -10,11 +10,6 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.db.models import Q
 from usermanage.models import Group
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib.enums import TA_CENTER
-from reportlab.lib.units import inch
 
 
 @login_required
