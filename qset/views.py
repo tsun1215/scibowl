@@ -185,50 +185,32 @@ def viewSet(request, set_id):
 def setToPDF(request, set_id):
     curr_set = get_object_or_404(Set, uid=set_id)
 
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename="output.pdf"'
-
-    doc = SimpleDocTemplate(response, pagesize=letter, leftMargin=inch, rightmargin=inch, topMargin=inch, bottomMargin=inch)
-    Elements = []
-    bodytext = ParagraphStyle(
-        name='bodytext',
-        fontName='Times-Roman',
-        fontSize=12
-    )
-    choicestext = ParagraphStyle(
-        name="choicestext",
-        fontName='Times-Roman',
-        fontSize=12,
-    )
-    qtypetext = ParagraphStyle(
-        name='qtypetext',
-        fontName='Times-Roman',
-        fontSize=12,
-        alignment=TA_CENTER
-    )
-
-    def addFooter(canvas, doc):
-        canvas.saveState()
-        canvas.setFont("Times-Roman", 8)
-        canvas.drawString(inch, 0.75 * inch, "Page %d" % (doc.page))
-        canvas.restoreState()
+    set_data = {
+        "name": curr_set.name,
+        "group": curr_set.creator.get_full_name(),
+        "creation_date": curr_set.creation_date.isoformat(),
+        "questions": []
+    }
 
     for sq in Set_questions.objects.filter(set=curr_set).order_by("q_num"):
         q = sq.question
-        heading = Paragraph(sq.get_q_type_display(), qtypetext)
-        Elements.append(heading)
-        q_text = Paragraph(sq.q_num.__str__()+". <b>"+q.subject.__str__()+"</b> <i>"+q.get_type_display()+"</i> "+q.text, bodytext)
-        Elements.append(q_text)
-        if q.type == 0:
-            Elements.append(Paragraph("<indent left='1cm'>W) "+q.choice_w+"</indent>", choicestext))
-            Elements.append(Paragraph("<indent left='1in'>X) "+q.choice_x+"</indent>", choicestext))
-            Elements.append(Paragraph("<indent left='1in'>Y) "+q.choice_y+"</indent>", choicestext))
-            Elements.append(Paragraph("<indent left='1in'>Z) "+q.choice_z+"</indent>", choicestext))
-        ans = Paragraph("ANSWER: "+q.ans(), bodytext)
-        Elements.append(ans)
-        Elements.append(Spacer(1, 0.2 * inch))
-    doc.build(Elements, onFirstPage=addFooter, onLaterPages=addFooter)
-    return response
+        set_data['questions'].append({
+            "text": q.text,
+            "q_num": sq.q_num.__str__(),
+            "type": sq.get_q_type_display(),
+            "sub_type": q.type,
+            "subject": q.subject.__str__(),
+            "choice_w": q.choice_w,
+            "choice_x": q.choice_x,
+            "choice_y": q.choice_y,
+            "choice_z": q.choice_z,
+            "ans": q.ans(),
+        })
+    import urllib
+    params = urllib.urlencode({"set": set_data})
+    f = urllib.urlopen("http://localhost:8000/pdf/", params)
+    # f.read()
+    return HttpResponse(f, content_type="application/pdf")
 
 
 @login_required
