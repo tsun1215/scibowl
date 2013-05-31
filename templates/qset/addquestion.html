@@ -6,7 +6,7 @@
     <script>
         $(document).ready(function(){   
             if({{success}}){
-                flyDown("Question Added",0);
+                flashMessage("Question added.");
             }    
             window.innerWidth = $("#content-container").outerWidth();
             window.innerHeight = $("#content-container").height()+80;
@@ -46,13 +46,13 @@
                 if($("#id_type").val()==0){
                     $("#id_answer").val($("#mc_answer").val());
                 }
-                if(opener!=null){
-                    opener.location.reload(true);
-                }
+                // if(opener!=null&&opener.location.href.indexOf("/account/questions/")!=-1){
+                //     opener.location.reload(true);
+                // }
             });
         });
         function closeWindow(){
-            if(opener!=null&&opener.location.href.indexOf("/home/")!=-1){
+            if(opener!=null&&opener.location.href.indexOf("/account/questions/")!=-1){
                 opener.location.reload(true);
             }
             window.close();
@@ -102,11 +102,11 @@
         <tr>
             <th>Answer</th>
             <td>
-                <select id="mc_answer">
-                    <option value="w">W</option>
-                    <option value="x">X</option>
-                    <option value="y">Y</option>
-                    <option value="z">Z</option>
+                <select id="mc_answer">                    
+                    <option value="w" {%if ans == "w"%}selected='selected'{%endif%}>W</option>
+                    <option value="x" {%if ans == "x"%}selected='selected'{%endif%}>X</option>
+                    <option value="y" {%if ans == "y"%}selected='selected'{%endif%}>Y</option>
+                    <option value="z" {%if ans == "z"%}selected='selected'{%endif%}>Z</option>
                 </select>
             </td>
         </tr>

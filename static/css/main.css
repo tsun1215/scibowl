@@ -175,23 +175,6 @@ header{
 #content-container p{
     margin:0;
 }
-.flyDown{
-    position: fixed;
-    top:30px;
-    left:0;
-    right:0;
-    margin:0 auto;
-    min-width: 150px;
-    max-width:300px;
-    -webkit-border-radius: 0px 0px 10px 10px;
-    border-radius: 0px 0px 10px 10px;
-    background-color: #333333;
-    border:2px solid #222222;
-    text-align: center;
-    border-top: none;
-    padding: 5px;
-    display:none;
-}
 
 .success{
     color:lime;

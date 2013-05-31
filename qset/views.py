@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.db.models import Q
 from usermanage.models import Group
+from django.contrib import messages
 
 
 @login_required
@@ -108,10 +109,11 @@ def editQuestion(request, q_id):
             form = QuestionForm(user=request.user, data=request.POST, instance=question)
             if form.is_valid():
                 form.save()
-                return HttpResponseRedirect('/home/')
+                messages.info(request, "Question saved.")
+                return redirect("/close/")
         else:
             form = QuestionForm(user=request.user, instance=question)
-        return render_to_response('qset/addquestion.html', {"form": form, "action": action, "type": "question", "title": "Edit question", "success": "false"})
+        return render_to_response('qset/addquestion.html', {"form": form, "action": action, "ans": question.answer.strip().lower(), "type": "question", "title": "Edit question", "success": "false"})
     elif question.is_used != 0:
         message = "Sorry, this question is being used in a set. You may not edit it."
         if request.user == question.creator:
