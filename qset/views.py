@@ -1,5 +1,5 @@
 # Create your views here.
-from qset.models import QuestionForm, Question, SetForm, Subject, Set, Set_questions
+from qset.models import QuestionForm, Question, SetForm, Subject, Set, Set_questions, user_q_status
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.utils import simplejson
 from django.shortcuts import render_to_response, get_object_or_404, redirect
@@ -36,10 +36,10 @@ def addQuestion(request):
             q.creator = request.user
             q.save()
             form = QuestionForm(user=request.user, s_group=(q.group.id if q.group is not None else None), s_subject=q.subject.id)
-            return render_to_response('qset/addquestion.html', {"form": form, "action": action, "title": "Add Question", "success": "true"})
+            return render_to_response('qset/addquestion.html', {"form": form, "q_count": user_q_status(request.user), "action": action, "title": "Add Question", "success": "true"})
     else:
         form = QuestionForm(user=request.user)
-    return render_to_response('qset/addquestion.html', {"form": form, "action": action, "title": "Add Question", "success": request.GET.get("success", "false")})
+    return render_to_response('qset/addquestion.html', {"form": form, "q_count": user_q_status(request.user), "action": action, "title": "Add Question", "success": request.GET.get("success", "false")})
 
 
 @login_required
@@ -92,7 +92,8 @@ def removeQuestion(request, q_id):
         return HttpResponse(simplejson.dumps({"success": False}))
     if question.creator == request.user and question.is_used == 0:
         question.delete()
-        return HttpResponse(simplejson.dumps({"success": True, "q_id": q_id}))
+        messages.info(request, "Question Deleted")
+        return HttpResponse(simplejson.dumps({"success": True, "q_id": q_id}), mimetype='application/json')
     elif question.is_used != 0:
         # Prevent normal users from deleting
         return HttpResponseForbidden("Question already in set")
@@ -113,7 +114,7 @@ def editQuestion(request, q_id):
                 return redirect("/close/")
         else:
             form = QuestionForm(user=request.user, instance=question)
-        return render_to_response('qset/addquestion.html', {"form": form, "action": action, "ans": question.answer.strip().lower(), "type": "question", "title": "Edit question", "success": "false"})
+        return render_to_response('qset/addquestion.html', {"form": form, "q_count": user_q_status(request.user), "action": action, "question": question, "ans": question.answer.strip().lower(), "type": "question", "title": "Edit question", "success": "false"})
     elif question.is_used != 0:
         message = "Sorry, this question is being used in a set. You may not edit it."
         if request.user == question.creator:

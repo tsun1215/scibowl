@@ -121,6 +121,18 @@ class Question(models.Model):
     def get_edit_url(self):
         return "/question/edit/" + self.uid + "/"
 
+    def get_del_url(self):
+        return "/question/delete/" + self.uid + "/"
+
+
+def user_q_status(user, group=None):
+    queryset = Question.objects.all()
+    if(group):
+        queryset = queryset.filter(group=group, creator=user)
+    else:
+        queryset = queryset.filter(creator=user)
+    return queryset.filter(is_used=0).count().__str__()+"/"+queryset.count().__str__()
+
 
 class Set(models.Model):
     questions = models.ManyToManyField(Question, through='Set_questions')

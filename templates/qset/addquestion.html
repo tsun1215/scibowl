@@ -57,6 +57,18 @@
             }
             window.close();
         }
+        {%if question%}
+            function deleteQuestion(){
+                $.get("{{question.get_del_url}}", function(data){
+                    if(data.success){
+                        $("#content-container").html("<h1>Question Removed</h1>");
+                        closeWindow();
+                    }else{
+                        alert("An error as occured");
+                    }
+                });
+            }
+        {%endif%}
     </script>
     <style type="text/css">
     #content-container{
@@ -64,9 +76,8 @@
         width:auto;
         padding:10px;
     }
-    #nav a{
-        position:absolute;
-        right:5px;
+    #nav{
+        text-align: right;
     }
     header h1{
         margin:0;
@@ -74,11 +85,21 @@
     textarea{
         resize:vertical;
     }
+    #q_count{
+        position: fixed;
+        padding:5px;
+        right:0;
+        bottom:0;
+        font-size: 0.7em;
+    }
     </style>
 {%endblock%}
 
 {%block topbar%}
 <div id="nav">
+    {%if question%}
+        <a href="javascript:deleteQuestion()">Delete Question</a>
+    {%endif%}
     <a href="javascript:closeWindow()">Close</a>
 </div>
 {%endblock%}
@@ -113,4 +134,7 @@
     </table>
     <input type="submit" value="Save"/>
 </form>
+<div id="q_count">
+    Written questions: {{q_count}}
+</div>
 {%endblock%}
