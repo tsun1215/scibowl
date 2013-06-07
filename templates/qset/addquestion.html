@@ -3,7 +3,9 @@
 {%block title%}{{title}}{%endblock%}
 {%block head%}
     <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/jquery.hotkeys.js"></script>
     <script>
+        var choices = ["w", "x", "y", "z"];
         $(document).ready(function(){   
             if({{success}}){
                 flashMessage("Question added.");
@@ -17,6 +19,7 @@
                 $($("#id_choice_z").parent().parent("tr")).show();
                 $($("#id_answer").parent().parent("tr")).hide();
                 $($("#mc_answer").parent().parent("tr")).show();
+                $("#shuffle").show();
             }else{
                 $($("#id_choice_w").parent().parent("tr")).hide();
                 $($("#id_choice_x").parent().parent("tr")).hide();
@@ -24,6 +27,7 @@
                 $($("#id_choice_z").parent().parent("tr")).hide();
                 $($("#id_answer").parent().parent("tr")).show();
                 $($("#mc_answer").parent().parent("tr")).hide();
+                $("#shuffle").hide();
             }   
             $("#id_type").change(function(){
                 if($(this).val()==0){
@@ -33,6 +37,7 @@
                     $($("#id_choice_z").parent().parent("tr")).show();
                     $($("#id_answer").parent().parent("tr")).hide();
                     $($("#mc_answer").parent().parent("tr")).show();
+                    $("#shuffle").show();
                 }else{
                     $($("#id_choice_w").parent().parent("tr")).hide();
                     $($("#id_choice_x").parent().parent("tr")).hide();
@@ -40,6 +45,7 @@
                     $($("#id_choice_z").parent().parent("tr")).hide();
                     $($("#id_answer").parent().parent("tr")).show();
                     $($("#mc_answer").parent().parent("tr")).hide();
+                    $("#shuffle").hide();
                 }
             });
             $("form").submit(function(){
@@ -50,12 +56,82 @@
                 //     opener.location.reload(true);
                 // }
             });
+            addListeners();
         });
+        function addListeners(){
+            $(document).bind("keydown", "ctrl+s", function(e){
+                e.preventDefault();
+                $("form").submit();
+                return false;
+            });
+            $(document).bind("keydown", "ctrl+e", function(e){
+                e.preventDefault();
+                shuffleQuestions();
+                return false;
+            });
+            $(document).bind("keydown", "ctrl+1", function(e){
+                e.preventDefault();
+                $("#mc_answer").val(choices[0]);
+                return false;
+            });
+            $(document).bind("keydown", "ctrl+2", function(e){
+                e.preventDefault();
+                $("#mc_answer").val(choices[1]);
+                return false;
+            });
+            $(document).bind("keydown", "ctrl+3", function(e){
+                e.preventDefault();
+                $("#mc_answer").val(choices[2]);
+                return false;
+            });
+            $(document).bind("keydown", "ctrl+4", function(e){
+                e.preventDefault();
+                $("#mc_answer").val(choices[3]);
+                return false;
+            });
+        }
         function closeWindow(){
             if(opener!=null&&opener.location.href.indexOf("/account/questions/")!=-1){
                 opener.location.reload(true);
             }
             window.close();
+        }
+        function arrayify_questions(){
+            var questions = [
+                {
+                    ans: $("#id_choice_w").val(),
+                    selected: $("#mc_answer").val()=="w"
+                },
+                {
+                    ans: $("#id_choice_x").val(),
+                    selected: $("#mc_answer").val()=="x"
+                },
+                {
+                    ans: $("#id_choice_y").val(),
+                    selected: $("#mc_answer").val()=="y"
+                },
+                {
+                    ans: $("#id_choice_z").val(),
+                    selected: $("#mc_answer").val()=="z"
+                },
+            ];
+            return questions;
+        }
+        function shuffle(o){
+            for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+                return o;
+        }
+        function shuffleQuestions(){
+            var arr = shuffle(arrayify_questions());
+            $("#id_choice_w").val(arr[0].ans);
+            $("#id_choice_x").val(arr[1].ans);
+            $("#id_choice_y").val(arr[2].ans);
+            $("#id_choice_z").val(arr[3].ans);
+            for(var x = 0; x<arr.length; x++){
+                if(arr[x].selected){
+                    $("#mc_answer").val(choices[x]);
+                }
+            }
         }
         {%if question%}
             function deleteQuestion(){
@@ -92,6 +168,9 @@
         bottom:0;
         font-size: 0.7em;
         text-align: right;
+    }
+    #shuffle{
+        font-size: 0.7em;
     }
     </style>
 {%endblock%}
@@ -130,6 +209,7 @@
                     <option value="y" {%if ans == "y"%}selected='selected'{%endif%}>Y</option>
                     <option value="z" {%if ans == "z"%}selected='selected'{%endif%}>Z</option>
                 </select>
+                <a id="shuffle" href="javascript:shuffleQuestions()">Shuffle</a>
             </td>
         </tr>
     </table>
