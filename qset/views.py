@@ -35,10 +35,11 @@ def addQuestion(request):
             q = form.save(commit=False)
             q.creator = request.user
             q.save()
-            form = QuestionForm(user=request.user, s_group=(q.group.id if q.group is not None else None), s_subject=q.subject.id)
-            return render_to_response('qset/addquestion.html', {"form": form, "q_count": user_q_status(request.user), "action": action, "title": "Add Question", "success": "true"})
+            request.session['last_group'] = q.group.id if q.group is not None else None
+            request.session['last_subject'] = q.subject.id
+            return redirect("qset.views.addQuestion")
     else:
-        form = QuestionForm(user=request.user)
+        form = QuestionForm(user=request.user, s_group=request.session.get("last_group", None), s_subject=request.session.get("last_subject", None))
     return render_to_response('qset/addquestion.html', {"form": form, "q_count": user_q_status(request.user), "action": action, "title": "Add Question", "success": request.GET.get("success", "false")})
 
 
