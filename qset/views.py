@@ -170,7 +170,7 @@ def viewSet(request, set_id):
             "subtypenum": q.type,
             "type": sq.get_q_type_display(),
             "num": sq.q_num,
-            "subject": q.subject.get_name_display(),
+            "subject": q.subject.name,
             "text": escape(q.text),
             "answer": escape(q.ans()),
             "id": q.uid,
@@ -202,7 +202,7 @@ def setToPDF(request, set_id):
             "type": sq.get_q_type_display(),
             "sub_type_num": q.type,
             "sub_type": q.get_type_display(),
-            "subject": q.subject.__str__(),
+            "subject": q.subject.name,
             "choice_w": q.choice_w,
             "choice_x": q.choice_x,
             "choice_y": q.choice_y,
@@ -246,7 +246,7 @@ def editSet(request, set_id):
         for q in questions:
             curr = {
                 "type": escape(q.type),
-                "subject": q.subject.get_name_display(),
+                "subject": q.subject.name,
                 "date": q.creation_date.date().__str__(),
                 "text": escape(q.text),
                 "answer": escape(q.ans()),
@@ -332,7 +332,7 @@ def getQuestions(request, group_id=None):
     for q in querydict:
         curr = {
             "type": escape(q.type),
-            "subject": q.subject.get_short_name(),
+            "subject": q.subject.__unicode__(),
             "subject-id": q.subject.id,
             "group": q.group.name if q.group else None,
             "group-id": q.group.uid if q.group else None,

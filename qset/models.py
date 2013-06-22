@@ -8,40 +8,6 @@ from hashlib import sha1
 
 # Create your models here.
 
-SUBJECT_CHOICES = (
-    ('A', 'Astronomy'),
-    ('B', 'Biology'),
-    ('C', 'Chemistry'),
-    ('E', 'Energy'),
-    ('ES', 'Earth Science'),
-    ('GG', 'Ocean Geography'),
-    ('GL', 'Ocean Geology'),
-    ('M', 'Math'),
-    ('MB', 'Marine Biology'),
-    ('MP', 'Marine Policy'),
-    ('OC', 'Ocean Chemistry'),
-    ('P', 'Physics'),
-    ('PO', 'Physical Oceanography'),
-    ('SS', 'Ocean History'),
-    ('T', 'Technology'),
-)
-SUBJECT_CHOICES_DICT = {
-    'ES': 'Earth Sci',
-    'A': 'Astro',
-    'P': 'Phys',
-    'C': 'Chem',
-    'M': 'Math',
-    'B': 'Bio',
-    'E': 'Energy',
-    'OC': 'Ocean Chem',
-    'PO': 'Physical O.',
-    'MB': 'Marine Bio',
-    'T': 'O. Tech',
-    'MP': 'Marine Policy',
-    'GL': 'O. Geology',
-    'GG': 'O. Geography',
-    'SS': 'O. History',
-}
 QUESTION_SUBTYPE_CHOICES = (
     (0, 'Multiple Choice'),
     (1, 'Short Answer'),
@@ -60,13 +26,14 @@ SCORE_TYPES_CHOICES = (
 
 
 class Subject(models.Model):
-    name = models.CharField(max_length=3, choices=SUBJECT_CHOICES)
+    name = models.CharField(max_length=100)
+    short_name = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return self.get_name_display()
+        return self.name
 
     def get_short_name(self):
-        return SUBJECT_CHOICES_DICT[self.name]
+        return self.short_name
 
 
 class Question(models.Model):
@@ -92,7 +59,7 @@ class Question(models.Model):
         ordering = ['-creation_date']
 
     def __unicode__(self):
-        return "(" + self.subject.__str__() + ") " + self.creator.__str__()
+        return "(" + self.subject.__unicode__() + ") " + self.creator.__str__()
 
     def save(self, *args, **kwargs):
         if self.uid is None or self.uid == "":

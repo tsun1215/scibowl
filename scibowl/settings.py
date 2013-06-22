@@ -142,6 +142,7 @@ INSTALLED_APPS = (
     'qset',
     'bookkeeping',
     'social_auth',
+    'south',
 )
 
 LOGIN_URL = '/login/'

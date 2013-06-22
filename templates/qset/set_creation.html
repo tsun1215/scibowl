@@ -124,11 +124,11 @@
             }
             $("#q_op_toggle").show();
             $("#q_op_toggle").click();
-            // if(q_arr.length == 0){
+            if(q_arr.length == 0){
                 initializeQuestions();
-            // }else{
-                // displayQuestions();
-            // }
+            }else{
+                displayQuestions();
+            }
             return false;
         });        
         $("#q_op_toggle").click(function(){

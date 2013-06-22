@@ -3,105 +3,120 @@
         "model": "qset.subject",
         "pk": 5,
         "fields": {
-            "name": "ES"
+            "name": "Earth Science",
+            "short_name": "ES"
         }
     },
     {
         "model": "qset.subject",
         "pk": 1,
         "fields": {
-            "name": "A"
+            "name": "Astronomy",
+            "short_name": "A"
         }
     },
     {
         "model": "qset.subject",
         "pk": 12,
         "fields": {
-            "name": "P"
+            "name": "Physics",
+            "short_name": "P"
         }
     },
     {
         "model": "qset.subject",
         "pk": 3,
         "fields": {
-            "name": "C"
+            "name": "Chemistry",
+            "short_name": "C"
         }
     },
     {
         "model": "qset.subject",
         "pk": 8,
         "fields": {
-            "name": "M"
+            "name": "Math",
+            "short_name": "M"
         }
     },
     {
         "model": "qset.subject",
         "pk": 2,
         "fields": {
-            "name": "B"
+            "name": "Biology",
+            "short_name": "B"
         }
     },
     {
         "model": "qset.subject",
         "pk": 4,
         "fields": {
-            "name": "E"
+            "name": "Energy",
+            "short_name": "E"
         }
     },
     {
         "model": "qset.subject",
         "pk": 11,
         "fields": {
-            "name": "OC"
+            "name": "Ocean Chemistry",
+            "short_name": "OC"
         }
     },
     {
         "model": "qset.subject",
         "pk": 13,
         "fields": {
-            "name": "PO"
+            "name": "Physical Oceanography",
+            "short_name": "PO"
         }
     },
     {
         "model": "qset.subject",
         "pk": 9,
         "fields": {
-            "name": "MB"
+            "name": "Marine Biology",
+            "short_name": "MB"
         }
     },
     {
         "model": "qset.subject",
         "pk": 15,
         "fields": {
-            "name": "T"
+            "name": "Technology",
+            "short_name": "T"
         }
     },
     {
         "model": "qset.subject",
         "pk": 10,
         "fields": {
-            "name": "MP"
+            "name": "Marine Policy",
+            "short_name": "MP"
         }
     },
     {
         "model": "qset.subject",
         "pk": 7,
         "fields": {
-            "name": "GL"
+            "name": "Ocean Geology",
+            "short_name": "GL"
         }
     },
     {
         "model": "qset.subject",
         "pk": 6,
         "fields": {
-            "name": "GG"
+            "name": "Oceaon Geography",
+            "short_name": "GG"
         }
     },
     {
         "model": "qset.subject",
         "pk": 14,
         "fields": {
-            "name": "SS"
+            "name": "Ocean History",
+            "short_name": "SS"
         }
     }
 ]
