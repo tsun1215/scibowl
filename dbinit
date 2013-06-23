@@ -1,0 +1,5 @@
+python manage.py convert_to_south qset
+python manage.py convert_to_south usermanage
+python manage.py syncdb
+python manage.py migrate qset
+python manage.py migrate usermanage
