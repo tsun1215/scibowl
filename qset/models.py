@@ -28,6 +28,7 @@ SCORE_TYPES_CHOICES = (
 class Subject(models.Model):
     name = models.CharField(max_length=100)
     short_name = models.CharField(max_length=100)
+    group = models.ForeignKey(Group, null=True, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -36,9 +37,40 @@ class Subject(models.Model):
         return self.short_name
 
 
+class SubTopic(models.Model):
+    name = models.CharField(max_length=100)
+    short_name = models.CharField(max_length=100)
+    parent_subject = models.ForeignKey(Subject)
+    group = models.ForeignKey(Group)
+
+    def __unicode__(self):
+        return self.parent_subject.name + " - " + self.name
+
+
+class SubjectForm(forms.ModelForm):
+    class Meta:
+        model = Subject
+
+    def __init__(self, user, *args, **kwargs):
+        super(SubjectForm, self).__init__(*args, **kwargs)
+        choices = user.group_set.filter(membership__status=1)
+        self.fields['group'].queryset = choices
+
+
+class SubTopicForm(forms.ModelForm):
+    class Meta:
+        model = SubTopic
+
+    def __init__(self, group, *args, **kwargs):
+        super(SubTopicForm, self).__init__(*args, **kwargs)
+        choices = group.subject_set.all() | Subject.objects.filter(group=None)
+        self.fields['parent_subject'].queryset = choices
+
+
 class Question(models.Model):
     creator = models.ForeignKey(User)
     subject = models.ForeignKey(Subject)
+    sub_topic = models.ForeignKey(SubTopic, blank=True, null=True)
     group = models.ForeignKey(Group, blank=True, null=True)
     type = models.IntegerField(choices=QUESTION_SUBTYPE_CHOICES, default=0)
     creation_date = models.DateTimeField(auto_now_add=True)
@@ -193,12 +225,19 @@ class QuestionForm(ModelForm):
     class Meta:
         model = Question
         exclude = ('uid', 'is_used', 'creation_date', 'creator')
+        fields = ('group', 'subject', 'sub_topic', 'type')
 
     def __init__(self, user, s_subject=None, s_group=None, *args, **kwargs):
         super(QuestionForm, self).__init__(*args, **kwargs)
         choices = user.group_set.all()
         self.fields['group'].queryset = choices
+        self.fields["subject"].widget.attrs = {"class": "hi"}
+        # raise Exception(self.fields["subject"].widget)
         if s_subject:
             self.fields['subject'].initial = s_subject
         if s_group:
             self.fields['group'].initial = s_group
+            self.fields["sub_topic"].queryset = SubTopic.objects.filter(group=s_group)
+        else:
+            self.fields["sub_topic"].queryset = SubTopic.objects.filter(group=None)
+            # del self.fields["sub_topic"]

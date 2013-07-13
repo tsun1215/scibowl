@@ -10,6 +10,22 @@
             if({{success}}){
                 flashMessage("Question added.");
             }    
+            $("#id_subject").change(function(){
+                $.getJSON("/ajax/subtopics/", {"subject": $(this).val(), "group": $("#id_group").val()}, function(data){
+                    if(data.success){
+                        for(var x in data.choices){
+                            console.log(data.choices[x]);
+                        }
+                    }
+                });
+            });
+            $("#id_group").change(function(){
+                if($(this).val()==""){
+                    window.location.href = "/question/add/";
+                }else{
+                    window.location.href = "/question/add/" + $(this).val() + "/";
+                }
+            });
             window.innerWidth = $("#content-container").outerWidth();
             window.innerHeight = $("#content-container").height()+80;
             if($("#id_type").val()==0){

@@ -1,5 +1,5 @@
 # Create your views here.
-from qset.models import QuestionForm, Question, SetForm, Subject, Set, Set_questions, user_q_status
+from qset.models import QuestionForm, Question, SetForm, Subject, Set, Set_questions, user_q_status, SubjectForm, SubTopicForm, SubTopic
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.utils import simplejson
 from django.shortcuts import render_to_response, get_object_or_404, redirect
@@ -27,9 +27,15 @@ def filterQuestions(request, group_id=None):
 
 
 @login_required
-def addQuestion(request):
+def addQuestion(request, group_id=None):
     action = "/question/add/"
+    group = None
+    if group_id:
+        group = get_object_or_404(Group, pk=group_id)
+        action += group.uid + "/"
     if(request.method == "POST"):
+        if group:
+            form = QuestionForm(user=request.user, data=request.POST, s_group=group)
         form = QuestionForm(user=request.user, data=request.POST)
         if form.is_valid():
             q = form.save(commit=False)
@@ -42,7 +48,7 @@ def addQuestion(request):
             request.session['last_subject'] = q.subject.id
             return redirect("qset.views.addQuestion")
     else:
-        form = QuestionForm(user=request.user, s_group=request.session.get("last_group", None), s_subject=request.session.get("last_subject", None))
+        form = QuestionForm(user=request.user, s_group=group if group else request.session.get("last_group", None), s_subject=request.session.get("last_subject", None))
     return render_to_response('qset/addquestion.html', {"form": form, "tot_written": request.session.get("written_questions", 0), "q_count": user_q_status(request.user), "action": action, "title": "Add Question", "success": request.GET.get("success", "false")})
 
 
@@ -127,6 +133,53 @@ def editQuestion(request, q_id):
     else:
         # Is the user is not the creator of the question (or staff)
         return HttpResponseRedirect('/')
+
+
+@login_required
+def getSubtopics(request):
+    if request.GET.get("subject", False) and request.GET.get("group", False):
+        subtopics = SubTopic.objects.filter(
+            parent_subject=Subject.objects.get(pk=request.GET.get("subject")),
+            group=Group.objects.get(pk=request.GET.get("group"))
+        )
+        data = []
+        for s in subtopics:
+            data.append({
+                "id": s.id,
+                "subtopic": s.name,
+            })
+        return HttpResponse(simplejson.dumps({"success": True, "choices": data}), content_type="application/json")
+    return HttpResponse(simplejson.dumps({"success": False}), content_type="application/json")
+
+
+@login_required
+def addSubject(request):
+    if request.method == "POST":
+        form = SubjectForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.info(request, "Subject Saved")
+            return redirect("/")
+    else:
+        form = SubjectForm(user=request.user)
+    return render_to_response("form_base.html", {"form": form}, context_instance=RequestContext(request))
+
+
+@login_required
+def addSubTopic(request, group_id):
+    group = get_object_or_404(Group, uid=group_id)
+    if request.user not in group.admins() and request.user != group.creator:
+        messages.info(request, "Access denied")
+        return redirect("/")
+    if request.method == "POST":
+        form = SubTopicForm(group=group, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.info(request, "Subtopic Saved")
+            return redirect("/")
+    else:
+        form = SubTopicForm(group=group)
+    return render_to_response("form_base.html", {"form": form}, context_instance=RequestContext(request))
 
 
 @login_required
