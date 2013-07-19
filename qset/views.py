@@ -32,11 +32,12 @@ def addQuestion(request, group_id=None):
     group = None
     if group_id:
         group = get_object_or_404(Group, pk=group_id)
-        action += group.uid + "/"
+        action += "%s/" % group.pk
     if(request.method == "POST"):
         if group:
             form = QuestionForm(user=request.user, data=request.POST, s_group=group)
-        form = QuestionForm(user=request.user, data=request.POST)
+        else:
+            form = QuestionForm(user=request.user, data=request.POST)
         if form.is_valid():
             q = form.save(commit=False)
             q.creator = request.user
@@ -46,9 +47,12 @@ def addQuestion(request, group_id=None):
             request.session['written_questions'] = int(request.session['written_questions']) + 1
             request.session['last_group'] = q.group.id if q.group is not None else None
             request.session['last_subject'] = q.subject.id
-            return redirect("qset.views.addQuestion")
+            if group:
+                return redirect("qset.views.addQuestion", group_id=group.pk)
+            else:
+                return redirect("qset.views.addQuestion")
     else:
-        form = QuestionForm(user=request.user, s_group=group if group else request.session.get("last_group", None), s_subject=request.session.get("last_subject", None))
+        form = QuestionForm(user=request.user, s_group=group if group else None, s_subject=request.session.get("last_subject", None))
     return render_to_response('qset/addquestion.html', {"form": form, "tot_written": request.session.get("written_questions", 0), "q_count": user_q_status(request.user), "action": action, "title": "Add Question", "success": request.GET.get("success", "false")})
 
 

@@ -11,14 +11,11 @@
                 flashMessage("Question added.");
             }    
             $("#id_subject").change(function(){
-                $.getJSON("/ajax/subtopics/", {"subject": $(this).val(), "group": $("#id_group").val()}, function(data){
-                    if(data.success){
-                        for(var x in data.choices){
-                            console.log(data.choices[x]);
-                        }
-                    }
-                });
+                getSubtopics();
             });
+            if($("#id_sub_topic").val()==""){
+                getSubtopics();
+            }
             $("#id_group").change(function(){
                 if($(this).val()==""){
                     window.location.href = "/question/add/";
@@ -74,6 +71,18 @@
             });
             addListeners();
         });
+        function getSubtopics(){
+            $.getJSON("/ajax/subtopics/", {"subject": $("#id_subject").val(), "group": $("#id_group").val()}, function(data){
+                if(data.success){
+                    $("#id_sub_topic").html("<option value>--------</option>");
+                    for(var x in data.choices){
+                        $("#id_sub_topic").append("<option value='" + data.choices[x].id + "'>"+data.choices[x].subtopic+"</option>");
+                    }
+                }else{
+                    $("#id_sub_topic").html("<option value>--------</option>");
+                }
+            });
+        }
         function addListeners(){
             $(document).bind("keydown", "ctrl+s", function(e){
                 e.preventDefault();

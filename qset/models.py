@@ -44,7 +44,7 @@ class SubTopic(models.Model):
     group = models.ForeignKey(Group)
 
     def __unicode__(self):
-        return self.parent_subject.name + " - " + self.name
+        return self.name
 
 
 class SubjectForm(forms.ModelForm):
@@ -225,7 +225,7 @@ class QuestionForm(ModelForm):
     class Meta:
         model = Question
         exclude = ('uid', 'is_used', 'creation_date', 'creator')
-        fields = ('group', 'subject', 'sub_topic', 'type')
+        fields = ('group', 'subject', 'sub_topic', 'type', 'text', 'choice_w', 'choice_x', 'choice_y', 'choice_z', 'answer')
 
     def __init__(self, user, s_subject=None, s_group=None, *args, **kwargs):
         super(QuestionForm, self).__init__(*args, **kwargs)
@@ -238,6 +238,9 @@ class QuestionForm(ModelForm):
         if s_group:
             self.fields['group'].initial = s_group
             self.fields["sub_topic"].queryset = SubTopic.objects.filter(group=s_group)
+        elif kwargs.get("instance", False):
+            self.fields["sub_topic"].queryset = SubTopic.objects.filter(group=kwargs['instance'].group)
+            self.fields['sub_topic'].initial = kwargs['instance'].sub_topic
         else:
             self.fields["sub_topic"].queryset = SubTopic.objects.filter(group=None)
             # del self.fields["sub_topic"]
